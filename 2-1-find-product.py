@@ -46,6 +46,9 @@ def find_product(lst):
     # product_of_all_before_i = [1, 2, 10, 70]
     # product_of_all_after_i = [-35,-7,-1,1]
 
+    if len(lst) <= 1:
+        return lst
+
     product_of_all_numbers_before_i = [1] # this needs to be calculated from 1..(n-1)
     product_of_all_numbers_after_i = deque([1]) # this needs to be calculated from 0...n-2
                                                 # can initialize another array of same length too
@@ -68,6 +71,7 @@ def find_product(lst):
 
 def test_find_product():
     testcases = [
+        [[-20], [-20]],
         [[2, 5, 7, -1], [-35, -14, -10, 70]],
         [[1,2,3,4], [24, 12, 8, 6]],
         [[2, 5, 9, 3, 6], [810, 324, 180, 540, 270]],
