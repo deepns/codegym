@@ -63,4 +63,5 @@ def test_right_rotate():
         lst, k = inp[0], inp[1]
         actual_output = right_rotate(lst, k)
         assert expected_output == actual_output
-   
+
+test_right_rotate()
