@@ -10,10 +10,8 @@ def run_server():
     # socket.socket supports context manager from version 3.2 onwards
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as serversock:
         host, port = 'localhost', 9090
-
         serversock.bind((host, port))
-
-        serversock.listen() # allow up to 5 connections
+        serversock.listen()
 
         connId = 0
         while True:
@@ -23,7 +21,6 @@ def run_server():
             with clientsocket:
                 data = clientsocket.recv(1024).decode('utf-8')
                 print(f'Msg from client{connId} {data}')
-
                 clientsocket.sendall(f'you are conn#{connId}'.encode('utf-8'))
 
 def run_client():
@@ -35,7 +32,7 @@ def run_client():
     clientsock.sendall(b'Hello, world')
 
     # recv message from server
-    data = clientsock.recv(1024)
+    data = clientsock.recv(1024).decode('utf-8')
     print(f'server sent: {data}')
 
     clientsock.close()
