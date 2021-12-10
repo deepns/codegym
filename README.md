@@ -1,0 +1,39 @@
+# Daily Coding Challenge
+
+- [ ] TODO
+  - [x] cleanup directories
+  - [ ] cleanup comments in ssl-socket-ex.py
+  - [ ] add a makefile to c/
+  - [ ] add cert verification to the ssl-client
+- Day 12 (12/09/21)
+  - [simple tcp client in C](c/tcp_client.c)
+  - [simple tls tcp client in c](c/ssl_client.c)
+  - [python ssl socket](ssl-ssl-socket-ex.py))
+- Day 11 (12/08/21)
+  - [continue learning ssl sockets](ssl-socket-ex.py)
+- Day 10 (12/07/21)
+  - [Python Socket Programming](10-1-socket-ex.py)
+- Day 9
+  - [longest-substring-after-k-replacements](practice/length-of-longest-substring.py)
+- Day 8
+  - [fruits-into-baskets](practice/fruits-into-baskets.py)
+  - [longest-substring-with-all-distinct](practice/length-of-longest-substring-with-all-distinct.py)
+- Day 7
+  - [longest-subarray-with-max-k-distinct](practice/length-of-longest-substring-with-no-more-than-k-distinct-chars.py)
+- Day 6
+  - [smallest-subarray-with-sum-k](practice/smallest-subarray-with-sum.py)
+- Day 5 - Coding challenges
+  - [average-of-contiguous-subarray](practice/find-average-contiguous-subarray.py)
+  - [maximum-sum-subarray](practice/maximum-sum-subarray.py)
+- Day 4 - Coding challenges
+  - [rearrange-list](practice/rearrange.py)
+  - [rearrange-list-max-min](practice/max-min-rearrange.py)
+- Day 3 - Coding challenges
+  - [right-rotate](practice/right-rotate.py)
+- Day 2 - Coding challenges
+  - [find-product](practice/find-product.py)
+  - [find-second-max](practice/find-second-maximum.py)
+- Day 1 - Python refresher
+  - [list-operations](practice/remove-even-numbers-list.py)
+  - [merge-sorted-lists](practice/merge-two-sorted-lists.py)
+  - [find-2sum](practice/find-two-numbers-add-upto-k.py)

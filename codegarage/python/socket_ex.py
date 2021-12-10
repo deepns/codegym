@@ -8,6 +8,16 @@ import argparse
 
 def run_server():
     # socket.socket supports context manager from version 3.2 onwards
+    #
+    # the typical steps set up a server socket:
+    #   create socket
+    #   bind to host:port
+    #   set listening mode
+    #   wait on connection accept
+
+    # the creation process (create socket, bind, listen) is simplified
+    # into socket.create_server((host, port)) which will create the socket,
+    # bind the socket to the given address and set it to listen.
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as serversock:
         host, port = 'localhost', 9090
         serversock.bind((host, port))
@@ -39,8 +49,11 @@ def run_client():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-m", "--mode", choices=["server", "client"], default="server",
-                        help="Run as server or client mode. Default mode:server", required=False)
+    parser.add_argument("-m", "--mode",
+                        choices=["server", "client"],
+                        default="server",
+                        help="Run as server or client mode. Default mode:server",
+                        required=False)
     args = parser.parse_args()
 
     if args.mode == "server":
