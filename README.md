@@ -1,18 +1,13 @@
-# Daily Coding Challenge
+# Daily Dose of Code
 
-- [ ] TODO
-  - [x] cleanup directories
-  - [ ] cleanup comments in ssl-socket-ex.py
-  - [ ] add a makefile to c/
-  - [ ] add cert verification to the ssl-client
 - Day 12 (12/09/21)
-  - [simple tcp client in C](c/tcp_client.c)
-  - [simple tls tcp client in c](c/ssl_client.c)
-  - [python ssl socket](ssl-ssl-socket-ex.py))
+  - [simple tcp client in C](codegarage/c/tcp_client.c)
+  - [simple tls tcp client in c](codegarage/c/tls_client.c)
+  - [python ssl socket](codegarage/python/ssl_socket_ex.py)
 - Day 11 (12/08/21)
-  - [continue learning ssl sockets](ssl-socket-ex.py)
+  - [continue learning ssl sockets](codegarage/python/ssl_socket_ex.py)
 - Day 10 (12/07/21)
-  - [Python Socket Programming](10-1-socket-ex.py)
+  - [Python Socket Programming](codegarage/python/socket_ex.py)
 - Day 9
   - [longest-substring-after-k-replacements](practice/length-of-longest-substring.py)
 - Day 8
@@ -22,15 +17,15 @@
   - [longest-subarray-with-max-k-distinct](practice/length-of-longest-substring-with-no-more-than-k-distinct-chars.py)
 - Day 6
   - [smallest-subarray-with-sum-k](practice/smallest-subarray-with-sum.py)
-- Day 5 - Coding challenges
+- Day 5
   - [average-of-contiguous-subarray](practice/find-average-contiguous-subarray.py)
   - [maximum-sum-subarray](practice/maximum-sum-subarray.py)
-- Day 4 - Coding challenges
+- Day 4
   - [rearrange-list](practice/rearrange.py)
   - [rearrange-list-max-min](practice/max-min-rearrange.py)
-- Day 3 - Coding challenges
+- Day 3
   - [right-rotate](practice/right-rotate.py)
-- Day 2 - Coding challenges
+- Day 2 - some practice challenges on python lists
   - [find-product](practice/find-product.py)
   - [find-second-max](practice/find-second-maximum.py)
 - Day 1 - Python refresher
