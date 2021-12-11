@@ -35,7 +35,7 @@ generate_cert_signed_by_root_ca()
     # The common name is typically the address to which we connect to the server
     # Set CN=<IP address|hostname> of the server for which the certificate is being generated.
     openssl req -new -nodes -newkey rsa:2048 \
-        -subj "/C=US/ST=DE/O=ExampleOrg, Inc./CN=127.0.0.1" \
+        -subj "/C=US/ST=DE/O=ExampleOrg, Inc./CN=localhost" \
         -out $NODE.csr -keyout $NODE.key
 
     # Generate the certificate signed by the root CA
