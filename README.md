@@ -1,5 +1,7 @@
 # Daily Dose of Code
 
+- Day 13 (12/10/21)
+  - Dump SSL cert info ([python](codegarage/python/ssl_socket_ex.py), [c](codegarage/c/tls_client.c#62))
 - Day 12 (12/09/21)
   - [simple tcp client in C](codegarage/c/tcp_client.c)
   - [simple tls tcp client in c](codegarage/c/tls_client.c)
