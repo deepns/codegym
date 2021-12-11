@@ -25,7 +25,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    char *SERVER = "127.0.0.1";
+    char *SERVER = "localhost";
     int port = 9090;
 
     int sockfd;
