@@ -1,5 +1,8 @@
 # Daily Dose of Code
 
+- Day 14 (12/11/21)
+  - Added a [simple tcp server](codegarage/c/tcp_server.c) and [simple tls server](codegarage/c/tls_server.c)
+  - Quick refresher of [makefile automatic variables](codegarage/c/Makefile)
 - Day 13 (12/10/21)
   - Dump SSL cert info ([python](codegarage/python/ssl_socket_ex.py), [c](codegarage/c/tls_client.c#62))
 - Day 12 (12/09/21)
