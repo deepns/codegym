@@ -84,7 +84,10 @@ void show_certs(SSL *ssl)
 int main()
 {
     // Initialize SSL library
-    (void)OPENSSL_init_ssl(0, NULL);
+    // linking with only openssl version 1.1.0 above
+    // so no explicit initialization and free of the library
+    // is required.
+    // (void)OPENSSL_init_ssl(0, NULL);
 
     char *SERVER = "localhost";
     int port = 9090;
