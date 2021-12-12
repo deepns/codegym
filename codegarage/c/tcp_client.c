@@ -5,11 +5,12 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <unistd.h>
+#include <string.h>
 
 int main()
 {
     char *SERVER = "127.0.0.1";
-    int port = 9090;
+    int port = 9799;
 
     int sockfd;
     struct hostent *host;
@@ -37,12 +38,12 @@ int main()
 	bzero(buf, sizeof(buf));
     sprintf(buf, "%s", "client: foo");
 
-    ssize_t bytessent = send(sockfd, &buf, sizeof(buf), 0);
+    ssize_t bytessent = send(sockfd, &buf, strlen(buf), 0);
     printf("Sent msg:%s of bytessent:%ld\n", buf, bytessent);
 
 	bzero(buf, sizeof(buf));
 	ssize_t bytesread = recv(sockfd, &buf, sizeof(buf), 0);
-    printf("Received %s of length %ld from %s\n", buf, bytesread, SERVER);
+    printf("Received: Message (%s) of length %ld from %s\n", buf, bytesread, SERVER);
 
     close(sockfd);
     return 0;
