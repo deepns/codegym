@@ -1,6 +1,16 @@
 # Daily Dose of Code
 
-- Day 14 (12/11/21)
+- Day 16
+  - [ ] Update learnings
+    - [ ] openssl library init
+    - [ ] quick over view of enabling tls on the server side and client side, and then read/write
+    - [ ] reading certificates in python and C
+    - [ ] pprint
+  - [ ] client with mtls
+  - [x] server
+- Day 15
+  - Added a [tcp server with mutual TLS](codegarage/c/mtls_server.c). some cleanup needs to be done.
+- Day 14
   - Added a [simple tcp server](codegarage/c/tcp_server.c) and [simple tls server](codegarage/c/tls_server.c)
   - Quick refresher of [makefile automatic variables](codegarage/c/Makefile)
 - Day 13 (12/10/21)
