@@ -10,7 +10,7 @@
 int main()
 {
     char *SERVER = "127.0.0.1";
-    int port = 9799;
+    int port = 9699;
 
     int sockfd;
     struct hostent *host;

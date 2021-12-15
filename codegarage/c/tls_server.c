@@ -65,7 +65,7 @@ SSL_CTX *create_ssl_context(const char *certfile, const char *keyfile)
 int main(void)
 {
     int sockfd;
-    int port = 9090;
+    int port = 9799;
     SSL_CTX *context = NULL;
     const char *certfile = "certs/server.crt";
     const char *keyfile = "certs/server.key";

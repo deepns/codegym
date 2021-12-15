@@ -40,7 +40,7 @@ int create_server_socket(int port)
 
 int main()
 {
-    int port = 9799;
+    int port = 9699;
     int serversock = create_server_socket(port);
 
     // listen for connections and accept

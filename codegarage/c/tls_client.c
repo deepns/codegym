@@ -90,7 +90,7 @@ int main()
     // (void)OPENSSL_init_ssl(0, NULL);
 
     char *SERVER = "localhost";
-    int port = 9090;
+    int port = 9799;
     int sockfd = create_socket(SERVER, port);
 
     SSL_CTX *context = create_context();
