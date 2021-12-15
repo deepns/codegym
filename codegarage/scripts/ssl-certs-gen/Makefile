@@ -1,7 +1,7 @@
 ROOT_CA=root_ca
-NODE=server
+NODES=server client
 
 certs:
-	./generate_ssl_certs.sh ${ROOT_CA} ${NODE}
+	./generate_ssl_certs.sh ${ROOT_CA} ${NODES}
 clean:
-	rm *.key *.srl *.crt *.csr *.pem
+	rm -vf *.key *.srl *.crt *.csr

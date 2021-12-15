@@ -1,13 +1,11 @@
 #! /usr/bin/env bash
 
 # TODO
-# Generate self-signed cert without root-ca
 
 # Generate the private key and self-signed cert for the root CA
 generate_root_ca()
 {
     ROOT_CA=$1
-
     # Create a self signed certificate for the root CA
     # what are these options mean?
     # -x509 - output a self signed certificate instead of a certificate request. Commonly used to generate a test certificate or self-signed cert for the root CA.
@@ -20,7 +18,7 @@ generate_root_ca()
     # -subj <arg> - specificy the subject name of the request. C-Country, ST-state, O-Organization, CN=Common Name.
     #             - openssl will prompt the user to enter the subject fields. Passing them in -subj makes it convenient to script
     openssl req -x509 -nodes -sha256 -newkey rsa:2048 \
-        -subj "/C=US/ST=DE/O=ExampleOrg, Inc./CN=example.org" \
+        -subj "/C=US/ST=DE/O=ExampleRootCA, Inc./CN=examplerootca.org" \
         -days 1024 -out $ROOT_CA.crt -keyout $ROOT_CA.key
 }
 
@@ -35,7 +33,7 @@ generate_cert_signed_by_root_ca()
     # The common name is typically the address to which we connect to the server
     # Set CN=<IP address|hostname> of the server for which the certificate is being generated.
     openssl req -new -nodes -newkey rsa:2048 \
-        -subj "/C=US/ST=DE/O=ExampleOrg, Inc./CN=localhost" \
+        -subj "/C=US/ST=DE/O=Example-$2, Inc./CN=localhost" \
         -out $NODE.csr -keyout $NODE.key
 
     # Generate the certificate signed by the root CA
@@ -88,6 +86,14 @@ validate_cert_key()
     fi
 }
 
-generate_root_ca $1
-generate_cert_signed_by_root_ca $1 $2
-validate_cert_key $2.crt $2.key
+ROOT_CA=$1
+generate_root_ca $ROOT_CA
+
+# shift the args to the left.
+shift
+
+# for the remaining args, generate a cert signed by the root CA
+for node in $@;do
+    generate_cert_signed_by_root_ca $ROOT_CA $node
+    validate_cert_key $node.crt $node.key
+done
