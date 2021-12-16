@@ -2,9 +2,10 @@
 
 - Day 16
   - [ ] Update learnings
-    - [ ] openssl library init
     - [ ] quick over view of enabling tls on the server side and client side, and then read/write
     - [ ] reading certificates in python and C
+- Day 17
+  - Revisit and fixes to [mtls_server](codegarage/c/mtls_server.c) and [mtls_client](codegarage/c/mtls_client.c).
 - Day 16
   - Added [tcp client with mutual TLS](codegarage/c/mtls_client.c)
   - Learnt about difference in TLS handshake behavior between TLS versions 1.2 and 1.3. See the comments in [mtls_client](codegarage/c/mtls_client.c)

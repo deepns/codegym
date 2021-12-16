@@ -2,6 +2,56 @@
 
 Noting down some learnings along the way
 
+## OpenSSL Init functions
+
+Prior to 1.1, one has to explicitly initialize the SSL library using during init.
+
+```c
+SSL_library_init()
+SSL_load_error_strings()
+OpenSSL_add_ssl_algorithms()
+```
+
+From 1.1 onwards, no explicit initialization is needed. It is taken care by the library internally. If explicit initialization is required, `OPENSSL_init_ssl` can be used. See [this doc](https://www.openssl.org/docs/man1.1.1/man3/OPENSSL_init_ssl.html)
+
+## SSL_connect behavior difference between TLSv1.2 and TLSv1.3
+
+There is a slight difference in behavior between TLSv1.2 and TLSv1.3 in terms of validating the certificate during handshake.In TLSv1.3, SSL_connect() would succeed even if the server rejects client certificate (for e.g. client's cert expired, or invalid, or didn't present at all/). 
+
+Subsequently SSL_write() would also succeed even though server had not accepted the connection fully. The buffer will be written to the socket, but server would not read it. However, SSL_read would fail if the server hadn't accepted the connection.
+
+First read from the client application would then fail since the underlying connection is already closed by the server. In case of TLSv1.2, SSL_connect() would fail if there is a failure in TLS handshake. This [issue](https://github.com/openssl/openssl/issues/8500) has some good comments explaining this version difference.
+
+In OpenSSL 1.1.1, usage of individual TLS method is deprecated using a specific version (for e.g. TLSv1_2_client_method()) will raise the deprecated warning during compilation.
+
+```c
+    SSL_CTX *context = SSL_CTX_new(TLSv1_2_client_method());
+    if (context == NULL) {
+        ERR_print_errors_fp(stderr);
+        return NULL;
+    }
+```
+
+## TCP client/server in C
+
+High level flow in a simple TLS client-server app.
+
+- On the server side
+  - Create the TCP socket. Use `socket()`
+  - Bind the socket to an addr/port.
+    - Set the addr and port in `struct sockaddr_in`. for quick tests on local node, can simply use `INADDR_ANY` for the addr field.
+    - Use `bind()` to bind the socket with addr. convert the sockaddr_in to `struct sockaddr` and give the length of the address as well.
+  - set the socket in listening mode. Use `listen()`
+  - accept the client connections using `accept()` which returns a descriptor to the client socket. `accept()` is blocking by default.
+  - work with client socket. reads? `recv()`/`read()`. writes? `send()`/`write()`
+  - close the client socket.
+- On the client side
+  - create socket. Use `socket()`
+  - set the addr, port, protocol family in `sockaddr_in`
+  - `connect()` socket and addr.
+  - read/write to the server.
+  - `close()` the socket to server.
+
 ## python func args initialization
 
 ```python

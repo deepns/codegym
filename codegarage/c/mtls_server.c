@@ -113,7 +113,7 @@ void send_to_client(SSL *ssl, int sockfd, char *buf, int buflen)
             printf("Written %lu bytes of msg=%s over SSL\n", byteswritten, buf);
         }
     } else {
-        ssize_t bytessent = write(sockfd, buf, buflen);
+        ssize_t bytessent = send(sockfd, buf, buflen, 0);
         printf("Sent %ld bytes from msg=%s\n", bytessent, buf);
     }
 }
