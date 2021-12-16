@@ -5,11 +5,11 @@
     - [ ] openssl library init
     - [ ] quick over view of enabling tls on the server side and client side, and then read/write
     - [ ] reading certificates in python and C
-    - [ ] pprint
-  - [ ] client with mtls
-  - [x] server
+- Day 16
+  - Added [tcp client with mutual TLS](codegarage/c/mtls_client.c)
+  - Learnt about difference in TLS handshake behavior between TLS versions 1.2 and 1.3. See the comments in [mtls_client](codegarage/c/mtls_client.c)
 - Day 15
-  - Added a [tcp server with mutual TLS](codegarage/c/mtls_server.c). some cleanup needs to be done.
+  - Added a [tcp server with mutual TLS](codegarage/c/mtls_server.c)
 - Day 14
   - Added a [simple tcp server](codegarage/c/tcp_server.c) and [simple tls server](codegarage/c/tls_server.c)
   - Quick refresher of [makefile automatic variables](codegarage/c/Makefile)

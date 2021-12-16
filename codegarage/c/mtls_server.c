@@ -70,10 +70,13 @@ SSL_CTX *create_context_mtls(
             int verify_flags = SSL_VERIFY_PEER |
                                SSL_VERIFY_FAIL_IF_NO_PEER_CERT |
                                SSL_VERIFY_CLIENT_ONCE;
-            SSL_CTX_set_verify(ctx, verify_flags, NULL);
+            SSL_CTX_set_verify(ctx, verify_flags, NULL /* verify callback */);
             return ctx;
         }
+        // hit some error while updating the context with certs
+        SSL_CTX_free(ctx);
     }
+    
     ERR_print_errors_fp(stderr);
     return NULL;
 }
@@ -83,9 +86,14 @@ void recv_from_client(SSL *ssl, int sockfd, char *buf, int buflen)
     if (ssl) {
         size_t bytesread;
         // SSL_read doesn't return the number of bytes read. so using SSL_read_ex
-        SSL_read_ex(ssl, buf, buflen, &bytesread);
-        printf("Received msg=%s of length=%lu from client over SSL\n", buf, bytesread);
-        // TODO error handling of SSL_read_ex and SSL_write_ex
+        int readerr = SSL_read_ex(ssl, buf, buflen, &bytesread);
+        if (readerr <= 0) {
+            fprintf(stderr, 
+                    "Hit error=%d from SSL_read, ssl_error=%d\n",
+                    readerr, SSL_get_error(ssl, readerr));
+        } else {
+            printf("Received msg=%s of length=%lu from client over SSL\n", buf, bytesread);
+        }
     } else {
         ssize_t bytesreceived = recv(sockfd, buf, buflen, 0 /*flags*/);
         printf("Received msg=%s of length=%ld from client\n", buf, bytesreceived);
@@ -96,8 +104,14 @@ void send_to_client(SSL *ssl, int sockfd, char *buf, int buflen)
 {
    if (ssl) {
         size_t byteswritten;
-        SSL_write_ex(ssl, buf, buflen, &byteswritten);
-        printf("Written %lu bytes of msg=%s over SSL\n", byteswritten, buf);
+        int writeerr = SSL_write_ex(ssl, buf, buflen, &byteswritten);
+        if (writeerr <= 0) {
+            fprintf(stderr,
+                    "Hit error=%d from SSL_write, ssl_error=%d\n",
+                    writeerr, SSL_get_error(ssl, writeerr));
+        } else {
+            printf("Written %lu bytes of msg=%s over SSL\n", byteswritten, buf);
+        }
     } else {
         ssize_t bytessent = write(sockfd, buf, buflen);
         printf("Sent %ld bytes from msg=%s\n", bytessent, buf);
@@ -106,7 +120,7 @@ void send_to_client(SSL *ssl, int sockfd, char *buf, int buflen)
 
 int main()
 {
-    int port = 9799;
+    int port = 9899;
     int serversock = create_server_socket(port);
     int clientId = 0;
 

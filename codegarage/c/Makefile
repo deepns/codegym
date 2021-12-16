@@ -1,6 +1,6 @@
 CC=clang
 OPTIONS=-Wall
-EXES=mtls_server tls_server tls_client tcp_server tcp_client
+EXES=mtls_client mtls_server tls_server tls_client tcp_server tcp_client
 OPENSSL_LIBS=-lssl -lcrypto
 
 all: $(EXES)
@@ -10,6 +10,9 @@ all: $(EXES)
 # $< - name of the first prerequisite
 # $? - names of all prerequisites that newer than target
 # $^ - name of all prerequisites
+
+mtls_client: mtls_client.c
+	$(CC) $(OPTIONS) $(OPENSSL_LIBS) -o $@ $^
 
 mtls_server: mtls_server.c
 	$(CC) $(OPTIONS) $(OPENSSL_LIBS) -o $@ $^
