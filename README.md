@@ -4,6 +4,8 @@
   - [ ] Update learnings
     - [ ] quick over view of enabling tls on the server side and client side, and then read/write
     - [ ] reading certificates in python and C
+- [x] Day 18
+  - Added [mtls client in python](codegarage/python/mtls_client.py) 
 - Day 17
   - Revisit and fixes to [mtls_server](codegarage/c/mtls_server.c) and [mtls_client](codegarage/c/mtls_client.c).
 - Day 16
