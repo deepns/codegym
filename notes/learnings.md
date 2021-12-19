@@ -2,6 +2,23 @@
 
 Noting down some learnings along the way
 
+## Running a standalone python script in a docker container
+
+A quick way to run simple python scripts in a docker container
+
+docker run command help => `docker run [OPTIONS] IMAGE [COMMAND] [ARG]`
+
+`docker run --rm --volume <path_with_scripts_on_host>:<path_to_script_inside_container> <python_image> python <path_to_script>`
+
+e.g.
+
+```text
+pydockdemo $ docker run --name pydockdemo --rm --volume $PWD:/home python:latest python /home/app.py
+Hello, World
+Running Python version 3.10.1 (main, Dec  8 2021, 03:30:49) [GCC 10.2.1 20210110]
+pydockdemo $
+```
+
 ## OpenSSL Init functions
 
 Prior to 1.1, one has to explicitly initialize the SSL library using during init.
