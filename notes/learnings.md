@@ -2,6 +2,21 @@
 
 Noting down some learnings along the way
 
+## Sharing IPC namespace between containers
+
+1. Start the source container with ipc option as **shareable**
+2. Start the other container sharing ipc, with the ipc option as **container:source-container-name**
+
+e.g.
+
+```text
+# starting first container
+docker run --rm --ipc=shareable --name shmserver --volume $PWD:/home python:latest python /home/shm_server.py
+
+# starting second container
+docker run --rm --ipc=container:shmserver --name shmclient --volume $PWD:/home python:latest python /home/shm_client.py
+```
+
 ## Running a standalone python script in a docker container
 
 A quick way to run simple python scripts in a docker container

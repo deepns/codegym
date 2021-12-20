@@ -1,9 +1,11 @@
 # Daily Dose of Code
 
-- Day 16
+- Day 22
   - [ ] Update learnings
-    - [ ] quick over view of enabling tls on the server side and client side, and then read/write
     - [ ] reading certificates in python and C
+- Day 21
+  - Using shared memory between two [python scripts](codegarage/python/pydockshm/). Beware of  [resource tracker bug](https://bugs.python.org/issue38119).
+  - Sharing shared memory between two python containers
 - Day 20
   - [containerized python script](codegarage/python/pydockdemo/Dockerfile)
   - Running simple python scripts in a container without building a docker image.
