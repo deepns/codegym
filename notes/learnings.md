@@ -2,6 +2,22 @@
 
 Noting down some learnings along the way
 
+## Dumping SSL cert info
+
+- `SSL_get_peer_certificate` get cert info from client SSL object.
+- `X509_get_issuer_name` && `X509_NAME_print_ex_fp` combination to dump the cert info to the desired file pointer.
+
+```c++
+    X509_NAME *issuer = X509_get_issuer_name(cert);
+    X509_NAME *subject = X509_get_subject_name(cert);
+
+    printf("Client Cert issued by:\n");
+    X509_NAME_print_ex_fp(stdout, issuer, 2 /*indent*/, XN_FLAG_ONELINE);
+    printf("\n");
+```
+
+- `X509_NAME_oneline` is deprecated. Use `X509_NAME_print_ex_fp` instead.
+
 ## Sharing IPC namespace between containers
 
 1. Start the source container with ipc option as **shareable**

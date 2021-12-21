@@ -1,8 +1,7 @@
 # Daily Dose of Code
 
 - Day 22
-  - [ ] Update learnings
-    - [ ] reading certificates in python and C
+  - Read SSL cert material sent from the client and print some info about the cert to stdout. See [mtls_server](codegarage/c/mtls_server.c)
 - Day 21
   - Using shared memory between two [python scripts](codegarage/python/pydockshm/). Beware of  [resource tracker bug](https://bugs.python.org/issue38119).
   - Sharing shared memory between two python containers

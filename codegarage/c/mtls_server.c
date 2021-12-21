@@ -118,6 +118,55 @@ void send_to_client(SSL *ssl, int sockfd, char *buf, int buflen)
     }
 }
 
+void show_cert_info(SSL *ssl)
+{
+    X509 *cert = NULL;
+    
+    cert = SSL_get_peer_certificate(ssl);
+    if (!cert) {
+        fprintf(stderr, "Unable to get cert from SSL object\n");
+    }
+
+    /* 
+     * X509_NAME_oneline produces non-standard output and can be
+     * inconsistent at times. So its usage is discouraged in new
+     * applications. Use X509_NAME_print_ex/X509_NAME_print_ex_fp
+     * instead.
+     * https://www.openssl.org/docs/man1.1.1/man3/X509_NAME_oneline.html
+     */
+    
+    // X509_NAME *issuer = X509_get_issuer_name(cert);
+    // char *issuer_info = X509_NAME_oneline(issuer, NULL, 0);
+
+    // if (issuer_info) {
+    //     printf("Cert issued by: %s\n", issuer_info);
+    //     free(issuer_info);
+    // }
+
+    // X509_NAME *subject = X509_get_subject_name(cert);
+    // char *subject_info = X509_NAME_oneline(subject, NULL, 0);
+    // if (subject_info) {
+    //     printf("Cert subject: %s\n", subject_info);
+    // }
+
+    X509_NAME *issuer = X509_get_issuer_name(cert);
+    X509_NAME *subject = X509_get_subject_name(cert);
+
+    printf("Client Cert issued by:\n");
+    X509_NAME_print_ex_fp(stdout, issuer, 2 /*indent*/, XN_FLAG_ONELINE);
+    printf("\n");
+
+    printf("Client Cert subject:\n");
+    X509_NAME_print_ex_fp(stdout, subject, 2 /*indent*/, XN_FLAG_MULTILINE);
+    printf("\n");
+
+    // refcnt taken on pubkey. so must be freed up after use
+    // EVP_PKEY *pubkey = X509_get_pubkey(cert);
+    //EVP_PKEY_free(pubkey);
+
+    X509_free(cert);
+}
+
 int main()
 {
     int port = 9899;
@@ -173,6 +222,8 @@ int main()
             // Once accepted, further operations are done over the SSL object.
             clientId++;
             printf("Connected to client#%d\n", clientId);
+
+            show_cert_info(ssl);
 
             char message[1024] = "\0";
             recv_from_client(ssl, clientsock, &message[0], sizeof(message));

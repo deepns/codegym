@@ -95,7 +95,7 @@ int create_socket(const char *server, int port)
 /*
  * Print some info about the cert in the given SSL object
  */
-void show_certs(SSL *ssl)
+void show_cert_info(SSL *ssl)
 {
     X509 *cert;
 
@@ -171,7 +171,7 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    show_certs(ssl);
+    show_cert_info(ssl);
 
 	char buf[1024];
     bzero(buf, sizeof(buf));
