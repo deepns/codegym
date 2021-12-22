@@ -1,5 +1,6 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include <openssl/evp.h>
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -127,6 +128,8 @@ void show_cert_info(SSL *ssl)
         fprintf(stderr, "Unable to get cert from SSL object\n");
     }
 
+    printf("===============================================\n");
+
     /* 
      * X509_NAME_oneline produces non-standard output and can be
      * inconsistent at times. So its usage is discouraged in new
@@ -160,11 +163,43 @@ void show_cert_info(SSL *ssl)
     X509_NAME_print_ex_fp(stdout, subject, 2 /*indent*/, XN_FLAG_MULTILINE);
     printf("\n");
 
-    // refcnt taken on pubkey. so must be freed up after use
-    // EVP_PKEY *pubkey = X509_get_pubkey(cert);
-    //EVP_PKEY_free(pubkey);
+    // No _fp functions available with ASN1_TIME, so using BIO interfaces.
+    // A good stackoverflow discussion on BIO interfaces
+    // https://stackoverflow.com/questions/51672133/what-are-openssl-bios-how-do-they-work-how-are-bios-used-in-openssl
+    
+    BIO *bio_out;
+    bio_out = BIO_new_fp(stdout, BIO_NOCLOSE);
 
+    printf("Cert valid not before: ");
+    const ASN1_TIME *not_before = X509_get0_notBefore(cert);
+    ASN1_TIME_print(bio_out, not_before);
+    printf("\n");
+
+    printf("Cert valid not after: ");
+    const ASN1_TIME *not_after = X509_get0_notAfter(cert);
+    ASN1_TIME_print(bio_out, not_after);
+    printf("\n");
+
+    // X509_get_pubkey bumps up the refcount on the public key
+    // in the cert. caller must call EVP_PKEY_free on that.
+    EVP_PKEY *pubkey = X509_get_pubkey(cert);
+
+    // Since OpenSSL 1.1, all structures in libssl public headers
+    // have been removed. Callers must use the accessor funtions to
+    // to access the associated values. See https://wiki.openssl.org/index.php/OpenSSL_1.1.0_Changes
+    int type = EVP_PKEY_base_id(pubkey);
+    if (type == EVP_PKEY_RSA) {
+        RSA *rsa = EVP_PKEY_get0_RSA(pubkey);
+        if (rsa) {
+            RSA_print(bio_out, rsa, 0);
+            // other option: RSA_print_fp(stdout, rsa, 0);
+        }
+    }
+    EVP_PKEY_free(pubkey);
+
+    BIO_free(bio_out);
     X509_free(cert);
+    printf("===============================================\n");
 }
 
 int main()
