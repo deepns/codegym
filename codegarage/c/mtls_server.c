@@ -155,6 +155,14 @@ void show_cert_info(SSL *ssl)
     X509_NAME *issuer = X509_get_issuer_name(cert);
     X509_NAME *subject = X509_get_subject_name(cert);
 
+    
+    // No _fp functions available with ASN1_TIME, so using BIO interfaces.
+    // A good stackoverflow discussion on BIO interfaces
+    // https://stackoverflow.com/questions/51672133/what-are-openssl-bios-how-do-they-work-how-are-bios-used-in-openssl
+
+    BIO *bio_out;
+    bio_out = BIO_new_fp(stdout, BIO_NOCLOSE);
+
     printf("Client Cert issued by:\n");
     X509_NAME_print_ex_fp(stdout, issuer, 2 /*indent*/, XN_FLAG_ONELINE);
     printf("\n");
@@ -162,13 +170,6 @@ void show_cert_info(SSL *ssl)
     printf("Client Cert subject:\n");
     X509_NAME_print_ex_fp(stdout, subject, 2 /*indent*/, XN_FLAG_MULTILINE);
     printf("\n");
-
-    // No _fp functions available with ASN1_TIME, so using BIO interfaces.
-    // A good stackoverflow discussion on BIO interfaces
-    // https://stackoverflow.com/questions/51672133/what-are-openssl-bios-how-do-they-work-how-are-bios-used-in-openssl
-    
-    BIO *bio_out;
-    bio_out = BIO_new_fp(stdout, BIO_NOCLOSE);
 
     printf("Cert valid not before: ");
     const ASN1_TIME *not_before = X509_get0_notBefore(cert);
@@ -194,6 +195,10 @@ void show_cert_info(SSL *ssl)
             RSA_print(bio_out, rsa, 0);
             // other option: RSA_print_fp(stdout, rsa, 0);
         }
+    
+        const RSA_METHOD *rsa_method = RSA_get_method(rsa);
+        const char *method_name = RSA_meth_get0_name(rsa_method);
+        printf("RSA method=%s\n", method_name);
     }
     EVP_PKEY_free(pubkey);
 

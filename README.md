@@ -1,5 +1,7 @@
 # Daily Dose of Code
 
+- Day 23
+  - Continued exploring the SSL cert fields. See [mtls_server](codegarage/c/mtls_server.c)
 - Day 22
   - Read SSL cert material sent from the client and print some info about the cert to stdout. See [mtls_server](codegarage/c/mtls_server.c)
 - Day 21
