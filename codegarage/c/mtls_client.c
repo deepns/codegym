@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "cert_util.h"
+
 SSL_CTX* create_context_mtls(const char *certfile,
                             const char *keyfile,
                             const char *cafile,
@@ -92,31 +94,6 @@ int create_socket(const char *server, int port)
     return sockfd;
 }
 
-/*
- * Print some info about the cert in the given SSL object
- */
-void show_cert_info(SSL *ssl)
-{
-    X509 *cert;
-
-    cert = SSL_get_peer_certificate(ssl);
-    if (cert) {
-        X509_NAME *issuer = X509_get_issuer_name(cert);
-        X509_NAME *subject = X509_get_subject_name(cert);
-        char *info;
-        info = X509_NAME_oneline(issuer, 0, 0);
-        printf("Cert issued by: %s\n", info);
-        free(info);
-
-        info = X509_NAME_oneline(subject, 0, 0);
-        printf("Cert subject is: %s\n", info);
-        free(info);
-        X509_free(cert);
-    } else {
-        printf("Unable to get peer certificate\n");
-    }
-}
-
 int main()
 {
     /*
@@ -171,7 +148,8 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    show_cert_info(ssl);
+    printf("Showing server certificate:\n");
+    show_cert_info(SSL_get_peer_certificate(ssl));
 
 	char buf[1024];
     bzero(buf, sizeof(buf));

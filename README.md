@@ -1,5 +1,11 @@
 # Daily Dose of Code
 
+- Day 27
+  - Read X509 cert from PEM format file (See [print_cert](codegarage/c/print_cert.c), [cert_file_read](codegarage/c/cert_util.c))
+  - Show details about Elliptic Curve key (See [show_cert_info](codegarage/c/cert_util.c)))
+- Day 26 - #nocodingday
+- Day 25 - #nocodingday
+- Day 24 - #nocodingday
 - Day 23
   - Continued exploring the SSL cert fields. See [mtls_server](codegarage/c/mtls_server.c)
 - Day 22
