@@ -9,7 +9,63 @@
 
 #include "uds.h"
 
-int create_server_uds_socket()
+#define BUFFER_SIZE 256
+
+/**
+ * @brief Set the up server's domain socket
+ * 
+ * @param socket_name path to socket
+ * @param backlog number of backlog connections
+ * @return socket descriptor 
+ */
+int setup_socket(const char *socket_name, int backlog);
+
+/**
+ * @brief Handle client connection
+ * 
+ * @param client_id client identifier
+ * @param sockfd socket descriptor
+ */
+void handle_client(int client_id, int sockfd);
+
+/**
+ * @brief Check error code and exit if error is fatal (-1)
+ * 
+ * @param err 
+ * @param errmsg 
+ */
+void check_err(int err, char *errmsg);
+
+int main()
+{
+    int serversock = setup_socket(SOCKET_NAME, 2/* backlog */);
+    int client_id = 0;
+
+    // listen for connections and accept
+    while (1) {
+        /*
+         * for network sockets, we usually specify the addr and length
+         * to get the client address details. Since domain sockets are
+         * used only within the same host, addr is not required.
+         * If we do pass one, accept() sets the address family (AF_UNIX) only.
+         * (gdb) p caddr
+            $1 = {
+                sun_family = 1,
+                sun_path = '\000' <repeats 107 times>
+            }
+         */
+        int clientsockfd = accept(serversock, NULL /* addr */, NULL /* addr len */);
+        check_err(clientsockfd, "accept() failed");
+
+        handle_client(++client_id, clientsockfd);
+    }
+
+    close(serversock);
+    unlink(SOCKET_NAME);
+    return 0;
+}
+
+int setup_socket(const char *socket_name, int backlog)
 {
     int sockfd;
 
@@ -17,61 +73,51 @@ int create_server_uds_socket()
     struct sockaddr_un addr;
     bzero(&addr, sizeof(addr));
     addr.sun_family = AF_UNIX;
-    strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path));
+    strncpy(addr.sun_path, socket_name, sizeof(addr.sun_path));
 
-    // clear the existing socket file
-    unlink(SOCKET_NAME);
+    // clear the socket file if exists
+    unlink(socket_name);
 
     // create the socket
     sockfd = socket(PF_UNIX, SOCK_STREAM, 0);
-    if (sockfd < 0) {
-        perror("Failed to create socket");
-        exit(EXIT_FAILURE);
-    }
+    check_err(sockfd, "Failed to create socket");
     
     // bind
-    if (bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
-        perror("Failed to bind the socket");
-        exit(EXIT_FAILURE);
-    }
+    check_err(bind(sockfd, (struct sockaddr *)&addr, sizeof(addr)),
+              "bind() failed");
 
     // listen
-    if (listen(sockfd, 2 /*backlog*/) < 0) {
-        perror("Failed to enable listening mode on the socket");
-        exit(EXIT_FAILURE);
-    }
+    check_err(listen(sockfd, backlog),
+              "Failed to enable listening mode on the socket");
     
     return sockfd;
 }
 
-int main()
+void handle_client(int client_id, int sockfd)
 {
-    int serversock = create_server_uds_socket();
-    int client_id = 0;
+    char buffer[BUFFER_SIZE] = "\0";
+    ssize_t bytesread = -1;
+    ssize_t byteswritten = -1;
 
-    // listen for connections and accept
-    while (1) {
-        int clientsockfd = accept(serversock, NULL, NULL);
+    printf("client_id=%d\n", client_id);
 
-        if (clientsockfd < 0) {
-            perror("failed to accept client");
-            close(serversock);
-            exit(EXIT_FAILURE);
-        }
+    bytesread = read(sockfd, buffer, BUFFER_SIZE);
+    check_err(bytesread, "read() failed");
+    buffer[bytesread] = '\0';
+    printf("msg_from_client=%s, msglen=%ld\n", buffer, bytesread);
 
-        client_id++;
+    snprintf(buffer, BUFFER_SIZE, "Hello, there. You are client#%d", client_id);
+    byteswritten = write(sockfd, buffer, strlen(buffer));
+    check_err(byteswritten, "write() failed");
+    printf("msg_to_client=%s, msglen=%ld\n", buffer, byteswritten);
 
-        char clientdata[1024] = "\0";
-        int bytesrecv = recv(clientsockfd, &clientdata, sizeof(clientdata), 0 /* flags */);
-        printf("client_id=%d, msg=%s, msg_length=%d\n", client_id, clientdata, bytesrecv);
+    close(sockfd);
+}
 
-        char messagetoclient[2048];
-        sprintf(messagetoclient, "Hello, there! You are client#%d", client_id);
-        int bytessent = send(clientsockfd, &messagetoclient, strlen(messagetoclient), 0 /* flags */);
-
-        close(clientsockfd);
+void check_err(int err, char *errmsg)
+{
+    if (err == -1) {
+        perror(errmsg);
+        exit(EXIT_FAILURE);
     }
-
-    close(serversock);
-    return 0;
 }

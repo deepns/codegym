@@ -1,5 +1,5 @@
 CC=clang
-OPTIONS=-Wall
+CFLAGS=-Wall -g
 EXES=uds_client uds_server
 
 all: $(EXES)
@@ -11,10 +11,10 @@ all: $(EXES)
 # $^ - name of all prerequisites
 
 uds_server: uds_server.c
-	$(CC) -o $@ $^
+	$(CC) $(CFLAGS) -g -o $@ $^
 
 uds_client: uds_client.c
-	$(CC) -o $@ $^
+	$(CC) $(CFLAGS) -g -o $@ $^
 	
 clean:
 	rm $(EXES)
