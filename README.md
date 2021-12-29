@@ -1,5 +1,7 @@
 # Daily Dose of Code
 
+- Day 28
+  - Sending messages over unix domain sockets (See [server](codegarage/c/domain_sockets/uds_server.c), [client](codegarage/c/domain_sockets/uds_client.c))
 - Day 27
   - Read X509 cert from PEM format file (See [print_cert](codegarage/c/print_cert.c), [cert_file_read](codegarage/c/cert_util.c))
   - Show details about Elliptic Curve key (See [show_cert_info](codegarage/c/cert_util.c)))

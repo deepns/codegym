@@ -1,0 +1,1 @@
+#define SOCKET_NAME "/tmp/newsock.sock"

@@ -4,20 +4,26 @@
 #include <stdlib.h> // for EXIT_FAILURE
 #include <strings.h> // for bzero
 #include <unistd.h> // for close()
-#include <string.h>
+#include <string.h> // for strlen
+#include <sys/un.h> // for sockaddr_un
 
-int create_server_socket(int port)
+#include "uds.h"
+
+int create_server_uds_socket()
 {
     int sockfd;
-    struct sockaddr_in addr;
 
+    // Use sockaddr_un for UNIX domain socket addresses
+    struct sockaddr_un addr;
     bzero(&addr, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, SOCKET_NAME, sizeof(addr.sun_path));
+
+    // clear the existing socket file
+    unlink(SOCKET_NAME);
 
     // create the socket
-    sockfd = socket(PF_INET, SOCK_STREAM, 0);
+    sockfd = socket(PF_UNIX, SOCK_STREAM, 0);
     if (sockfd < 0) {
         perror("Failed to create socket");
         exit(EXIT_FAILURE);
@@ -40,29 +46,27 @@ int create_server_socket(int port)
 
 int main()
 {
-    int port = 9699;
-    int serversock = create_server_socket(port);
+    int serversock = create_server_uds_socket();
+    int client_id = 0;
 
     // listen for connections and accept
     while (1) {
-        struct sockaddr_in addr;
-        unsigned int len = sizeof(addr);
-        
-        int clientsockfd = accept(serversock, (struct sockaddr *)&addr, &len);
+        int clientsockfd = accept(serversock, NULL, NULL);
+
         if (clientsockfd < 0) {
             perror("failed to accept client");
             close(serversock);
             exit(EXIT_FAILURE);
         }
 
-        printf("client_port=%d\n", addr.sin_port);
+        client_id++;
 
         char clientdata[1024] = "\0";
         int bytesrecv = recv(clientsockfd, &clientdata, sizeof(clientdata), 0 /* flags */);
-        printf("Received msg:%s of length:%d from client\n", clientdata, bytesrecv);
+        printf("client_id=%d, msg=%s, msg_length=%d\n", client_id, clientdata, bytesrecv);
 
         char messagetoclient[2048];
-        sprintf(messagetoclient, "hello, there! You sent (%s)", clientdata);
+        sprintf(messagetoclient, "Hello, there! You are client#%d", client_id);
         int bytessent = send(clientsockfd, &messagetoclient, strlen(messagetoclient), 0 /* flags */);
 
         close(clientsockfd);
