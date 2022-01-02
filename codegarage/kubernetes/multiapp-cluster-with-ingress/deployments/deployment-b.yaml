@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: second-app
+  template:
+    metadata:
+      labels:
+        app: second-app
+    spec:
+      containers:
+      - name: httpbin
+        image: kennethreitz/httpbin
+        ports:
+        - containerPort: 80
+        env:
+        - name: GUNICORN_CMD_ARGS
+          value: "--capture-output --error-logfile -
+                  --access-logfile - --access-logformat '%(h)s %(t)s
+                  %(r)s %(s)s Host: %({Host}i)s}'"

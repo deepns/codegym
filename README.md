@@ -1,5 +1,7 @@
 # Daily Dose of Code
 
+- Day 31
+  - Deployed a [multiapp cluster](codegarage/kubernetes/multiapp-cluster-with-ingress/deployments/) in minikube. Created multi service with an ingress controller.
 - Day 30
   - Deployed a simple webapp on a single node k8s cluster using minikube (see [testapp](codegarage/kubernetes/testapp/README.md))
 - Day 29
@@ -25,7 +27,7 @@
   - Running simple python scripts in a container without building a docker image.
 - Day 19 - #nocodingday
 - Day 18
-  - Added [mtls client in python](codegarage/python/mtls_client.py) 
+  - Added [mtls client in python](codegarage/python/mtls_client.py)
 - Day 17
   - Revisit and fixes to [mtls_server](codegarage/c/mtls_server.c) and [mtls_client](codegarage/c/mtls_client.c).
 - Day 16

@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: apps-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+  labels:
+    name: apps-ingress
+spec:
+  rules:
+    - host: myhost.com # set myhost.com to minikube's IP in /etc/hosts in minikube
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/anything"
+            backend:
+              service:
+                name: first-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: "/uuid"
+            backend:
+              service:
+                name: second-service
+                port:
+                  number: 80
