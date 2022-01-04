@@ -1,5 +1,7 @@
 # Daily Dose of Code
 
+- Day 32
+  - #practice problem. [longest-substr-with-ones-after-replacement](practice/longest-subarray-with-ones-after-replacement.py)
 - Day 31
   - Deployed a [multiapp cluster](codegarage/kubernetes/multiapp-cluster-with-ingress/deployments/) in minikube. Created multi service with an ingress controller.
 - Day 30
