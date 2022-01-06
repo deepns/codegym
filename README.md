@@ -1,5 +1,9 @@
 # Daily Dose of Code
 
+- Day 34
+  - [echo server and client](codegarage/python/echo_server_client/echo_server_threaded.py) in python. Also, added a verion of echo server with client processing in separate thread.
+- Day 33
+  - starting to learn non-blocking sockets
 - Day 32
   - #practice problem. [longest-substr-with-ones-after-replacement](practice/longest-subarray-with-ones-after-replacement.py)
 - Day 31

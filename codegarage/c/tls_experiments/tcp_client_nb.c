@@ -29,15 +29,20 @@ int main()
 
     sockfd = socket(PF_INET, SOCK_STREAM, 0);
 
-    // what are we doing here?
+    // get the file status flags, OR with additional
+    // flags (e.g. O_NONBLOCK) and set the new flags
     int flags = fcntl(sockfd, F_GETFL, 0);
-    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);     
+    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
-    if (connect(sockfd, (struct sockaddr*)&addr, sizeof(addr)) != 0)
-    {
-        close(sockfd);
-        perror(SERVER);
-        abort();
+    int err = -1;
+    if ((err = connect(sockfd, (struct sockaddr*)&addr, sizeof(addr))) < 0) {
+        printf("Connected to socket----, err = %d\n", err);   
+        if (err != EWOULDBLOCK || err != EINPROGRESS) {
+            close(sockfd);
+            perror("connect() failed");
+            exit(EXIT_FAILURE);
+        }
+        printf("Connected to socket++++++++++   ??\n");   
     }
 
 	char buf[1024];
