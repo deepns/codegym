@@ -1,5 +1,11 @@
 # Daily Dose of Code
 
+- Day 38
+  - [echo server, multiplexing using select](codegarage/c/select/select_server.c)
+- Day 37
+  - [echo server client](codegarage/c/echo_server_client/echo_server.c) in C
+- Day 36 #nocodingday
+- Day 35 #nocodingday
 - Day 34
   - [echo server and client](codegarage/python/echo_server_client/echo_server_threaded.py) in python. Also, added a verion of echo server with client processing in separate thread.
 - Day 33
