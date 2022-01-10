@@ -1,86 +1,16 @@
-# Daily Dose of Code
+# Code Garage
 
-- Day 38
-  - [echo server, multiplexing using select](codegarage/c/select/select_server.c)
-- Day 37
-  - [echo server client](codegarage/c/echo_server_client/echo_server.c) in C
-- Day 36 #nocodingday
-- Day 35 #nocodingday
-- Day 34
-  - [echo server and client](codegarage/python/echo_server_client/echo_server_threaded.py) in python. Also, added a verion of echo server with client processing in separate thread.
-- Day 33
-  - starting to learn non-blocking sockets
-- Day 32
-  - #practice problem. [longest-substr-with-ones-after-replacement](practice/longest-subarray-with-ones-after-replacement.py)
-- Day 31
-  - Deployed a [multiapp cluster](codegarage/kubernetes/multiapp-cluster-with-ingress/deployments/) in minikube. Created multi service with an ingress controller.
-- Day 30
-  - Deployed a simple webapp on a single node k8s cluster using minikube (see [testapp](codegarage/kubernetes/testapp/README.md))
-- Day 29
-  - Reading and writing files using io vectors with readv and writev system calls. (sample [here](codegarage/c/vectored_io/vio.c))
-  - Modified UDS [server](codegarage/c/domain_sockets/uds_server.c) and [client](codegarage/c/domain_sockets/uds_client.c) to use `read()`/`write()` instead of `send()`/`recv()` calls.
-- Day 28
-  - Sending messages over unix domain sockets (See [server](codegarage/c/domain_sockets/uds_server.c), [client](codegarage/c/domain_sockets/uds_client.c))
-- Day 27
-  - Read X509 cert from PEM format file (See [print_cert](codegarage/c/print_cert.c), [cert_file_read](codegarage/c/cert_util.c))
-  - Show details about Elliptic Curve key (See [show_cert_info](codegarage/c/cert_util.c)))
-- Day 26 - #nocodingday
-- Day 25 - #nocodingday
-- Day 24 - #nocodingday
-- Day 23
-  - Continued exploring the SSL cert fields. See [mtls_server](codegarage/c/mtls_server.c)
-- Day 22
-  - Read SSL cert material sent from the client and print some info about the cert to stdout. See [mtls_server](codegarage/c/mtls_server.c)
-- Day 21
-  - Using shared memory between two [python scripts](codegarage/python/pydockshm/). Beware of  [resource tracker bug](https://bugs.python.org/issue38119).
-  - Sharing shared memory between two python containers
-- Day 20
-  - [containerized python script](codegarage/python/pydockdemo/Dockerfile)
-  - Running simple python scripts in a container without building a docker image.
-- Day 19 - #nocodingday
-- Day 18
-  - Added [mtls client in python](codegarage/python/mtls_client.py)
-- Day 17
-  - Revisit and fixes to [mtls_server](codegarage/c/mtls_server.c) and [mtls_client](codegarage/c/mtls_client.c).
-- Day 16
-  - Added [tcp client with mutual TLS](codegarage/c/mtls_client.c)
-  - Learnt about difference in TLS handshake behavior between TLS versions 1.2 and 1.3. See the comments in [mtls_client](codegarage/c/mtls_client.c)
-- Day 15
-  - Added a [tcp server with mutual TLS](codegarage/c/mtls_server.c)
-- Day 14
-  - Added a [simple tcp server](codegarage/c/tcp_server.c) and [simple tls server](codegarage/c/tls_server.c)
-  - Quick refresher of [makefile automatic variables](codegarage/c/Makefile)
-- Day 13 (12/10/21)
-  - Dump SSL cert info ([python](codegarage/python/ssl_socket_ex.py), [c](codegarage/c/tls_client.c#62))
-- Day 12 (12/09/21)
-  - [simple tcp client in C](codegarage/c/tcp_client.c)
-  - [simple tls tcp client in c](codegarage/c/tls_client.c)
-  - [python ssl socket](codegarage/python/ssl_socket_ex.py)
-- Day 11 (12/08/21)
-  - [continue learning ssl sockets](codegarage/python/ssl_socket_ex.py)
-- Day 10 (12/07/21)
-  - [Python Socket Programming](codegarage/python/socket_ex.py)
-- Day 9
-  - [longest-substring-after-k-replacements](practice/length-of-longest-substring.py)
-- Day 8
-  - [fruits-into-baskets](practice/fruits-into-baskets.py)
-  - [longest-substring-with-all-distinct](practice/length-of-longest-substring-with-all-distinct.py)
-- Day 7
-  - [longest-subarray-with-max-k-distinct](practice/length-of-longest-substring-with-no-more-than-k-distinct-chars.py)
-- Day 6
-  - [smallest-subarray-with-sum-k](practice/smallest-subarray-with-sum.py)
-- Day 5
-  - [average-of-contiguous-subarray](practice/find-average-contiguous-subarray.py)
-  - [maximum-sum-subarray](practice/maximum-sum-subarray.py)
-- Day 4
-  - [rearrange-list](practice/rearrange.py)
-  - [rearrange-list-max-min](practice/max-min-rearrange.py)
-- Day 3
-  - [right-rotate](practice/right-rotate.py)
-- Day 2 - some practice challenges on python lists
-  - [find-product](practice/find-product.py)
-  - [find-second-max](practice/find-second-maximum.py)
-- Day 1 - Python refresher
-  - [list-operations](practice/remove-even-numbers-list.py)
-  - [merge-sorted-lists](practice/merge-two-sorted-lists.py)
-  - [find-2sum](practice/find-two-numbers-add-upto-k.py)
+Welcome to my code garage. This is my space where I try to learn new things, fail, learn and share.
+
+- [Simple TCP client/server in Python](python/echo_server_client/)
+- [Containerizing a python script](python/pydockdemo/)
+- [Share shared-memory between two containers](python/pydockshm/)
+- [Unix domain sockets](c/domain_sockets/)
+- [Simple TCP client/server in C](c/echo_server_client/)
+- [Simple TCP client/server in C with TLS](c/tls_experiments/tls_server.c)
+- [Simple TCP client/server in C with mutual TLS](c/tls_experiments/mtls_server.c)
+- [Read X509 certificates using openssl library](c/tls_experiments/cert_util.c)
+- [I/O Multiplexing with select()](c/select/)
+- [Vectored I/O](c/vectored_io/)
+- [Deploying a webapp in a minikube k8s cluster](kubernetes/testapp/README.md)
+- [Generate SSL certificates using openssl](scripts/ssl-certs-gen/generate_ssl_certs.sh)
