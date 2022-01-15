@@ -2,7 +2,7 @@
 
 ## Things to try out
 
-- [ ] Nonblocking TCP client/server
+- [x] Nonblocking TCP client/server
 - [ ] Running zookeeper cluster locally with docker
 - [x] poll
 - [ ] epoll
@@ -10,7 +10,9 @@
 ## Daily log
 
 - Day 43
-  - Learnt about `poll()` system call and its usage. Added a sample [code]([../c/poll/poll_server.c] here)
+  - Learning about **poll()** system call and its usage. Added a sample [code]([../c/poll/poll_server.c] here)
+  - Learning about **non-blocking** sockets. added a simple client/server [demo code](../c/non_blocking/nb_server.c)
+  - Didn't know strace is specific to Linux. equivalent tool in macOS is **dtruss** which is a shell script wrapper around **dtrace**
 - Day 42 #nocodingday
 - Day 41 #nocodingday
 - Day 40 #nocodingday
