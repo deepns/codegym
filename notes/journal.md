@@ -4,9 +4,17 @@
 
 - [ ] Nonblocking TCP client/server
 - [ ] Running zookeeper cluster locally with docker
+- [x] poll
+- [ ] epoll
 
 ## Daily log
 
+- Day 43
+  - Learnt about `poll()` system call and its usage. Added a sample [code]([../c/poll/poll_server.c] here)
+- Day 42 #nocodingday
+- Day 41 #nocodingday
+- Day 40 #nocodingday
+- Day 39 #nocodingday
 - Day 38
   - [echo server, multiplexing using select](codegarage/c/select/select_server.c)
 - Day 37
