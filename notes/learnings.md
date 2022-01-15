@@ -2,6 +2,63 @@
 
 Noting down some learnings along the way
 
+## Tracing system calls of a program in macOS
+
+I didn't know strace didn't exist in macOS. The equivalent of strace in macOS is **dtrace**. macOS has a wrapper shell script **dtruss** around dtrace.
+
+```console
+~ % which dtrace
+/usr/sbin/dtrace
+~ % which dtruss
+/usr/bin/dtruss
+~ % dtruss --help
+/usr/bin/dtruss: illegal option -- -
+USAGE: dtruss [-acdefholLs] [-t syscall] { -p PID | -n name | command | -W name }
+
+          -p PID          # examine this PID
+          -n name         # examine this process name
+          -t syscall      # examine this syscall only
+          -W name         # wait for a process matching this name
+          -a              # print all details
+          -c              # print syscall counts
+          -d              # print relative times (us)
+          -e              # print elapsed times (us)
+          -f              # follow children
+          -l              # force printing pid/lwpid
+          -o              # print on cpu times
+          -s              # print stack backtraces
+          -L              # don't print pid/lwpid
+          -b bufsize      # dynamic variable buf size
+   eg,
+       dtruss df -h       # run and examine "df -h"
+       dtruss -p 1871     # examine PID 1871
+       dtruss -n tar      # examine all processes called "tar"
+       dtruss -f test.sh  # run test.sh and follow children
+~ %
+```
+
+## Set sockets in non-blocking mode
+
+TCP sockets operate in blocking mode by default. They can be turned into non-blocking using **fcntl** or **ioctl** system calls. **ioctl** predates **fcntl**, but can be inconsistent on different implementations and does not support all types of descriptors. **fcntl** is portable, and supports more descriptor types.
+
+```c++
+
+    // Set the socket in non-blocking mode using ioctl
+    int ON = 1;
+    err = ioctl(sockfd, FIONBIO, (char *)&ON);
+    if (err < 0) {
+        perror("ioctl() failed");
+        exit(EXIT_FAILURE);
+    }
+
+    int flags = fcntl(sockfd, F_GETFL, 0);
+    err = fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+    if (err < 0) {
+        perror("fcntl() failed");
+        exit(EXIT_FAILURE);
+    }
+```
+
 ## Dumping SSL cert info
 
 - `SSL_get_peer_certificate` get cert info from client SSL object.

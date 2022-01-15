@@ -125,7 +125,10 @@ int main(int argc, char **argv)
     // what are some practical use cases for that?
     // Turning on non-blocking mode
     int flags = fcntl(serverconn, F_GETFL, 0);
-    fcntl(serverconn, F_SETFL, flags | O_NONBLOCK);
+    if (fcntl(serverconn, F_SETFL, flags | O_NONBLOCK) < 0) {
+        perror("fcntl failed");
+        exit(EXIT_FAILURE);
+    }
 
     process_connection(serverconn);
     close(serverconn);
