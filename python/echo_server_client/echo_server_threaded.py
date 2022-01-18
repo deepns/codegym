@@ -9,12 +9,13 @@ import threading
 
 def handle_connection(conn: socket.socket):
     """ Handler to process client connection """
-    data = conn.recv(256).decode('utf-8')
-    # getsockname() gets the addr of the local endpoint
-    # getpeername() gets the addre of the remote endpoint
-    print(f'addr={conn.getpeername()}, data={data}')
-    conn.send(data.encode('utf-8'))
-    conn.close()
+    while True:
+        # TODO Handle connection close error
+        data = conn.recv(256).decode('utf-8')
+        # getsockname() gets the addr of the local endpoint
+        # getpeername() gets the addre of the remote endpoint
+        print(f'addr={conn.getpeername()}, data={data}')
+        conn.send(data.encode('utf-8'))
 
 def run_server(host, port, backlog=5):
     """ Start the echo server """
@@ -24,6 +25,7 @@ def run_server(host, port, backlog=5):
     #     sock.bind((host, port))
     #     sock.listen(5)   
     with socket.create_server((host, port), backlog=backlog) as sock:
+        print(f'Server listening at {host}:{port}...')
         connid = 0
         while True:
             connection, connaddr = sock.accept()
