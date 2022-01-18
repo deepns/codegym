@@ -2,6 +2,19 @@
 
 Noting down some learnings along the way
 
+## I/O multiplexing with select and poll
+
+- Both **select()** and **poll()** are system calls to multiplex I/O among multiple file descriptors (which can be files, sockets, pipes, fifo etc.)
+- select
+  - declare bit sets (for each of read, write, error operations) for list of sockets to monitor
+  - call `select(max_fd, read_fd_set, write_fd_set, error_fd_set, NULL /*timeout*/)`
+  - here `max_fd` is the value of the maximum file descriptor. The default value can be obtained from `FD_SETSIZE`.`select` would modify the given fdsets with only the bit of the actual file descriptors available for the given op.
+  - Use **FD_SET(fd, fdset)** to set a particular fd in the given fdset.
+  - Once select returns, walk all the FDs and operate on the ones whose bit is set in the operation fdset we passed to `select()`.
+  - The onus is on the user to keep track of the maximum file descriptor of the process. for e.g. say a server is listening to two sockets simultaneously. Along with the server socket and two client connections, we have three in total but cannot set `nfds` to 3. Need to set max(all known fds) + 1
+  - expensive due to the need to lookup all file descriptors each time to check for readiness
+- poll
+
 ## Tracing system calls of a program in macOS
 
 I didn't know strace didn't exist in macOS. The equivalent of strace in macOS is **dtrace**. macOS has a wrapper shell script **dtruss** around dtrace.
@@ -58,6 +71,16 @@ TCP sockets operate in blocking mode by default. They can be turned into non-blo
         exit(EXIT_FAILURE);
     }
 ```
+
+- When accepting connections on a non-blocking socket, **accept()** would fail with **errno** set to **EWOULDBLOCK** if no connections are waiting to connect
+- Likewise, **read()/recv()** would fail with **errno** set to **EAGAIN** if there are no data waiting to be read.
+- If **write()/send()** unable to write all the given data, it would fail with **errno** set to **EAGAIN** if data could not be written immediately.
+
+### References
+
+- [SO Thread](https://stackoverflow.com/questions/1150635/unix-nonblocking-i-o-o-nonblock-vs-fionbio)
+- [Julia Evans](https://jvns.ca/blog/2017/06/03/async-io-on-linux--select--poll--and-epoll/)
+- [devarea](https://devarea.com/linux-io-multiplexing-select-vs-poll-vs-epoll/#.X1hNMNZS9Nc)
 
 ## Dumping SSL cert info
 

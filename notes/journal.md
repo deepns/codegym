@@ -6,9 +6,14 @@
 - [ ] Running zookeeper cluster locally with docker
 - [x] poll
 - [ ] epoll
+- [ ] async IO
 
 ## Daily log
 
+- Day 45
+  - Learnt more on tracing syscalls using **dtruss** in macOS.
+- Day 44
+  - Added my notes on select in the learning note.
 - Day 43
   - Learning about **poll()** system call and its usage. Added a sample [code]([../c/poll/poll_server.c] here)
   - Learning about **non-blocking** sockets. added a simple client/server [demo code](../c/non_blocking/nb_server.c)
