@@ -10,6 +10,9 @@
 
 ## Daily log
 
+- Day 46
+  - Learning epoll, added an [echo server](../c/epoll/epoll_server.c) in LEVEL Triggered mode (works similar to poll()). will add a separate example for Edge Triggered, with a non-blocking client conn.
+  - Didn't add a client this time. Used `telnet <hostname> <IP>` instead.
 - Day 45
   - Learnt more on tracing syscalls using **dtruss** in macOS.
 - Day 44
