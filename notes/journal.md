@@ -5,11 +5,14 @@
 - [x] Nonblocking TCP client/server
 - [ ] Running zookeeper cluster locally with docker
 - [x] poll
-- [ ] epoll
+- [x] epoll
 - [ ] async IO
+- [ ] Connect to ubuntu VM from vscode using the remote-ssh extension
 
 ## Daily log
 
+- Day 47
+  - Learning epoll. added a [echo server](../c/epoll/epoll_server_et.c) in edge triggere mode. Been using telnet to talk to the server programs in the last few days.
 - Day 46
   - Learning epoll, added an [echo server](../c/epoll/epoll_server.c) in LEVEL Triggered mode (works similar to poll()). will add a separate example for Edge Triggered, with a non-blocking client conn.
   - Didn't add a client this time. Used `telnet <hostname> <IP>` instead.
