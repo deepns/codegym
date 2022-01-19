@@ -11,14 +11,14 @@
 #define BUFFER_SIZE 128
 #define SERVER_PORT 11011
 #define SERVER_BACKLOG 10
+#define MAX_EVENTS 5
+#define POLL_TIMEOUT_MS 30000
 
 /*
- * Trying out select to multiplex I/O between multiple sockets.
- * Server is a simple echo server that reads some text from the
- * client and writes it back on the same channel. If client says
- * 'bye', server will close the client connection. We will use
- * 'select' to check for readiness of the server and client sockets
- * and act on them.
+ * Trying out I/O multiplexing using blocking sockets and epoll
+ * in level-triggered mode. Server is a simple echo server that reads
+ * a block of data from client and writes the same back to the client.
+ * If client says 'bye', server will close the client connection.
  */
 
 /**
@@ -125,6 +125,13 @@ void handle_connection(int sockfd, int epollfd)
     buf[bytesread] = '\0';
     if (strcmp(buf, "bye") == 0) {
         printf("Closing the connection...bye\n");
+        /*
+         * Kernel automatically removes the file descriptor from the
+         * epoll interest list when the file descriptor is closed
+         * (if no other handle is open to the same descriptor).
+         * So EPOLL_CTL_DEL is not really needed here.
+         * Explicitly removing it just for experimentation purpose.
+         */
         check_err(epoll_ctl(epollfd, EPOLL_CTL_DEL, sockfd, NULL),
                 "epoll_ctl(DEL) failed");
         close(sockfd);
@@ -133,9 +140,6 @@ void handle_connection(int sockfd, int epollfd)
         write(sockfd, (const void *)buf, bytesread);
     }
 }
-
-#define MAX_EVENTS 5
-#define POLL_TIMEOUT_MS 30000
 
 int main(int argc, char **argv)
 {
