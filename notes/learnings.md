@@ -144,7 +144,7 @@ From 1.1 onwards, no explicit initialization is needed. It is taken care by the 
 
 ## SSL_connect behavior difference between TLSv1.2 and TLSv1.3
 
-There is a slight difference in behavior between TLSv1.2 and TLSv1.3 in terms of validating the certificate during handshake.In TLSv1.3, SSL_connect() would succeed even if the server rejects client certificate (for e.g. client's cert expired, or invalid, or didn't present at all/). 
+There is a slight difference in behavior between TLSv1.2 and TLSv1.3 in terms of validating the certificate during handshake.In TLSv1.3, SSL_connect() would succeed even if the server rejects client certificate (for e.g. client's cert expired, or invalid, or didn't present at all/).
 
 Subsequently SSL_write() would also succeed even though server had not accepted the connection fully. The buffer will be written to the socket, but server would not read it. However, SSL_read would fail if the server hadn't accepted the connection.
 
