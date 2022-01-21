@@ -31,6 +31,13 @@ func GetFunc(op string) func(int, int) int {
 	}
 }
 
+// mod returns the modulus of x by y.
+// though the name begins with lowercase, it can still be
+// accessed in another file under the same package
+func Mod(x int, y int) int {
+	return x % y
+}
+
 // Double is an example for FuncWithPointerArgs
 // doubles given the number in place
 func Double(ptrA *int) {
