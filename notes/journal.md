@@ -6,15 +6,17 @@
 - [ ] Running zookeeper cluster locally with docker
 - [x] poll
 - [x] epoll
-- [ ] async IO
+- [x] async IO
   - [x] basic signal handling
-  - [ ] handling SIGIO with sigaction
+  - [x] handling SIGIO with sigaction
 - [x] Connect to ubuntu VM from vscode using the remote-ssh extension
 
 ## Daily log
 
 - Day 51
   - #signal handling - handling return values
+  - #signal handling - with sigaction()
+  - #signal handling - sigio on non-blocking sockets. This turned out to be a good learning. Tried to read from nonblocking sockets. apparently, sigio tells us only one fd even when multiple file descriptors are ready. I thought a signal would be delivered independently for each fd that is registered with O_ASYNC. I guess we should maintain the list of nonblocking fds to read, when SIGIO is fired, attempt read from all of them.
 - Day 50
   - learning #signal handling in C.
 - Day 49
