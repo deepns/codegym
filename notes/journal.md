@@ -13,6 +13,8 @@
 
 ## Daily log
 
+- Day 51
+  - #signal handling - handling return values
 - Day 50
   - learning #signal handling in C.
 - Day 49
