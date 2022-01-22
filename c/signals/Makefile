@@ -1,13 +1,13 @@
 CC=clang
 CFLAGS=-g -Wall -Werror
-EXES=signal signal_multiple signal_with_return sigaction_ex
+EXES=signal_ex signal_multiple signal_with_return sigaction_ex
 RM=rm -rf
 
 all: $(EXES)
 
 # $@ - file name of the target of the rule
 # $^ - name of all prerequisites
-signal: signal.c
+signal_ex: signal_ex.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 signal_multiple: signal_multiple.c
