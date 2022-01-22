@@ -1,6 +1,6 @@
 CC=clang
 CFLAGS=-g -Wall -Werror
-EXES=signal signal_multiple
+EXES=signal signal_multiple signal_with_return sigaction_ex
 RM=rm -rf
 
 all: $(EXES)
@@ -11,6 +11,12 @@ signal: signal.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 signal_multiple: signal_multiple.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+signal_with_return: signal_with_return.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+sigaction_ex: sigaction_ex.c
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
