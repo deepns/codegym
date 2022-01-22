@@ -7,10 +7,14 @@
 - [x] poll
 - [x] epoll
 - [ ] async IO
+  - [x] basic signal handling
+  - [ ] handling SIGIO with sigaction
 - [x] Connect to ubuntu VM from vscode using the remote-ssh extension
 
 ## Daily log
 
+- Day 50
+  - learning #signal handling in C.
 - Day 49
   - learning #golang. added some sample code.
   - unclear on how the golang module dependency works. how to import local packages before publishing?
