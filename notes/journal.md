@@ -13,6 +13,9 @@
 
 ## Daily log
 
+- Day 52 (#golang)
+  - reading from standard input
+  - string manipulation, type conversion using strconv, strings package
 - Day 51
   - #signal handling - handling return values
   - #signal handling - with sigaction()
