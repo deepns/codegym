@@ -28,7 +28,7 @@ SSL_CTX* create_context_mtls(const char *certfile,
     // present at all/). First read from the client application would then
     // fail since the underlying connection is already closed by the server.
     // In case of TLSv1.2, SSL_connect() would fail if there is a failure
-    // in TLS handshake. 
+    // in TLS handshake.
     // This [issue](https://github.com/openssl/openssl/issues/8500)
     // has some good comments explaining this version difference.
 
@@ -42,23 +42,19 @@ SSL_CTX* create_context_mtls(const char *certfile,
         return NULL;
     }
 
-    if (context) {
-        /*
-        * All the SSL_CTX_xxx functions below return 1 on success.
-        */
-        if ((SSL_CTX_use_certificate_chain_file(context, certfile) == 1) &&
-            (SSL_CTX_use_PrivateKey_file(context, keyfile, SSL_FILETYPE_PEM) == 1) &&
-            (SSL_CTX_load_verify_locations(context, cafile, capath) == 1)) {
+    /*
+    * All the SSL_CTX_xxx functions below return 1 on success.
+    */
+    if ((SSL_CTX_use_certificate_chain_file(context, certfile) == 1) &&
+        (SSL_CTX_use_PrivateKey_file(context, keyfile, SSL_FILETYPE_PEM) == 1) &&
+        (SSL_CTX_load_verify_locations(context, cafile, capath) == 1)) {
 
-            int verify_flags = SSL_VERIFY_PEER |
-                               SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
-            SSL_CTX_set_verify(context, verify_flags, NULL /* verify callback */);
-            return context;
-        }
-    }
-
-    ERR_print_errors_fp(stderr);
-    if (context) {
+        int verify_flags = SSL_VERIFY_PEER |
+                            SSL_VERIFY_FAIL_IF_NO_PEER_CERT;
+        SSL_CTX_set_verify(context, verify_flags, NULL /* verify callback */);
+        return context;
+    } else {
+        ERR_print_errors_fp(stderr);
         SSL_CTX_free(context);
     }
     return NULL;
@@ -118,7 +114,7 @@ int main()
     }
 
     SSL_CTX *context = create_context_mtls(
-                                    CLIENT_CERT, 
+                                    CLIENT_CERT,
                                     CLIENT_KEY,
                                     CAFILE,
                                     NULL);
@@ -132,7 +128,7 @@ int main()
     // attach the ssl object to the socket
     SSL_set_fd(ssl, sockfd);
 
-    /* 
+    /*
      * securely connect with SSL
      * The behavior of TLS handshake and acceptance is different between
      * TLS versions 1.2 and 1.3. SSL_connect() would succeed even if server
@@ -151,7 +147,7 @@ int main()
     printf("Showing server certificate:\n");
     show_cert_info(SSL_get_peer_certificate(ssl));
 
-	char buf[1024];
+    char buf[1024];
     bzero(buf, sizeof(buf));
     sprintf(buf, "%s", "client: foo");
 
@@ -174,8 +170,8 @@ int main()
         printf("Sent msg:%s of bytessent:%ld\n", buf, bytessent);
     }
 
-	bzero(buf, sizeof(buf));
-	size_t bytesread = 0;
+    bzero(buf, sizeof(buf));
+    size_t bytesread = 0;
     int ret = SSL_read_ex(ssl, &buf, sizeof(buf), &bytesread);
     if (ret <= 0) {
         fprintf(stderr, "Received read_error:%d, ssl_error_code=%d\n", ret, SSL_get_error(ssl, ret));

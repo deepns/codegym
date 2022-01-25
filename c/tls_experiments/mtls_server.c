@@ -26,7 +26,7 @@ int create_server_socket(int port)
         SOCK_STREAM /*socket type*/,
         0 /*protocol to use. 0=IP*/
         );
-    
+
     if (sockfd < 0) {
         perror("Unable to create a socket");
         exit(EXIT_FAILURE);
@@ -59,7 +59,7 @@ SSL_CTX *create_context_mtls(
      * note: SSL_CTX object is reference counted.
      * Using the general purpose server method. The actual TLS version
      * will be selected during negotiation.
-     * e.g. of specific versions TLSv1_2_server_method(), TLSv1_1_server_method(), 
+     * e.g. of specific versions TLSv1_2_server_method(), TLSv1_1_server_method(),
      */
     SSL_CTX *ctx = SSL_CTX_new(TLS_server_method());
     if (ctx) {
@@ -79,7 +79,7 @@ SSL_CTX *create_context_mtls(
         // hit some error while updating the context with certs
         SSL_CTX_free(ctx);
     }
-    
+
     ERR_print_errors_fp(stderr);
     return NULL;
 }
@@ -91,7 +91,7 @@ void recv_from_client(SSL *ssl, int sockfd, char *buf, int buflen)
         // SSL_read doesn't return the number of bytes read. so using SSL_read_ex
         int readerr = SSL_read_ex(ssl, buf, buflen, &bytesread);
         if (readerr <= 0) {
-            fprintf(stderr, 
+            fprintf(stderr,
                     "Hit error=%d from SSL_read, ssl_error=%d\n",
                     readerr, SSL_get_error(ssl, readerr));
         } else {
@@ -133,7 +133,7 @@ int main()
 
     SSL_CTX *context = create_context_mtls(
                         certfile, keyfile, cafile, NULL /* capath - not using now */);
-    
+
     if (context == NULL) {
         printf("Failed to create SSL context\n");
         exit(EXIT_FAILURE);
@@ -165,9 +165,9 @@ int main()
             /*
              * 0 -> The TLS/SSL handshake was not successful but was shut down
              * controlled and by the specifications of the TLS/SSL protocol
-             * 
+             *
              * < 0 -> The TLS/SSL handshake was not successful because a fatal
-             * error occurred either at the protocol level or a connection 
+             * error occurred either at the protocol level or a connection
              * failure occurred. The shutdown was not clean.
              */
 
