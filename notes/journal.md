@@ -13,6 +13,8 @@
 
 ## Daily log
 
+- Day 53 (#golang)
+  - #golang - pointers, arrays, slices
 - Day 52 (#golang)
   - reading from standard input
   - string manipulation, type conversion using strconv, strings package
