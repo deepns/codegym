@@ -15,6 +15,7 @@
 
 - Day 54 (#golang)
   - #golang - maps, initialization, iteration
+  - #golang - structs, struct methods
 - Day 53 (#golang)
   - #golang - pointers, arrays, slices
 - Day 52 (#golang)

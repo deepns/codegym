@@ -15,10 +15,13 @@ import (
 	"github.com/deepns/codegarage/go/learning/collections/arrays"
 	"github.com/deepns/codegarage/go/learning/collections/maps"
 	"github.com/deepns/codegarage/go/learning/collections/slices"
+	"github.com/deepns/codegarage/go/learning/collections/structs"
 )
 
 func main() {
 	arrays.Learn()
 	slices.Learn()
 	maps.Learn()
+	structs.Learn()
+	structs.LearnStructMethods()
 }
