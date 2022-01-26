@@ -13,10 +13,12 @@ package main
 
 import (
 	"github.com/deepns/codegarage/go/learning/collections/arrays"
+	"github.com/deepns/codegarage/go/learning/collections/maps"
 	"github.com/deepns/codegarage/go/learning/collections/slices"
 )
 
 func main() {
 	arrays.Learn()
 	slices.Learn()
+	maps.Learn()
 }
