@@ -13,6 +13,8 @@
 
 ## Daily log
 
+- Day 55 (#golang)
+  - #golang - some more structs, file reading, file writing
 - Day 54 (#golang)
   - #golang - maps, initialization, iteration
   - #golang - structs, struct methods
