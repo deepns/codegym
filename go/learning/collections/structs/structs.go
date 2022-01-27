@@ -3,17 +3,24 @@ package structs
 import "fmt"
 
 // Learning struct
-
-// structs are yet another type in golang
+// struct are yet another types in golang
+// declared as
+// type <struct-name> struct {
+//	fieldName fieldType
+//	...
+// }
+// Sort of combination of C++ classes and structs
+// No polymorphism
+// supports interfaces
 
 // Version of the application
 type Version struct {
 	// just like the type, the struct fields also supports
 	// exporting. fields starting in uppercase are exported.
 	// Only exported fields can be accessed outside the struct.
-	Major int
-	Minor int
-	name  string
+	// can also combine declaration of fields of same type
+	name         string
+	Major, Minor int
 }
 
 // UpgradeMajorVersionByValue updates the major version.
@@ -28,9 +35,9 @@ func UpgradeMajorVersion(v *Version) {
 	v.Major++
 }
 
-func Learn() {
+func Basics() {
 	fmt.Println("========== Learning Structs ==========")
-	v1 := Version{1, 0, "apple"}
+	v1 := Version{"ducati", 1, 0}
 	fmt.Printf("v1: %v, type(v1):%T\n", v1, v1)
 
 	// updating the fields of struct

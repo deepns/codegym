@@ -22,6 +22,6 @@ func main() {
 	arrays.Learn()
 	slices.Learn()
 	maps.Learn()
-	structs.Learn()
-	structs.LearnStructMethods()
+	structs.Basics()
+	structs.StructMethods()
 }

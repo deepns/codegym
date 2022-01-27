@@ -21,8 +21,13 @@ func (c Connection) String() string {
 	return fmt.Sprintf("%v:%v", c.IPAddr, c.Port)
 }
 
-func LearnStructMethods() {
-	localServer := Connection{
+// IsPrivate returns true if the connection belongs to a private IP
+func (c Connection) IsPrivate() bool {
+	return c.IPAddr.IsPrivate()
+}
+
+func StructMethods() {
+	serverConn := Connection{
 		"localhost",
 		net.IPv4(127, 0, 0, 1),
 		8080,
@@ -30,9 +35,9 @@ func LearnStructMethods() {
 
 	// Since Connection has String(), that will be used instead of
 	// standard print which will print all fields of the struct
-	fmt.Println(localServer)
-	fmt.Printf("localServer: %v\n", localServer)
+	fmt.Println(serverConn)
+	fmt.Printf("serverConn: %v, isPrivate:%v\n", serverConn, serverConn.IsPrivate())
 
 	// print the go representation of the type
-	fmt.Printf("localServer: %#v\n", localServer)
+	fmt.Printf("serverConn: %#v\n", serverConn)
 }
