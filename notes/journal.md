@@ -11,8 +11,10 @@
   - [x] handling SIGIO with sigaction
 - [x] Connect to ubuntu VM from vscode using the remote-ssh extension
 - [ ] Golang
-  - [ ] http get/post
+  - [x] http get
+  - [ ] http post
   - [ ] TLS Server
+  - [ ] log package
 
 ## Daily log
 
@@ -20,6 +22,8 @@
   - json decoding
     - simple values in a json stream, using decoder.Decode()
     - decoding list (using decoder.Token(), More(), Decode())
+  - http
+    - Get data from URL, decode using a json decoder
 - Day 66 #nocodingday
 - Day 55 (#golang)
   - #golang - some more structs, file reading, file writing
