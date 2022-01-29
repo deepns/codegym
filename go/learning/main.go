@@ -11,4 +11,6 @@ func main() {
 
 	files.BasicReading()
 	files.BasicWriting()
+
+	files.ReadUsingIOUtil()
 }

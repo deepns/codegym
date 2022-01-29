@@ -2,6 +2,7 @@ package files
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 )
@@ -26,9 +27,7 @@ func BasicReading() {
 	// in a byte slice.
 	fmt.Println("==> Reading using os.ReadFile")
 	dataBytes, err := os.ReadFile(testFile)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 
 	// converting the byte slice into a string
 	data := string(dataBytes)
@@ -36,9 +35,7 @@ func BasicReading() {
 
 	fmt.Println("==> Reading using file opened with os.Open")
 	file, err := os.Open(testFile)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 	// don't forget to close the file handle
 	// it is idiomatic in golang to use defer right
 	// after a successful open
@@ -48,8 +45,20 @@ func BasicReading() {
 	// since we we reused the byte slice (dataBytes),
 	// file.Read() read all contents of the file.
 	readLength, err := file.Read(dataBytes)
-	if err != nil {
-		panic(err)
-	}
+	checkErr(err)
 	fmt.Printf("readLength: %v\n", readLength)
+}
+
+func ReadUsingIOUtil() {
+	fmt.Println("========= Reading files using ioutil functions ==========")
+
+	file, err := os.Open(GetTestFilePath())
+	checkErr(err)
+	defer file.Close()
+
+	rawData, err := ioutil.ReadAll(file)
+	checkErr(err)
+
+	data := string(rawData)
+	fmt.Printf("data: %v\n", data)
 }
