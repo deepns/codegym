@@ -14,13 +14,17 @@
   - [x] http get
   - [ ] http post
   - [ ] TLS Server
-  - [ ] log package
+  - [x] log package
 - [ ] syslog
 
 ## Daily log
 
 - Day 69 #golang
   - errors. creating custom errors.
+  - log
+    - using log package
+    - creating custom loggers
+    - logging to files
 - Day 68 #golang
   - getting started with error handling
   - creating new errors
