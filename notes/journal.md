@@ -18,6 +18,9 @@
 
 ## Daily log
 
+- Day 68 #golang
+  - getting started with error handling
+  - creating new errors
 - Day 67 #golang
   - json decoding
     - simple values in a json stream, using decoder.Decode()
