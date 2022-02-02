@@ -19,6 +19,11 @@
 
 ## Daily log
 
+- Day 71 #golang
+  - json unmarshaling into defined types and maps
+- Day 70 #golang
+  - net/url package
+  - net/http Post
 - Day 69 #golang
   - errors. creating custom errors.
   - log

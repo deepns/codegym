@@ -1,11 +1,10 @@
-package json
-
-// Learning about json encoding and decoding
+package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"strings"
 )
 
@@ -136,4 +135,24 @@ func DecodeJsonListIterative() {
 		panic(err)
 	}
 	fmt.Printf("%T: %v\n", token, token)
+}
+
+func DecodeJsonFromWeb() {
+	fmt.Println("========== Decoding a json data pulled from web ==========")
+
+	const httpbin = "https://httpbin.org/get"
+
+	resp, err := http.Get(httpbin)
+	checkErr(err)
+	defer resp.Body.Close()
+
+	var data map[string]interface{}
+
+	decoder := json.NewDecoder(resp.Body)
+
+	err = decoder.Decode(&data)
+	checkErr(err)
+	for k, v := range data {
+		fmt.Println(k, ":", v)
+	}
 }
