@@ -1,4 +1,4 @@
-package http
+package main
 
 // Exploring net/http package in golang
 // https://pkg.go.dev/net/http
@@ -85,6 +85,14 @@ func GetAndDecodeJson() {
 		panic(err)
 	}
 	defer resp.Body.Close()
+
+	// exploring the resp metadata
+	fmt.Printf("resp.Header: %v\n", resp.Header)
+	fmt.Printf("resp.ContentLength: %v\n", resp.ContentLength)
+	fmt.Printf("resp.Proto: %v\n", resp.Proto)
+	fmt.Printf("resp.Status: %v\n", resp.Status)
+	fmt.Printf("resp.StatusCode: %v\n", resp.StatusCode)
+	fmt.Printf("resp.Request.URL: %v\n", resp.Request.URL)
 
 	// lets get some interesting info from the data contained
 	// in the response body

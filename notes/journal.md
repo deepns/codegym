@@ -21,6 +21,7 @@
 
 - Day 71 #golang
   - json unmarshaling into defined types and maps
+  - http post, url parsing
 - Day 70 #golang
   - net/url package
   - net/http Post
