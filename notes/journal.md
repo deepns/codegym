@@ -12,13 +12,16 @@
 - [x] Connect to ubuntu VM from vscode using the remote-ssh extension
 - [ ] Golang
   - [x] http get
-  - [ ] http post
+  - [x] http post
   - [ ] TLS Server
   - [x] log package
 - [ ] syslog
 
 ## Daily log
 
+- Day 73 #golang
+  - constants
+- Day 72 #nocodingday
 - Day 71 #golang
   - json unmarshaling into defined types and maps
   - http post, url parsing
