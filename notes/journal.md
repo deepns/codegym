@@ -14,11 +14,31 @@
   - [x] http get
   - [x] http post
   - [ ] TLS Server
+  - [ ] functions
+    - [ ] variadic
+    - [ ] closures
+    - [ ] function types
+  - [ ] interfaces
+  - [ ] struct embedding
+  - [ ] channels
+  - [ ] strings
+    - [ ] strings package
+    - [ ] string formatting
+  - [ ] cmdline processing
+    - [ ] functionality similar to argparse
+  - [x] Files
+    - [x] temp files
+    - [x] directories
+  - [x] defer
   - [x] log package
 - [ ] syslog
 
 ## Daily log
 
+- Day 74 #golang
+  - tempfiles
+  - directories, temp directories
+  - defer keyword
 - Day 73 #golang
   - constants
 - Day 72 #nocodingday
