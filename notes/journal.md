@@ -15,7 +15,7 @@
   - [x] http post
   - [ ] TLS Server
   - [ ] functions
-    - [ ] variadic
+    - [x] variadic
     - [ ] closures
     - [ ] function types
   - [ ] interfaces
@@ -35,6 +35,9 @@
 
 ## Daily log
 
+- Day 75 #golang
+  - variadic functions
+  - a self pat 🙌🏻 for reaching 75 days
 - Day 74 #golang
   - tempfiles
   - directories, temp directories
