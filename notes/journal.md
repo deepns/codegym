@@ -22,8 +22,8 @@
   - [ ] struct embedding
   - [ ] channels
   - [ ] strings
-    - [ ] strings package
-    - [ ] string formatting
+    - [x] strings package
+    - [x] string formatting
   - [ ] cmdline processing
     - [ ] functionality similar to argparse
   - [x] Files
@@ -37,7 +37,9 @@
 
 - Day 75 #golang
   - variadic functions
-  - a self pat 🙌🏻 for reaching 75 days
+  - a self pat 🙌🏻 for reaching 75 days // oops.. spoke too soon.
+  - (1) I made a mistake of counting the days.. from 55 I jumped to 66 instead of 56.
+  - worked on strings package
 - Day 74 #golang
   - tempfiles
   - directories, temp directories
