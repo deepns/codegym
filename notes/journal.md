@@ -16,8 +16,8 @@
   - [ ] TLS Server
   - [ ] functions
     - [x] variadic
-    - [ ] closures
-    - [ ] function types
+    - [x] closures
+    - [x] function types
   - [ ] interfaces
   - [ ] struct embedding
   - [ ] channels
@@ -35,40 +35,42 @@
 
 ## Daily log
 
-- Day 75 #golang
+- Day 66 #golang
+  - closures, function variables, anonymous functions
+- Day 65 #golang
   - variadic functions
   - a self pat 🙌🏻 for reaching 75 days // oops.. spoke too soon.
   - (1) I made a mistake of counting the days.. from 55 I jumped to 66 instead of 56.
   - worked on strings package
-- Day 74 #golang
+- Day 64 #golang
   - tempfiles
   - directories, temp directories
   - defer keyword
-- Day 73 #golang
+- Day 63 #golang
   - constants
-- Day 72 #nocodingday
-- Day 71 #golang
+- Day 62 #nocodingday
+- Day 61 #golang
   - json unmarshaling into defined types and maps
   - http post, url parsing
-- Day 70 #golang
+- Day 60 #golang
   - net/url package
   - net/http Post
-- Day 69 #golang
+- Day 59 #golang
   - errors. creating custom errors.
   - log
     - using log package
     - creating custom loggers
     - logging to files
-- Day 68 #golang
+- Day 58 #golang
   - getting started with error handling
   - creating new errors
-- Day 67 #golang
+- Day 57 #golang
   - json decoding
     - simple values in a json stream, using decoder.Decode()
     - decoding list (using decoder.Token(), More(), Decode())
   - http
     - Get data from URL, decode using a json decoder
-- Day 66 #nocodingday
+- Day 56 #nocodingday
 - Day 55 (#golang)
   - #golang - some more structs, file reading, file writing
 - Day 54 (#golang)
