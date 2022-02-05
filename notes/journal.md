@@ -19,7 +19,7 @@
     - [x] closures
     - [x] function types
   - [ ] interfaces
-  - [ ] struct embedding
+  - [x] struct embedding
   - [ ] channels
   - [ ] strings
     - [x] strings package
@@ -31,12 +31,19 @@
     - [x] directories
   - [x] defer
   - [x] log package
+  - [ ] Language and other open source references for go topics
+    - [ ] embedding
+    - [ ] variadic functions
+    - [ ] interfaces
+    - [ ] tempfiles
+    - [ ] custom logging
 - [ ] syslog
 
 ## Daily log
 
 - Day 66 #golang
   - closures, function variables, anonymous functions
+  - struct embedding
 - Day 65 #golang
   - variadic functions
   - a self pat 🙌🏻 for reaching 75 days // oops.. spoke too soon.

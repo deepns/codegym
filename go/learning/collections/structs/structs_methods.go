@@ -26,7 +26,7 @@ func (c Connection) IsPrivate() bool {
 	return c.IPAddr.IsPrivate()
 }
 
-func StructMethods() {
+func Methods() {
 	serverConn := Connection{
 		"localhost",
 		net.IPv4(127, 0, 0, 1),

@@ -23,5 +23,6 @@ func main() {
 	slices.Learn()
 	maps.Learn()
 	structs.Basics()
-	structs.StructMethods()
+	structs.Methods()
+	structs.Embed()
 }
