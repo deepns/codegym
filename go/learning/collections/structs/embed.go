@@ -1,9 +1,6 @@
-package structs
+package main
 
 import "fmt"
-
-// Exploring struct embedding
-//	embedding works somewhat like inheritance
 
 type Address struct {
 	Street string
@@ -35,6 +32,11 @@ func (p Property) String() string {
 	return fmt.Sprintf("%v, isResidential:%v", p.Address, p.IsResidential)
 }
 
+// Embed explores struct embedding
+//	embedding works somewhat like inheritance
+//	embed one struct in another
+//	access exposed and private fields and methods of the
+//	embedded struct
 func Embed() {
 	p1 := Property{
 		Address{

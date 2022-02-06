@@ -1,4 +1,4 @@
-package structs
+package main
 
 import (
 	"fmt"
@@ -26,6 +26,8 @@ func (c Connection) IsPrivate() bool {
 	return c.IPAddr.IsPrivate()
 }
 
+// Methods create a struct type, and calls the methods
+// of that struct
 func Methods() {
 	serverConn := Connection{
 		"localhost",

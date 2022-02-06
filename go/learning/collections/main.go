@@ -14,13 +14,9 @@ package main
 import (
 	"github.com/deepns/codegarage/go/learning/collections/arrays"
 	"github.com/deepns/codegarage/go/learning/collections/maps"
-	"github.com/deepns/codegarage/go/learning/collections/structs"
 )
 
 func main() {
 	arrays.Basics()
 	maps.Basics()
-	structs.Basics()
-	structs.Methods()
-	structs.Embed()
 }
