@@ -19,6 +19,10 @@
     - [x] closures
     - [x] function types
   - [ ] interfaces
+    - [x] basics
+    - [x] empty interfaces
+    - [ ] nil interfaces
+    - [ ] type assertions
   - [x] struct embedding
   - [ ] channels
   - [ ] mutex
@@ -48,6 +52,9 @@
 
 ## Daily log
 
+- Day 67 #golang
+  - interfaces basics. looked into how fmt.Print functions work.
+  - empty interfaces
 - Day 66 #golang
   - closures, function variables, anonymous functions
   - struct embedding
