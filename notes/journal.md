@@ -21,6 +21,10 @@
   - [ ] interfaces
   - [x] struct embedding
   - [ ] channels
+  - [ ] mutex
+  - [ ] environment variables
+  - [ ] runes
+  - [ ] panic/recover
   - [ ] strings
     - [x] strings package
     - [x] string formatting
@@ -32,6 +36,9 @@
   - [x] defer
   - [x] log package
   - [ ] Language and other open source references for go topics
+    - [ ] arrays
+    - [ ] maps
+    - [ ] make vs new
     - [ ] embedding
     - [ ] variadic functions
     - [ ] interfaces
