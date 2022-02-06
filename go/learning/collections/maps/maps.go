@@ -7,7 +7,12 @@ import (
 	"sort"
 )
 
-func Learn() {
+// Basics of maps
+//	defininig maps
+//	make maps
+//	iterating
+//	insertion, deletions
+func Basics() {
 	fmt.Println("=========== Learning Maps ============")
 	// declare the map type explicitly
 	// var varName map[keyType]valueType
@@ -53,7 +58,7 @@ func Learn() {
 		fmt.Printf("key:%v, value:%v\n", day, weather[day])
 	}
 
-	// if two variables are provide, range gives both key and value
+	// if two variables are provided, range gives both key and value
 	for k, v := range fileDescriptors {
 		fmt.Printf("%v => %v\n", k, v)
 	}
