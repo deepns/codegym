@@ -21,7 +21,7 @@
   - [ ] interfaces
     - [x] basics
     - [x] empty interfaces
-    - [ ] nil interfaces
+    - [x] nil interfaces
     - [ ] type assertions
   - [x] struct embedding
   - [ ] channels
@@ -52,6 +52,8 @@
 
 ## Daily log
 
+- Day 68 #golang
+  - nil interfaces
 - Day 67 #golang
   - interfaces basics. looked into how fmt.Print functions work.
   - empty interfaces
