@@ -12,8 +12,8 @@ func main() {
 
 	// In python str(100) will return "100". Go type conversion doesn't
 	// work that way. string(100) will treat 100 as the ascii value instead.
-	d := string(100)
-	fmt.Printf("d: %v\n", d)
+	// d := string(100)
+	// fmt.Printf("d: %v\n", d)
 
 	// int, float, bool in string format can be parsed into their
 	// equivalent types with strconv.Parse... functions

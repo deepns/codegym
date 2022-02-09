@@ -33,6 +33,7 @@
     - [x] strings package
     - [x] string formatting
     - [x] string builder
+    - [x] string conversions
   - [ ] cmdline processing
     - [ ] functionality similar to argparse
   - [x] Files
@@ -49,9 +50,12 @@
     - [ ] interfaces
     - [ ] tempfiles
     - [ ] custom logging
-- [ ] syslog
+- [ ] syslog, journalctl
+- [ ] gc pause
 
 ## Daily log
+
+// Tracking my journey to 100 days and beyond.
 
 - Day 69 #golang
   - string builder
