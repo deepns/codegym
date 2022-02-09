@@ -56,6 +56,7 @@
 - Day 69 #golang
   - string builder
   - revisited interface, Stringer usage when looking into String() of strings.Builder
+  - strconv package. Parsing int,float, bool strings. and reverse conversion using strconv.Format.
 - Day 68 #golang
   - nil interfaces
 - Day 67 #golang
