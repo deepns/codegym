@@ -1,4 +1,4 @@
-package files
+package main
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 
 func GetTestFilePath() string {
 	curDir, _ := os.Getwd() // return the rooted path name of current working directory
-	return path.Join(curDir, "files", "sample.txt")
+	return path.Join(curDir, "sample.txt")
 }
 
 // BasicReading is about getting started with reading files in go.
