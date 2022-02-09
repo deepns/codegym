@@ -32,6 +32,7 @@
   - [ ] strings
     - [x] strings package
     - [x] string formatting
+    - [x] string builder
   - [ ] cmdline processing
     - [ ] functionality similar to argparse
   - [x] Files
@@ -52,6 +53,9 @@
 
 ## Daily log
 
+- Day 69 #golang
+  - string builder
+  - revisited interface, Stringer usage when looking into String() of strings.Builder
 - Day 68 #golang
   - nil interfaces
 - Day 67 #golang
