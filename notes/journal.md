@@ -14,15 +14,15 @@
   - [x] http get
   - [x] http post
   - [ ] TLS Server
-  - [ ] functions
+  - [x] functions
     - [x] variadic
     - [x] closures
     - [x] function types
-  - [ ] interfaces
+  - [x] interfaces
     - [x] basics
     - [x] empty interfaces
     - [x] nil interfaces
-    - [ ] type assertions
+    - [x] type assertions
   - [x] struct embedding
   - [ ] channels
   - [ ] mutex
@@ -57,6 +57,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 70 #golang
+  - type assertions
 - Day 69 #golang
   - string builder
   - revisited interface, Stringer usage when looking into String() of strings.Builder
