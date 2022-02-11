@@ -57,6 +57,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 71 #golang
+  - a sample exercise - rot13 subsitution cipher
 - Day 70 #golang
   - type assertions
 - Day 69 #golang
