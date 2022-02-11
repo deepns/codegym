@@ -26,7 +26,7 @@
   - [x] struct embedding
   - [ ] channels
   - [ ] mutex
-  - [ ] environment variables
+  - [x] environment variables
   - [ ] runes
   - [ ] panic/recover
   - [ ] strings
@@ -57,6 +57,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 72 #golang
+  - environment variables
 - Day 71 #golang
   - a sample exercise - rot13 subsitution cipher
   - random package and its functions
