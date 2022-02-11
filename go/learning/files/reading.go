@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"path"
@@ -10,7 +11,8 @@ import (
 // Learning to read files in go.
 
 func GetTestFilePath() string {
-	curDir, _ := os.Getwd() // return the rooted path name of current working directory
+	// return the rooted path name of current working directory
+	curDir, _ := os.Getwd()
 	return path.Join(curDir, "sample.txt")
 }
 
@@ -47,6 +49,28 @@ func BasicReading() {
 	readLength, err := file.Read(dataBytes)
 	checkErr(err)
 	fmt.Printf("readLength: %v\n", readLength)
+
+	// Read the file in chunks
+	fmt.Printf("Reading from %v\n", "sample2.txt")
+	buf := make([]byte, 64)
+	samplefile, err := os.Open("sample2.txt")
+	if err != nil {
+		checkErr(err)
+	}
+	defer samplefile.Close()
+
+	for {
+		n, err := samplefile.Read(buf)
+		if err != nil {
+			if err != io.EOF {
+				checkErr(err)
+			}
+			break
+		}
+		// Print upto the number of bytes read.
+		fmt.Printf("%s", buf[:n])
+	}
+	fmt.Println()
 }
 
 func ReadUsingIOUtil() {
