@@ -59,6 +59,7 @@
 
 - Day 71 #golang
   - a sample exercise - rot13 subsitution cipher
+  - random package and its functions
 - Day 70 #golang
   - type assertions
 - Day 69 #golang
