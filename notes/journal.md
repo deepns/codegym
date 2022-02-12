@@ -59,6 +59,7 @@
 
 - Day 72 #golang
   - environment variables
+  - file metadata
 - Day 71 #golang
   - a sample exercise - rot13 subsitution cipher
   - random package and its functions
