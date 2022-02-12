@@ -28,7 +28,7 @@
   - [ ] mutex
   - [x] environment variables
   - [ ] runes
-  - [ ] panic/recover
+  - [x] panic/recover
   - [ ] strings
     - [x] strings package
     - [x] string formatting
@@ -57,6 +57,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 73 #golang
+  - recover, defer
 - Day 72 #golang
   - environment variables
   - file metadata
