@@ -57,6 +57,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 74 #golang
+  - revisit maps. access missing keys, check key exists or not
+  - sync.Mutex. Added a sample ledger app to make use of sync.Mutex
 - Day 73 #golang
   - recover, defer
 - Day 72 #golang
