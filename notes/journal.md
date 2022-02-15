@@ -61,6 +61,7 @@
   - continuing sync.Mutex
   - read file line by line using bufio.Scanner
   - added channel to communicate between the workers and main
+  - expanded mutex example into a bigger one with multiple go concepts in use.
 - Day 74 #golang
   - revisit maps. access missing keys, check key exists or not
   - sync.Mutex. Added a sample ledger app to make use of sync.Mutex
