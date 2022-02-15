@@ -57,6 +57,10 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 75 #golang
+  - continuing sync.Mutex
+  - read file line by line using bufio.Scanner
+  - added channel to communicate between the workers and main
 - Day 74 #golang
   - revisit maps. access missing keys, check key exists or not
   - sync.Mutex. Added a sample ledger app to make use of sync.Mutex
