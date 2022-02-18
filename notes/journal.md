@@ -41,6 +41,7 @@
     - [x] directories
   - [x] defer
   - [x] log package
+  - [ ] init()  
   - [ ] Language and other open source references for go topics
     - [ ] arrays
     - [ ] maps
@@ -57,6 +58,10 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 76
+    - flags and args in cmd line
+- Day 75 #nocodingday
+- Day 74 #nocodingday
 - Day 73 #golang
   - recover, defer
 - Day 72 #golang
