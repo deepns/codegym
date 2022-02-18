@@ -53,6 +53,7 @@
     - [ ] custom logging
 - [ ] syslog, journalctl
 - [ ] gc pause
+- [ ] json path
 
 ## Daily log
 
