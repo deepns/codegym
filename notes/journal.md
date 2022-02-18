@@ -58,10 +58,18 @@
 
 // Tracking my journey to 100 days and beyond.
 
-- Day 76
+- Day 78
     - flags and args in cmd line
-- Day 75 #nocodingday
-- Day 74 #nocodingday
+- Day 77 #nocodingday
+- Day 76 #nocodingday
+- Day 75 #golang
+  - continuing sync.Mutex
+  - read file line by line using bufio.Scanner
+  - added channel to communicate between the workers and main
+  - expanded mutex example into a bigger one with multiple go concepts in use.
+- Day 74 #golang
+  - revisit maps. access missing keys, check key exists or not
+  - sync.Mutex. Added a sample ledger app to make use of sync.Mutex
 - Day 73 #golang
   - recover, defer
 - Day 72 #golang

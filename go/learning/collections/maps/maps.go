@@ -39,6 +39,23 @@ func Basics() {
 	weather["monday"] = 30.2
 	fmt.Printf("type(weather):%T, weather: %v\n", weather, weather)
 
+	// access a missing key
+	// though "wednesday" didn't exist before, accessing the missing key
+	// gives the nil value of the type
+	weather["wednesday"] += 10.3
+	fmt.Printf("weather: %v\n", weather)
+
+	// here is another example of an unknown key
+	// In Python, this would result in KeyError. Go returns the nil value
+	// of the value instead.
+	fmt.Printf("weather[\"friday\"]: %v\n", weather["friday"])
+
+	// how to check whether a key exists or not?
+	_, ok := weather["friday"]
+	if !ok {
+		fmt.Println("No data available for friday yet")
+	}
+
 	// int-to-string map
 	// declared implicitly
 	fileDescriptors := map[int]string{
