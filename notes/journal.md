@@ -59,7 +59,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
-- Day 78
+- Day 79 #golang
+    - flags custom types, duration
+- Day 78 #golang
     - flags and args in cmd line
 - Day 77 #nocodingday
 - Day 76 #nocodingday

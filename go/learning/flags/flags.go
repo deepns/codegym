@@ -4,7 +4,29 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/url"
+	"time"
 )
+
+type urlValue struct {
+	url *url.URL
+}
+
+func (u urlValue) String() string {
+	if u.url != nil {
+		return fmt.Sprintf("%v", u.url)
+	}
+	return ""
+}
+
+func (u urlValue) Set(urlString string) error {
+	if v, err := url.Parse(urlString); err != nil {
+		return err
+	} else {
+		*u.url = *v
+	}
+	return nil
+}
 
 func main() {
 
@@ -14,7 +36,7 @@ func main() {
 	//	Define the flags
 	// 	call Parse
 	// 	access the flags
-	
+
 	// from the cmdline,
 	//	flags can be specified with -flag or --flag
 	//	-h/--help shows the help information based on the flags given
@@ -29,6 +51,8 @@ func main() {
 
 	var nRetry int
 	var nThreads int
+	maxTimeout, _ := time.ParseDuration("10s")
+	var timeout = flag.Duration("timeout", maxTimeout, "max timeout")
 
 	// note: if the default value is 0, flag doesn't seem to consider it
 	// as explicit default.
@@ -43,6 +67,10 @@ func main() {
 	// 				number of threads to use (default 1)
 	flag.IntVar(&nThreads, "num-threads", 1, "number of threads to use")
 
+	// Adding a custom value
+	var u = &url.URL{}
+	flag.Var(&urlValue{u}, "url", "link to the server")
+
 	flag.Parse()
 
 	// Number of flags specified in the command line
@@ -52,6 +80,8 @@ func main() {
 	fmt.Printf("port: %v\n", *port)
 	fmt.Printf("verbose: %v\n", *verbose)
 	fmt.Printf("nThreads: %v\n", nThreads)
+	fmt.Printf("timeout: %v\n", timeout)
+	fmt.Printf("host:%v, scheme %v\n", u.Host, u.Scheme)
 
 	// Number of args remaining after the flags are parsed
 	fmt.Printf("flag.NArg(): %v\n", flag.NArg())
@@ -69,14 +99,9 @@ func main() {
 
 	// Prints the default message listing out the flags and their description
 	flag.PrintDefaults()
-	
+
 	// we can't seem to have alias for the flag name
 	// for e.g. -v / --verbose
 	// we can't one flag that can take either -v or --verbose
 	// have to check it out whether such option is available or not
-
-	// To explore further
-	//	flag.Duraiton
-	//	Custom flags
-	//	FlagSet
 }
