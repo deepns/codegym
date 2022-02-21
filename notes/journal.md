@@ -41,7 +41,7 @@
     - [x] directories
   - [x] defer
   - [x] log package
-  - [ ] init()  
+  - [x] init()  
   - [ ] Language and other open source references for go topics
     - [ ] arrays
     - [ ] maps
@@ -59,6 +59,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 80 #golang
+    - init() functions
 - Day 79 #golang
     - flags custom types, duration
 - Day 78 #golang

@@ -6,6 +6,11 @@ package main
 // (defined in go.mod file at the top of the workspace)
 
 import (
+	// go doesn't like packages imported but not used. There are some exceptions
+	// where a package is imported (for init as a side effect) but not used explicitly.
+	// in such case, we can suppress the error with the help of a blank identifier
+	// https://go.dev/doc/effective_go#blank_import
+	_ "flag"
 	"fmt"
 	"math/rand"
 
