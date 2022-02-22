@@ -24,7 +24,7 @@
     - [x] nil interfaces
     - [x] type assertions
   - [x] struct embedding
-  - [ ] channels
+  - [x] channels
   - [ ] mutex
   - [x] environment variables
   - [ ] runes
@@ -34,8 +34,8 @@
     - [x] string formatting
     - [x] string builder
     - [x] string conversions
-  - [ ] cmdline processing
-    - [ ] functionality similar to argparse
+  - [x] cmdline processing
+    - [x] functionality similar to argparse
   - [x] Files
     - [x] temp files
     - [x] directories
@@ -59,6 +59,11 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 81 #golang
+    - channels, bufferred and unbuffered
+    - iterate channels
+    - added flag processing to ledger example
+    - sleep using time.Sleep(). time has the units defined for Second, Milli, Micro
 - Day 80 #golang
     - init() functions
 - Day 79 #golang
