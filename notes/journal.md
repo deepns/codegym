@@ -24,7 +24,10 @@
     - [x] nil interfaces
     - [x] type assertions
   - [x] struct embedding
-  - [x] channels
+  - [] channels
+    - [x] basics
+    - [ ] read only and write only channels
+  - [x] select
   - [ ] mutex
   - [x] environment variables
   - [ ] runes
@@ -59,6 +62,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 82 #golang
+    - multiplex channel read and write with select{..}
+    - using time Ticker
 - Day 81 #golang
     - channels, bufferred and unbuffered
     - iterate channels
