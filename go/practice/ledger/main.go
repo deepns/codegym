@@ -22,10 +22,12 @@
 //	- string conversion using strconv package
 //	- split strings using strings package
 //  - generate docs with 'go doc'
+//	- command line flags
 package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -33,7 +35,8 @@ import (
 	"strings"
 )
 
-// getTransactions returns a slice of transactions read from the given file
+// getTransactions reads the transactions from the given file and returns them
+// in a slice
 func getTransactions(file string) []Transaction {
 	var transactions []Transaction
 
@@ -61,7 +64,7 @@ func getTransactions(file string) []Transaction {
 
 // getWorkerCount returns the number of worker routines
 func getWorkerCount() (int, error) {
-	nWorkers := 1
+	nWorkers := 2
 	const MAX_WORKERS = 16
 
 	// just for fun, get the number of workers through an environment variable
@@ -79,14 +82,21 @@ func getWorkerCount() (int, error) {
 	return nWorkers, nil
 }
 
+func NewLedger() *Ledger {
+	return &Ledger{db: make(map[string]float64)}
+}
+
 func main() {
-	transactions := getTransactions("transactions.txt")
+	transFile := flag.String("file", "transactions.txt", "source file to read the transactions")
+	flag.Parse()
+
+	transactions := getTransactions(*transFile)
 	nWorkers, err := getWorkerCount()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	l := Ledger{db: make(map[string]float64)}
+	l := NewLedger()
 	l.Settle(transactions, nWorkers)
 	l.ShowBalance()
 }
