@@ -44,7 +44,9 @@
     - [x] directories
   - [x] defer
   - [x] log package
-  - [x] init()  
+  - [x] init()
+  - [x] timers
+  - [x] tickers
   - [ ] Language and other open source references for go topics
     - [ ] arrays
     - [ ] maps
@@ -62,6 +64,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 83 #golang
+    - explored the timers and tickers from time package
 - Day 82 #golang
     - multiplex channel read and write with select{..}
     - using time Ticker
