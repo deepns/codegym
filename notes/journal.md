@@ -47,6 +47,7 @@
   - [x] init()
   - [x] timers
   - [x] tickers
+  - [x] waitgroups
   - [ ] Language and other open source references for go topics
     - [ ] arrays
     - [ ] maps
@@ -64,6 +65,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 84 #golang
+    - explored the usage of WaitGroup from sync package
 - Day 83 #golang
     - explored the timers and tickers from time package
 - Day 82 #golang
