@@ -65,6 +65,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 85 #golang
+    - time parsing and formatting
+    - converting time to unix epoch seconds and vice versa
 - Day 84 #golang
     - explored the usage of WaitGroup from sync package
 - Day 83 #golang
