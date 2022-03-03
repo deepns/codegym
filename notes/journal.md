@@ -13,7 +13,7 @@
 - [ ] Golang
   - [x] http get
   - [x] http post
-  - [ ] TLS Server
+  - [x] TLS Server
   - [x] functions
     - [x] variadic
     - [x] closures
@@ -67,6 +67,7 @@
 
 - Day 90 #golang
     - sort using functions from sort package. will do custom sorting tomorrow
+    - TLS server
 - Day 89 #nocodingday
 - Day 88 #nocodingday
 - Day 87 #nocodingday
