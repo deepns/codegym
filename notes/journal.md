@@ -65,6 +65,12 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 90 #golang
+    - sort using functions from sort package. will do custom sorting tomorrow
+- Day 89 #nocodingday
+- Day 88 #nocodingday
+- Day 87 #nocodingday
+- Day 86 #nocodingday
 - Day 85 #golang
     - time parsing and formatting
     - converting time to unix epoch seconds and vice versa
