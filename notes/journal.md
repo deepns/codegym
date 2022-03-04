@@ -65,6 +65,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 91 #golang
+    - custom sort functions using sort.Interface interface
 - Day 90 #golang
     - sort using functions from sort package. will do custom sorting tomorrow
     - TLS server
