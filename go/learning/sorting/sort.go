@@ -64,7 +64,7 @@ func main() {
 	// sorted in ascending order. Search returns the index to insert the search value
 	fmt.Printf("sort.SearchInts(ints, 25): %v\n", sort.SearchInts(ints, 25))
 
-	points := []Point {
+	points := []Point{
 		{rand.Intn(100), rand.Intn(100)},
 		{rand.Intn(100), rand.Intn(100)},
 		{rand.Intn(100), rand.Intn(100)},
@@ -74,6 +74,20 @@ func main() {
 
 	// for slices of any type, sort.Slice with a custom less function works great
 	// sorting the points slice by the x coordinates.
-	sort.Slice(points, func(i, j int) bool { return points[i].x < points[j].x})
+	sort.Slice(points, func(i, j int) bool { return points[i].x < points[j].x })
 	fmt.Printf("points: %v\n", points)
+
+	// To preserve the order, use stable sort
+	names := []string{
+		"alice",
+		"bob",
+		"chris",
+		"dee",
+		"emma",
+	}
+
+	sort.SliceStable(names, func(i, j int) bool {
+		return len(names[i]) < len(names[j])
+	})
+	fmt.Printf("names (stable sorted): %v\n", names)
 }

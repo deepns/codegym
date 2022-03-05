@@ -10,8 +10,10 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"path/filepath"
 	"sort"
+	"time"
 )
 
 type byExtension []string
@@ -35,10 +37,22 @@ func main() {
 		"foobar.txt",
 		"httpserver.go",
 		"client.c",
+		"onemore.txt",
+		"server.c",
+		"names.json",
 	}
 
 	sort.Sort(byExtension(files))
-	fmt.Printf("files: %v\n", files)
+	fmt.Printf("files (regular sort): %v\n", files)
+
+	// lets shuffle the slice a bit
+	rand.Seed(time.Now().Unix())
+	rand.Shuffle(len(files), func(i, j int) {
+		files[i], files[j] = files[j], files[i]
+	})
+
+	sort.Stable(byExtension(files))
+	fmt.Printf("files (stable sorted): %v\n", files)
 
 	// Here is an example of custom types implemeting the sort.Interface
 	// https://cs.opensource.google/go/go/+/refs/tags/go1.17.7:src/net/http/header.go;l=149;bpv=1;bpt=1

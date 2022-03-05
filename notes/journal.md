@@ -32,7 +32,7 @@
   - [x] environment variables
   - [ ] runes
   - [x] panic/recover
-  - [ ] strings
+  - [x] strings
     - [x] strings package
     - [x] string formatting
     - [x] string builder
@@ -65,6 +65,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 92 #golang
+    - stable sort
+    - quick recap - part 1 - time format, time duration, random generation, nameless structs, slice append, iteration
 - Day 91 #golang
     - custom sort functions using sort.Interface interface
 - Day 90 #golang
