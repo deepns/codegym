@@ -65,6 +65,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 93 #golang
+    - quick recap - part 2 - init functions, custom errors, read from stdin, str conversion
+    - read using scanner
 - Day 92 #golang
     - stable sort
     - quick recap - part 1 - time format, time duration, random generation, nameless structs, slice append, iteration

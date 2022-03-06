@@ -21,7 +21,6 @@ func main() {
 	fmt.Print("Enter radius:")
 
 	// read from standard input using a buffered reader
-	// TODO Try using Scanner as well.
 	reader := bufio.NewReader(os.Stdin)
 
 	// specify the delimited in bytes. "" is considered a string in Go. Use '' for bytes
@@ -42,4 +41,13 @@ func main() {
 	// Specify the floating point precision in the formatting verb
 	fmt.Printf("Area of circle with radius %v = %.2f\n",
 		radius, math.Pi*math.Pow(radius, 2))
+	
+	// reading values using scanner
+	fmt.Println("Enter some numbers:")
+	scanner := bufio.NewScanner(os.Stdin)
+	// read until EOF
+	// max token size is determined by bufio.MaxScanTokenSize
+	for scanner.Scan() {
+		fmt.Printf("You entered: %v\n", scanner.Text())
+	}
 }
