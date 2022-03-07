@@ -65,6 +65,8 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 94 #golang
+    - quick recap - part 3 - json decoding, channel send receive, http.Get, go routines, timers, select
 - Day 93 #golang
     - quick recap - part 2 - init functions, custom errors, read from stdin, str conversion
     - read using scanner
