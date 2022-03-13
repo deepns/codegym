@@ -28,7 +28,9 @@
     - [x] basics
     - [ ] read only and write only channels
   - [x] select
-  - [ ] mutex
+  - [x] atomic
+    - [x] mutex
+    - [x] Add/Load/Store
   - [x] environment variables
   - [ ] runes
   - [x] panic/recover
@@ -65,46 +67,52 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 99 #nocodingday
+  - tried out atomic Add, Load, Store from sync/atomic package
+- Day 98 #nocodingday
+- Day 97 #nocodingday
+- Day 96 #nocodingday
+- Day 95 #nocodingday
 - Day 94 #golang
-    - json encoding of basic types, maps, slices, structs using Marshaller and Encoder
+  - json encoding of basic types, maps, slices, structs using Marshaller and Encoder
 - Day 94 #golang
-    - quick recap - part 3 - json decoding, channel send receive, http.Get, go routines, timers, select
+  - quick recap - part 3 - json decoding, channel send receive, http.Get, go routines, timers, select
 - Day 93 #golang
-    - quick recap - part 2 - init functions, custom errors, read from stdin, str conversion
-    - read using scanner
+  - quick recap - part 2 - init functions, custom errors, read from stdin, str conversion
+  - read using scanner
 - Day 92 #golang
-    - stable sort
-    - quick recap - part 1 - time format, time duration, random generation, nameless structs, slice append, iteration
+  - stable sort
+  - quick recap - part 1 - time format, time duration, random generation, nameless structs, slice append, iteration
 - Day 91 #golang
-    - custom sort functions using sort.Interface interface
+  - custom sort functions using sort.Interface interface
 - Day 90 #golang
-    - sort using functions from sort package. will do custom sorting tomorrow
-    - TLS server
+  - sort using functions from sort package. will do custom sorting tomorrow
+  - TLS server
 - Day 89 #nocodingday
 - Day 88 #nocodingday
 - Day 87 #nocodingday
 - Day 86 #nocodingday
 - Day 85 #golang
-    - time parsing and formatting
-    - converting time to unix epoch seconds and vice versa
+  - time parsing and formatting
+  - converting time to unix epoch seconds and vice versa
 - Day 84 #golang
-    - explored the usage of WaitGroup from sync package
+  - explored the usage of WaitGroup from sync package
 - Day 83 #golang
-    - explored the timers and tickers from time package
+  - explored the timers and tickers from time package
 - Day 82 #golang
-    - multiplex channel read and write with select{..}
-    - using time Ticker
+  - multiplex channel read and write with select{..}
+  - using time Ticker
 - Day 81 #golang
-    - channels, bufferred and unbuffered
-    - iterate channels
-    - added flag processing to ledger example
-    - sleep using time.Sleep(). time has the units defined for Second, Milli, Micro
+  - channels, bufferred and unbuffered
+  - iterate channels
+  - added flag processing to ledger example
+  - sleep using time.Sleep(). time has the units defined for Second, Milli, Micro
 - Day 80 #golang
-    - init() functions
+  - init() functions
 - Day 79 #golang
-    - flags custom types, duration
+  - flags custom types, duration
 - Day 78 #golang
-    - flags and args in cmd line
+  - flags and args in cmd line
 - Day 77 #nocodingday
 - Day 76 #nocodingday
 - Day 75 #golang
