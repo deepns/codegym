@@ -67,7 +67,11 @@
 
 // Tracking my journey to 100 days and beyond.
 
-- Day 99 #nocodingday
+- Day 101 #golang
+  - starting to explore signal handling
+  - read about os.Signal and os/signal packages, signal registration and handling.
+- Day 100 #nocodingday
+- Day 99 #golang
   - tried out atomic Add, Load, Store from sync/atomic package
 - Day 98 #nocodingday
 - Day 97 #nocodingday
