@@ -67,6 +67,10 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 102 #golang
+  - Ignoring signals
+  - registering multiple signals
+  - handle signals in go routine
 - Day 101 #golang
   - starting to explore signal handling
   - read about os.Signal and os/signal packages, signal registration and handling.

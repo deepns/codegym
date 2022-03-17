@@ -26,14 +26,29 @@ func main() {
 	// can also use os.Interrupt in place of syscall.SIGINT. They are equal.
 	signal.Notify(sigs, syscall.SIGINT)
 
+	// register multiple signals
+	signal.Notify(sigs, syscall.SIGUSR1, syscall.SIGUSR2)
+
+	// ignore selective signals
+	signal.Ignore(syscall.SIGABRT)
+
 	// wait until signal is received
 	fmt.Println("Waiting for signal. Press Ctrl-C")
 	sig := <-sigs
 	fmt.Println("Received", sig, "signal")
 
-	// TODO
-	// - [ ] handle signal in a separate go routine
-	// - [ ] ignore signals
-	// - [ ] handle additional signals (see syscall package)
-	// - [ ] find examples from package
+	done := make(chan bool)
+	go func() {
+		fmt.Println("Waiting for signal in a go routine")
+		sig := <-sigs
+		fmt.Println("Received", sig, "signal")
+		done <- true
+	}()
+
+	<-done
+
+	// Not many examples of signal notification in the standard library
+	// some examples in other repos
+	// https://github.com/kubernetes/kubernetes/blob/eb43b41cfd59adfb0ee88e34f5967a8cf6ed0c9b/staging/src/k8s.io/kubectl/pkg/cmd/profiling.go#L72
+	// from kubectl - https://github.com/kubernetes/kubectl/blob/652881798563c00c1895ded6ced819030bfaa4d7/pkg/util/interrupt/interrupt.go#L90
 }
