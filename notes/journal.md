@@ -67,6 +67,9 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 103 #golang
+    - directed channels.
+    - recv only channels, send only channels
 - Day 102 #golang
   - Ignoring signals
   - registering multiple signals
