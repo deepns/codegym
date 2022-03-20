@@ -24,9 +24,9 @@
     - [x] nil interfaces
     - [x] type assertions
   - [x] struct embedding
-  - [] channels
+  - [x] channels
     - [x] basics
-    - [ ] read only and write only channels
+    - [x] read only and write only channels
   - [x] select
   - [x] atomic
     - [x] mutex
@@ -67,9 +67,11 @@
 
 // Tracking my journey to 100 days and beyond.
 
+- Day 104 #golang
+  - Getting started with unit testing
 - Day 103 #golang
-    - directed channels.
-    - recv only channels, send only channels
+  - directed channels.
+  - recv only channels, send only channels
 - Day 102 #golang
   - Ignoring signals
   - registering multiple signals
