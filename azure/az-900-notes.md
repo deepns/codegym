@@ -20,6 +20,77 @@
 - An unique namespace is defined per Azure AD DS managed domain. Azure deploys two Domain Controllers in the chosen region and manages it for us.
 - One way sync between Azure AD and Azure AD DS.
 
+#### Authentication Methods
+
+- supports multiple authentication methods - password based, SSO, MFA and passwordless (FIDO2)
+- SSO is only as strong as the initial sign in
+- MFA - for two factor authentication using tokens, code, authenticator apps like Google Authenticator, Microsoft Authenticator
+- MFA - must satisfy two of the below three challenges
+  - something user knows (e.g. password)
+  - something user has (e.g. phone)
+  - something user is (e.g. fingerprint, facial ID)
+- passwordless - most convenient and secure. Azure offers passworless sign in through Windows Hello for Business, Authenticator App and FIDO2 security keys
+- [FIDO](https://fidoalliance.org/) - **F**ast **IDentity** **O**nline standard - leverages standard sign in without username or password by using external security keys (or platform key built into the device such as phone or laptop)
+
+#### Azure AD External Identities - secure interaction with users outside the org
+
+- for secure collaboration with external users (such as partners, distributors, consumers) in sharing and managing the Azure resources
+- users bring in their own identity such as govt issued digital ID, Google or Facebook (unmanaged social ID) IDs. Identity managed by the external provider, access managed and protected by us using Azure AD or AD B2C. What capabilities does it provide?
+  - B2B Collaboration - to collaborate between external users and business using Azure
+  - B2B Direct Connect - to collaborate between two Azure AD organization (e.g. sharing Teams channel between two different organization)
+  - B2C - use Azure AD for identity and access management in apps published on Azure
+
+#### Azure Conditional Access - allow or deny access to resources based on identity signals
+
+- manage access to applications, resources based on factors like users' role, location, network, device etc.
+- require access only through approved client applications. e.g. Allow access to business email only from Outlook and not any other third party email clients
+
+#### Azure RBAC
+
+- allow access based on the principle of least privilege
+- use built-in roles (with common access rules) or define own roles (and associate set of access permissions)
+- ![relationship between role and scope](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/role-based-access-scope-4b12a8f3.png)
+- some built in roles - Reader, Owner, Contributor
+- RBAC applied to a scope (*mgmt group, subscription, resource group, resource*). Each scope inherits from RBAC permissions from its parent scope
+- [ARM](#azure-resource-manager---deployment-and-management-service-for-azure) enforces the RBAC permissions when processing the requests to Azure resources
+- RBAC follows **allow-model**.
+
+#### Zero Trust Model
+
+- Adopt Zero Trust security model
+- Guiding principles
+  - *Verify explicitly* - authenticate and authorize at all points
+  - *Least privilege access* - Just in Time (JIT), Just Enough Access (JEA)
+  - *Assume breach* - minimize blaste radius and segment access
+- moving from trusted secure network to a network with centralized policy enforcing authentication and authorization at all points.
+
+#### Defense-in-Depth - strategy to slow the advance of attack aimed to access data
+
+- Layered strategy to protect the most precious data
+- Layers: Physical, Identity & Access, Perimeter (for DDoS prevention), Network, Compute, Application, Data
+- Much of these are self explanatory and common sense
+- ![Defense-in-Depth-layers](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defense-depth-486afc12.png)
+
+#### Defender for Cloud - monitoring tool for security posture management and threat protection
+
+- provides the tools to **harden resources, track security posture, protect against attacks and streamline security management**, not only in Azure but also in hybrid and multi-cloud deployments
+- native service in Azure. enabled by default in many Azure services
+- Azure machines have the log Analystics Agent deployed by default to gather security related data
+- Extend to hybrid and multi cloud with the help of [Azure Arc](#azure-arc---extend-azure-compliance-and-monitoring-to-hybrid-and-multi-cloud-environments). An overview [here](https://docs.microsoft.com/en-us/azure/azure-arc/overview)
+- Native protections across many services
+  - Azure PaaS - such as Azure App Service, Azure SQL, Azure Storage Accounts. can also do anomaly detection on Azure Activity Logs using Defender for Cloud Apps
+  - Data services - perform classification of data in Azure SQL to find potential vulnerabilities
+  - Networks - limit exposure to brute force attacks. reduce access to VM ports, Just-In-Time access, allow only authorized users, source IP address ranges
+- **CSPM** - Cloud Security and Posture Management to extend into multi cloud environment. Agentless plan to assess other cloud (e.g. AWS) resources according to their security recommendations.
+- Defender for Kubernetes - extend container threat detection and defenses to Amazon EKS Linux Cluster
+- Defender for servers - to add threat detection and advanced features to Windows and Linux EC2 machines
+- Strategy followed => **Continuously Assess + Secure + Defend**
+- Defender for Cloud built on top of Azure Policy controls.. makes it easy to run on Azure scopes
+- Azure Security Benchmark - MS authored, Azure specific set of guidelines to ensure security and compliance
+- View the security health through the ![Security Score](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defender-for-cloud-d47a71d8.png)
+- Generates Alerts upon threat detection
+- Detection followed by protection (suggests remediation, trigger logic app in response), includes fusion kill-chain analysis
+
 ## Fundamentals - Management and Governance
 
 ### Azure Blueprints - define repeatable settings and policies
@@ -95,7 +166,7 @@
 #### Azure Advisor - recommendations to optimize the cloud environment
 
 - provides recommendations to improve *reliability, security, performance, operational excellence and cost reduction*.
-- [Dashboard](https://docs.microsoft.com/en-us/training/wwl-azure/describe-monitoring-tools-azure/media/azure-advisor-dashboard-baca22e2.png)
+- ![Dashboard](https://docs.microsoft.com/en-us/training/wwl-azure/describe-monitoring-tools-azure/media/azure-advisor-dashboard-baca22e2.png)
 - recommendations available in the Azure Portal or through Advisor APIs
 
 #### Azure Service Health - status of deployed resources and overall Azure services
