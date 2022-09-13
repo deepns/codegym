@@ -1,5 +1,25 @@
 # AZ-900 Exam Notes
 
+## Azure Architecture and Services
+
+### Idenity, Access and Security
+
+#### Azure Active Directory - directory service to sign into MS cloud, other cloud applications and possibly on-prem
+
+- enables signing in to Microsoft cloud applications including Azure, Office 365, Dynamics and other cloud applications configured to use Microsoft authentication
+- Same functionality (identity and access mgmt) provided by Active Directory running on Windows Server in on-prem deployments
+- In on-prem AD deployments, Microsoft doesn't monitor the sign-ins. With Azure AD, Microsoft monitors it and provides additional services and protections (threat detection, suspicious sign-ins etc.)
+- Azure AD services - *authentication, Single-Sign-On (SSO), App management, Device management with Intune*
+- In hybrid cloud environment, maintaining two identity services (AD in on-prem and Azure AD in Cloud) is not recommended. Can combine that into one using **Azure AD Connect**. Sync changes between both the systems
+
+#### Azure Active Directory Domain Services - managed domain services
+
+- eliminates the need to deploy, manage and patch Windows Server domain controllers (DC) in the cloud. #question. What are domain controllers?
+- legacy apps using domain services in on-prem can be lift-and-shifted into cloud with the help of Azure AD DS
+- integrates with Azure AD tenant
+- An unique namespace is defined per Azure AD DS managed domain. Azure deploys two Domain Controllers in the chosen region and manages it for us.
+- One way sync between Azure AD and Azure AD DS.
+
 ## Fundamentals - Management and Governance
 
 ### Azure Blueprints - define repeatable settings and policies
