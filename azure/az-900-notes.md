@@ -188,3 +188,11 @@
 - add Application Insight support to an application through Application Insight SDK or Agent
 - provides lot of information such as request rates, response times, page views, performance counters from VMs etc.
 - can also be used to send artificial traffic to the application during periods of low-activicty to check the status
+
+## Resources
+
+- [Understanding block blobs, append blobs, and page blobs](https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-block-blobs--append-blobs--and-page-blobs)
+- [Azure Data Box, Data Box Disk, Data Box Heavy](https://docs.microsoft.com/en-us/azure/databox/)
+- [Cloud Adoption Framework](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/overview)
+- [Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)
+- [Application Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/application-security-groups)
