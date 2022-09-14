@@ -1,5 +1,311 @@
 # AZ-900 Exam Notes
 
+## Core components
+
+### Infrastructure
+
+- AZ account -> Subscription -> Resource Groups -> Resources
+- Activated Learn Sandbox. Hands on with Azure Cloud Shell, Bash
+- [Global Infrastructure Site](https://infrastructuremap.microsoft.com/)
+- Data centers grouped into Regions or Availability Zones
+- Region - one or more data centers, networked together with a low-latency network. intelligent resource placement within the region for appropriate workload balancing.
+  - Most resources require the region to be specified. Some are region agnostic: Azure Active Directory, Azure Traffic Manager, and Azure DNS
+  - Cost varies per region due to difference in the local cost and laws.
+  - Some resource and resource types may be available only in a particular region
+- Availability Zone - isolation boundary for resources. physically separate data centers within a region. Some regions may not support availability zones. Used for high availability.
+  - primarily for VMs, managed disks, load balancers, and SQL databases.
+  - Services that support az fall under three types
+    - Zonal - resource pinned to specific zone
+    - Zone-redundant - Azure automatically replicates the resource to another zone within the region
+    - Non-regional - resource not affected by zone-wide or region-wide outages.
+  - ![availability-zone-and-regions](https://docs.microsoft.com/en-us/azure/availability-zones/media/availability-zones.png)
+- Region Pairs - high availability for regions
+  - Most regions are paired with another region that is at least 300km apart. For disaster recovery.
+  - Most region pairings are bi-directional (active/active), while some are uni-directional (active/passive)
+  - Data will reside in the same [geography](https://azure.microsoft.com/en-us/explore/global-infrastructure/geographies/#geographies) as the pair
+  - Planned updates are rolled out to paired regions, one region at a time.
+  - In case of outage, one region out of every pair is prioritized for quicker recovery.
+- Sovereign region - separate instance of Azure, completely isolated from the main instance of Azure.
+  - e.g. regions -> US DoD Central, US Gov Virginia, US Iowa - require special clearance and compliance to operate
+  - China East, China North - regions in Azure in China, operated by 21ViaNet.
+
+### Subscriptions
+
+- Resource - fundamental unit. VMs, Disks, Databases, Networks, Blobs etc.
+- Resource Groups - group of resources. Resources inherit properties, access policies from the resource groups. A resource can’t be in multiple resource groups. No nesting either. Deleting a resource group will delete the resources under the group too.
+- Subscription - grouping of resource groups.
+- Every Azure account required to have at least one subscription. more is optional. Subscription links to an Azure Account, which is an identity in the Azure Active Directory or in a directory that Azure AD trusts.
+- Subscription Boundaries
+  - Billing boundary - separate billing reports and invoices for each subscription. e.g. subscription for every dept within an org.
+  - Access control boundary - apply access management policies at the subscription level.
+- may have some hard limits depending on the resources
+
+### Management Groups
+
+- Logical container to group subscriptions, for better compliance and governance.
+- Subscription inherits the policies and RBAC applied at the management group level.
+- max up to 10000 mgmt. groups under a directory
+- up to six level of depth
+- management group can have multiple management groups under its hierarchy. Supports up to six levels deep.
+
+![resource-hierarchy](https://docs.microsoft.com/en-us/training/wwl-azure/describe-core-architectural-components-of-azure/media/management-groups-subscriptions-dfd5a108.png)
+
+### Resources and Resource Groups
+
+- Resource Group - logical container for resource group
+- grouping typically based on Lifecycle of the resource
+- Azure Resource Manager - control plane for the resources. Manage the resources through declarative templates. Template defined in JSON file.
+
+## Compute
+
+### Azure VMs
+
+- IaaS offering in Azure. Configure, update and maintain sw running in the VMs. Support for multiple OS (Windows, Linux, Oracle (Solaris?), IBM (z/OS?)
+- Ideal for solutions requiring total control over the OS, custom software
+- Use preconfigured image for rapid provisioning
+- Grouping of VMs - Scale Sets and Availability Sets
+  - Scale Sets - create and manage group of identical, load balanced VMs. Scale Set comes with load balancer. Automatic scale up or down.
+  - Availability Sets - to ensure staggered updates, and fault isolation in network and power connectivity
+  - VMs grouped by fault-domain (failure in network/power in one domain doesn’t affect VMs in another fault domain) and update-domain (updates performed on one group at a time).
+  - No additional cost for configuring availability set. Pay only for VMs
+- Use cases - dev/test, lift-and-shift of on-prem servers, extending on-prem datacenter to cloud by creating a virtual network and placing Azure VMs under that network
+- Common VM resources - Size (purpose, cores, processors), Storage disks (for persistence), networking (virtual network, public IP, port configurations)
+- Azure Virtual Desktop - Cloud hosted Windows desktop. Data and apps separated from the underlying hardware. Supports MFA and granular RBAC. Also supports multi session Windows 10 or 11 with the Enterprise version.
+
+### Azure Containers
+
+- [Azure Container Instances](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-overview) - PaaS offering to run containers in the cloud. Best suited for microservice based architecture
+- supports linux or windows container images from Docker hub, Azure Container Registry or any other hosted container registry
+- containers can be grouped into Container Groups, exposed with a FQDN (customlabel.azureregion.azurecontainer.io), custom label provided at the time of container creation
+- Container groups includes group of containers configured to run on the same host
+- ACI supports hypervisor-level security (secured multi-tenancy), custom sizes (CPU, Memory)
+- Native support of Azure File Shares to provide persistence to the container. File Shares can be automatically mounted
+- When deployed in a virtual network, ACI instances can communicate with other resources in the same virtual network
+- Some functionalities (volume mounts, multiple container per container groups, virtual network) are supported only on linux containers
+
+![Container-groups](https://docs.microsoft.com/en-us/azure/container-instances/media/container-instances-container-groups/container-groups-example.png)
+
+### Azure Kubernetes Service
+
+- [AKS](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) overview
+
+### Azure Functions
+
+- Event driven. Serverless compute. (Similar to AWS Lambda, GCP Cloud Functions)
+- Automatic scaling. Pay only for the resource (CPU time) consumed when the function runs.
+- Can be stateless (default) or stateful (aka Durable functions) where a context (with the state information) is passed to each invocation.
+
+### Azure App Service
+
+- PaaS offering to host web applications, background jobs, REST APIs, mobile backend.
+- Supports windows and linux environments. Multiple languages supported (.NET, .NET Core, Java, Ruby, Node.js, PHP, or Python.)
+- Supports automated deployments from source repo (e.g. Github)
+- Type of app services - web apps, api apps, web jobs, mobile apps
+
+### Azure Virtual Desktop
+
+## Networking
+
+### Azure Virtual Networking
+
+- Virtual network and subnets to enable Azure resources connect each other, connect to Internet, connect to on premises resources
+- Provides isolation and segmentation through proper subnetting.
+- Enable internet communications through public IP or by keeping the resource behind a load balancer
+- Secure communication between Azure resources - not just VMs, but other resources like App Service, AKS, VM Scale Sets
+- Communicate with on-prem resources
+  - Point-to-site - a client (from on-prem?) initiates a secured VPN connection to the Azure Virtual Network
+  - Site-to-site - extend on-prem VPN to connect to Azure VPN gateway, bringing in AZ resources in the same network as the cor network
+  - Express Route - dedicated private connection on the Microsoft backbone network, not through internet.
+- Route traffic using routing tables on the virtual network. Supports BGP with Azure VPN gateway.
+- Filter traffic using network security groups (NSG) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VM) running firewall or WAN optimizations.
+- Connect virtual network using virtual network peering.  Peered traffic runs on the Microsoft backbone. Able to make a global network on the Azure network using network peering between multiple virtual network that spans regions across geographies.
+- UDR - User Defined Route - to fine grained control over the routing tables between subnets within virtual network or between virtual networks.
+
+### Azure VPN
+
+- VPN gateways deployed in dedicated subnet of the virtual network
+- Used to
+  - connect on-prem data center to Azure virtual network through site-to-site connection
+  - Connect devices to virtual network securely through point-to-site connections
+  - Network-to-network connection
+- Type of VPN
+  - Policy based - IP address of the tunnel is specified statically
+  - Route based - modeled after IPSec tunnel. Specify which network (or virtual network) interface to use for tunneling. Preferred VPN type. Use it for connections between virtual networks, point-to-site connections, multi-site connections, coexistence with Azure Express Route Gateway (for failover reasons)
+- High Availability
+  - Active/Standby - default option. Azure provisions a standby VPN by default. Failover in few seconds for planned events, under 90 seconds for unplanned disruption
+  - Active/Active - enabled by the support of BGP. Assign a public IP address for each instance. Create separate tunnels to each IP address.
+  - Express Route Failover - in the event of physical failures on the express route connection, failover to use secured VPN traffic (which goes over the internet).
+  - Zone redundant gateways - in regions supporting multiple availability zones, VPN gateways and Express Route Gateways can be deployed in zone redundant configuration. Zone redundant gateways use Standard public IP address instead of Basic IP address. (For difference between standard and basic, see here)
+
+### Azure ExpressRoute
+
+- Expand on-prem network into Microsoft cloud (Azure and other Microsoft services like 365, Dynamics 365) over a private connection (Express Route Circuit)
+- Some benefits => connectivity to MS cloud services in all geopolitical regions, global connectivity through ExpressRoute Global Reach, built in redundancy
+- Services that work with Express Route => Office 365, Dynamics 365, Azure Compute and Network services, Azure Storage, Databases
+- Global connectivty - connect branch offices across the world together by connecting through ExpressRoute circuits using Global Reach. Enables on-prem applications to connect across the world without going over the internet.
+- Dynamic routing - enabled by BGP support.
+- Connectivity modes
+  - Colocation at cloud exchange
+  - Point to point ethernet connection (point to point connection between on-prem to azure)
+  - Any-to-any connection (adding azure network into the existing WAN network)
+  - Directly from ExpressRoute sites (connection from a peering facility. Direct dual 100Gpbs or 10Gbps connectivity)
+- Security considerations => Data traffic on ExpressRoute do not go over the internet. However some essential traffic like DNS queries, CRL checks, Azure CDN are still sent over the public internet.
+
+### Azure DNS
+
+- Managed DNS hosting service from Azure
+- DNS domains hosted on the Azure global network of name servers. Uses AnyCast networking (so query is answered by closest available server)
+- Based on Azure Resource Manager. Supports RBAC, activity logs, resource locking and many other features applicable to a resource.
+- Can manage DNS records for Azure services and external resources
+- Supports private domains too (can use custom domain names in private virtual networks, avoiding the use of azure provided names)
+- Supports Alias record sets.
+- Can’t buy a domain name though. That can be done by App Service domain or third party domain name registrar.
+
+## Storage
+
+### Azure Storage Services
+
+#### Basics
+
+- Azure Storage Account - unique name space for all data stored under the service types. What services offered by Azure Storage Services?
+  - Blob storage
+  - Data lake Storage
+  - Azure Files (for NFS/CIFS)
+  - Queue Storage (for messaging services)
+  - Table Storage (no-sql key-value store, different from cosmos DB?)
+- Resource endpoint looks like this `https://<storage-account-name>.file.core.windows.net`. Account naming has some restrictions. 3-24 characters, only numbers and lowercase, naming must be unique across Azure.
+- Storage account type determines which of the above services are supported and the redundancy levels offered.
+- What are the available storage account types?
+  - Standard General Purpose V2 - most common. supports all services. Supports all redundancy types.
+  - Premium block blobs - for SAN workloads (for block blobs and append blobs).
+  - Premium file shares - for NFS/CIFS workloads
+  - Premium page blob - for VM disks (workloads in 512b pages), closer to real disks
+- What redundancy levels offered?
+  - Locally Redundant Storage (LRS) - synchronous replication within the local data center. 3 copies. 11 nines of durability.
+  - Zone Redundant Storage (ZRS) - synchronous replication across the availability zones within a region. 3 copies. 12 nines of durability. (note: not all regions support availability zones). Recommended for applications requiring high availability, compliance in storing data within a region. data available for read and write in the event of a zone failure.
+  - Geo Redundant Storage (GRS) - synchronous replication within a single location in the primary region. 3 copies. async replication to secondary region using LRS. 16 nines of durability.
+  - Geo ZRS (GZRS) - sync replication to 3 availability zones in the primary region. async replication to secondary using LRS. 16 nines of durability.
+  - Read-Access Geo Redundant Storage (RA-GRS) - GRS for read heavy workloads.
+  - Read-Access Geo ZRS (RA-GZRS) - GZRS for read heavy workloads.
+- LRS and ZRS offered in the primary region. For protection against regional failures, choose geo redundant type.
+  - Data replicated to a secondary region (determined by the region pairs. can’t be changed).
+  - GRS ~= LRS in two region, GZRS ~= ZRS in two regions.
+  - must failover to secondary region to gain read and write access (doesn’t seem to be supporting automatic failover) similar to any DR solution.
+  - RPO of < 15 minutes.
+
+#### Storage Services (Blob, Files, Queue, Table, Disk)
+
+- Blob storage - Azure’s object storage.
+  - can hold all kinds of data. Ideal for serving images, documents, storing files for distributed access, streaming media, backup and restore, data analytics.
+  - Access through HTTP/HTTPS, REST, Azure Shell, CLI or client libraries.
+  - Storage tiers
+    - Hot - frequently accessed data. High storage cost, low retrieval cost.
+    - Cool - infrequently accessed, stored for at least 30 days. Low storage cost, high access cost and lower SLA
+    - Archive - rarely accessed, stored for at least 180 days. Lowest storage cost, stored offline (meaning tapes?), highest access cost. Ideal for long term backups.
+    - Only hot/cool tier can be set at the account level. Set archive option at the blob level (?)
+- Azure Files
+  - Managed file shares, accessible via NFS and SMB protocols.
+  - Concurrent access from cloud or on-prem applications. SMB supported on windows, linux and macOS clients, NFS on Linux, macOS clients.
+  - Azure File Sync caches the file shares in Windows Server. For better data affinity.
+  - Create and manage file shares through cmdlets, Azure CLI, Azure Portal or Azure Storage Explorer.
+  - Data in the file shares can be accessed via file system I/O calls. Can also use Azure Storage Client libraries or Azure Storage REST API.
+- Queue storage - highly scalable message queue. Max individual message size 64KB. sample use case: user submits a form on the webpage. App adds that to a message queue. Message queue triggers an event which invokes a function in Azure Functions.
+- Disk storage - block storage for VMs. (#doubt aka Page Blobs?)
+
+JSON view of the storage account created in the sandbox.
+
+```json
+{
+    "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+    },
+    "kind": "StorageV2",
+    "id": "/subscriptions/8672fcd9-4133-4ab5-a899-acba167f727c/resourceGroups/learn-f2cd4ff8-0ffd-40ae-9172-7ad1b137d617/providers/Microsoft.Storage/storageAccounts/deepazurestorage",
+    "name": "deepazurestorage",
+    "type": "Microsoft.Storage/storageAccounts",
+    "location": "eastus",
+    "tags": {},
+    "properties": {
+        "minimumTlsVersion": "TLS1_2",
+        "allowBlobPublicAccess": true,
+        "allowSharedKeyAccess": true,
+        "networkAcls": {
+            "bypass": "AzureServices",
+            "virtualNetworkRules": [],
+            "ipRules": [],
+            "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+            "services": {
+                "file": {
+                    "enabled": true,
+                    "lastEnabledTime": "2022-09-12T15:25:25.6484294Z"
+                },
+                "blob": {
+                    "enabled": true,
+                    "lastEnabledTime": "2022-09-12T15:25:25.6484294Z"
+                }
+            },
+            "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot",
+        "provisioningState": "Succeeded",
+        "creationTime": "2022-09-12T15:25:25.5233582Z",
+        "primaryEndpoints": {
+            "dfs": "https://deepazurestorage.dfs.core.windows.net/",
+            "web": "https://deepazurestorage.z13.web.core.windows.net/",
+            "blob": "https://deepazurestorage.blob.core.windows.net/",
+            "queue": "https://deepazurestorage.queue.core.windows.net/",
+            "table": "https://deepazurestorage.table.core.windows.net/",
+            "file": "https://deepazurestorage.file.core.windows.net/"
+        },
+        "primaryLocation": "eastus",
+        "statusOfPrimary": "available"
+    }
+}
+```
+
+### Data migration
+
+Two options available to migrate on-prem data (takes different form here: raw data, VMs, databases, applications etc.) to Azure.
+
+#### Azure Migrate - unified platform to track migration from on-prem to Azure
+
+- Comes with many integrated tools to manage the migration
+- Discovery and Assessment - to assess the readiness of on-prem servers running on VMware, Hyper-V and physical servers
+- Server Migration - to do the actual migration of the physical, virtualized servers in on-prem and other public cloud.
+- Data Migration Assistant - to assess SQL servers
+- Database Migration Service - migrate on-prem databases to Azure VMs with SQL server, Azure SQL or SQL managed instances.
+- WebApp migration assistant - to migrate on-prem web applications to Azure App Service
+- Azure Databox - move large amounts of offline data to Azure.
+
+#### Azure Data box - physical migration service to transfer large amounts of data to/from azure
+
+- Data contained in a proprietary Data Box storage device. Max storage capacity 80TB.
+- End-to-end tracking provided in the Data box service of Azure Portal.
+- Common use cases
+  - Transfer data larger than 40TB from the places with limited to no network connectivity
+  - Moving media library from offline tapes into Azure
+  - Migrating VM farms to Azure
+- Data movement - one time, periodic or initial bulk transfer followed by periodic transfer.
+- Export data out of Azure in to on-prem as well. Some common use cases => DR, compliance, migration of applications back into on-prem or other cloud providers.
+- Data in Data Box wiped in accordance with NIST 800-88r1 standards
+
+#### File movement (AzCopy, Azure Storage Explorer, Azure File Sync)
+
+- AzCopy
+  - cmdline tool to copy blobs/files to and from a storage account.
+  - Copy & sync files between storage account. No bi-directional support.
+  - Can move files back and forth between Azure and other clouds as well.
+- Azure storage explorer (https://azure.microsoft.com/en-us/products/storage/storage-explorer/#overview)
+  - Standalone GUI app to manage files and blobs. Uses AzCopy under the hood.
+- Azure File Sync
+  - Centralize file shares in Azure Files with the compatibility of a Windows Server.
+  - Install File Sync in Windows Server to take advantage of this. Allows bi-directional sync.
+  - Turns a Windows Server into mini CDN.
+
 ## Azure Architecture and Services
 
 ### Idenity, Access and Security
