@@ -14,7 +14,7 @@
 
 #### Azure Active Directory Domain Services - managed domain services
 
-- eliminates the need to deploy, manage and patch Windows Server domain controllers (DC) in the cloud. #question. What are domain controllers?
+- eliminates the need to deploy, manage and patch Windows Server domain controllers (DC) in the cloud. #question. What are domain controllers? - a brief one-liner explanation in the [glossary](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/64781df1-ee20-413e-b8c5-6511c90dbc30#gt_76a05049-3531-4abd-aec8-30e19954b4bd)
 - legacy apps using domain services in on-prem can be lift-and-shifted into cloud with the help of Azure AD DS
 - integrates with Azure AD tenant
 - An unique namespace is defined per Azure AD DS managed domain. Azure deploys two Domain Controllers in the chosen region and manages it for us.
@@ -197,9 +197,10 @@
 
 - forms the backbone of the management layer
 - all deployment, access and management goes through ARM. All API, CLI, portal invoke the same API to ARM
-- manage infrastructure as code. specify the desired state of the resources in declarative templates (**ARM Templates**). Much like managing kubernetes resources with spec files.
+- manage infrastructure as code. specify the desired state of the resources in declarative templates ([ARM Templates](https://docs.microsoft.com/en-us/azure/azure-resource-manager/templates/overview). Much like managing kubernetes resources with spec files.
 - dependencies can be specified in the template. Azure takes care of the ordering and invoking the right tools to deploy the resources
 - ARM templates can be modular, nested, and also extended (with PowerShell or Bash scripts inline or externally sourced)
+- [Sample ARM template to create ubuntu VM](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-template?toc=%2Fazure%2Fazure-resource-manager%2Ftemplates%2Ftoc.json)
 - note: prior to the introduction of ARM in 2014, there existed the classic deployment model. Resources existed independently and required external coordination in managing multiple resources. more on that [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/deployment-models)
 
 ### Monitoring Tools
