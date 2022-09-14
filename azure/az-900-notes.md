@@ -93,6 +93,46 @@
 
 ## Fundamentals - Management and Governance
 
+### Cost Management
+
+- shift in costs - from CapEx heavy to OpEx heavy
+- parameters affecting the costs
+  - resource params - type, size, perf, region etc. can affect the costs
+  - consumption - pay as-you-go consumption. Discounts with Azure Reservations for commited use
+  - maintenance - make sure to clean up attached resources. e.g. VM provisioned with virtual networks, storage, db instances etc.. clean up the associated resources when deleting a VM. (tip: manage under resource groups)
+  - geography - region, country, taxes etc.
+  - subscription type - some subscription includes allowances
+  - azure market place products
+
+#### Pricing Calculator - estimate cost of provisioning Azure resources
+
+- [Pricing Calculator in Azure](https://azure.microsoft.com/en-us/pricing/calculator/)
+- get estimated cost of individual resources or build a solution involving multiple resources in Azure
+
+#### TCO Calculator - compare cost of running on-prem infra vs Azure Cloud Infra
+
+- provide the current infrastructure configuration. (compute, storage, network, bandwidth consumption etc), define workloads, assumptions for power, labor, IT costs. Azure computes the cost of that infrastructure in running in on-prem vs Azure Cloud
+- [TCO on Azure](https://azure.microsoft.com/en-in/pricing/tco/calculator/)
+
+#### Cost Management Tool - check resource costs, create alerts, budgets
+
+- Azure service to quickly check costs, create alerts, track spending, budget spending and create automation to manage costs
+- ![Sample Cost Analysis](https://docs.microsoft.com/en-us/training/wwl-azure/describe-cost-management-azure/media/cost-analysis-b52dedab.png)
+- supports multiple alert types - *budget alerts, credit alerts, spending quota alerts*
+- Creating budgets - defined by cost when created from Portal. can be defined by cost or consumption when using **Azure Consumption API**
+- Budgets can be set based on subscription, resource group, service type. optionally configure the budget conditions to trigger automation to suspend or modify the resource as needed
+
+#### Tracking cost of resources organized by tags
+
+- Tags are another way to organize resources, finer grained than resource groups.
+- Some ways to categorize using tags
+  - Resource management - to locate and act on resources associated with specific workloads, BUs etc.
+  - Cost management
+  - Operations management - group resources based on operational availability and criticality. Formulate SLA.
+  - Security and governance tags
+  - workload optimization and automation
+- Tags can be added, modified or deleted through PowerShell, Azure. CLI, ARM templates, REST API or Azure Portal
+
 ### Azure Blueprints - define repeatable settings and policies
 
 - standardize cloud subscription and environment deployments to enforce settings and policies
@@ -160,6 +200,7 @@
 - manage infrastructure as code. specify the desired state of the resources in declarative templates (**ARM Templates**). Much like managing kubernetes resources with spec files.
 - dependencies can be specified in the template. Azure takes care of the ordering and invoking the right tools to deploy the resources
 - ARM templates can be modular, nested, and also extended (with PowerShell or Bash scripts inline or externally sourced)
+- note: prior to the introduction of ARM in 2014, there existed the classic deployment model. Resources existed independently and required external coordination in managing multiple resources. more on that [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/deployment-models)
 
 ### Monitoring Tools
 
@@ -191,8 +232,10 @@
 
 ## Resources
 
+- [About AZ-900](https://docs.microsoft.com/en-us/certifications/exams/az-900)
 - [Understanding block blobs, append blobs, and page blobs](https://docs.microsoft.com/en-us/rest/api/storageservices/understanding-block-blobs--append-blobs--and-page-blobs)
 - [Azure Data Box, Data Box Disk, Data Box Heavy](https://docs.microsoft.com/en-us/azure/databox/)
 - [Cloud Adoption Framework](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/overview)
 - [Network Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview)
 - [Application Security Groups](https://docs.microsoft.com/en-us/azure/virtual-network/application-security-groups)
+- [Subscription and Service Limits](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits)
