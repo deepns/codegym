@@ -108,16 +108,17 @@
 
 ### Azure Virtual Networking
 
+- [Azure VNet Overview](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-overview)
 - Virtual network and subnets to enable Azure resources connect each other, connect to Internet, connect to on premises resources
 - Provides isolation and segmentation through proper subnetting.
 - Enable internet communications through public IP or by keeping the resource behind a load balancer
 - Secure communication between Azure resources - not just VMs, but other resources like App Service, AKS, VM Scale Sets
 - Communicate with on-prem resources
-  - Point-to-site - a client (from on-prem?) initiates a secured VPN connection to the Azure Virtual Network
-  - Site-to-site - extend on-prem VPN to connect to Azure VPN gateway, bringing in AZ resources in the same network as the cor network
+  - [Point-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/point-to-site-about) - a client (from on-prem) initiates a secured VPN connection to the Azure Virtual Network
+  - [Site-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/design?toc=/azure/virtual-network/toc.json#s2smulti) - extend on-prem VPN to connect to Azure VPN gateway, bringing in AZ resources in the same network as the corp network
   - Express Route - dedicated private connection on the Microsoft backbone network, not through internet.
 - Route traffic using routing tables on the virtual network. Supports BGP with Azure VPN gateway.
-- Filter traffic using network security groups (NSG) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VM) running firewall or WAN optimizations.
+- Filter traffic using Network Security Groups (NSG) and Application Security Groups (ASG) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VMs) running firewall or WAN optimizations.
 - Connect virtual network using virtual network peering.  Peered traffic runs on the Microsoft backbone. Able to make a global network on the Azure network using network peering between multiple virtual network that spans regions across geographies.
 - UDR - User Defined Route - to fine grained control over the routing tables between subnets within virtual network or between virtual networks.
 
