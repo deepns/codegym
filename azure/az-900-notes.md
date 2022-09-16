@@ -75,7 +75,7 @@
 ### Azure Containers
 
 - [Azure Container Instances](https://docs.microsoft.com/en-us/azure/container-instances/container-instances-overview) - PaaS offering to run containers in the cloud. Best suited for microservice based architecture
-- supports linux or windows container images from Docker hub, Azure Container Registry or any other hosted container registry
+- supports linux or windows container images from Docker hub, [Azure Container Registry](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-intro) or any other hosted container registry
 - containers can be grouped into Container Groups, exposed with a FQDN (customlabel.azureregion.azurecontainer.io), custom label provided at the time of container creation
 - Container groups includes group of containers configured to run on the same host
 - ACI supports hypervisor-level security (secured multi-tenancy), custom sizes (CPU, Memory)
@@ -85,8 +85,11 @@
 
 ![Container-groups](https://docs.microsoft.com/en-us/azure/container-instances/media/container-instances-container-groups/container-groups-example.png)
 
-### Azure Kubernetes Service
+### Azure Kubernetes Service - fully managed k8s service in Azure Cloud
 
+- Azure manages the master nodes, user pay only for the worker nodes
+- Integrates with Azure AD for access and security management
+- Integrates with Azure Monitor [Container Inisghts](https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview) to collect container telemetry, metrics from nodes and controllers and application workloads. Logs collected in the Logs Analytics workspace, metrics sent to metrics database in Azure Monitor
 - [AKS](https://docs.microsoft.com/en-us/azure/aks/intro-kubernetes) overview
 
 ### Azure Functions
@@ -112,15 +115,23 @@
 - Virtual network and subnets to enable Azure resources connect each other, connect to Internet, connect to on premises resources
 - Provides isolation and segmentation through proper subnetting.
 - Enable internet communications through public IP or by keeping the resource behind a load balancer
-- Secure communication between Azure resources - not just VMs, but other resources like App Service, AKS, VM Scale Sets
+- Secure communication between Azure resources - not just VMs, but other resources like App Service, AKS, VM Scale Sets. How?
+  - virtual network - deploy VMs and other resources in the same network
+  - [virtual network service end point](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview) - direct connectivity azure services over the Azure backbone network. Extends the address space of the private IP addr of the virtual network.
+  - [VNet Peering](https://docs.microsoft.com/en-us/azure/virtual-network/virtual-network-peering-overview) - connect two virtual networks together, traffic flows only on the Azure backbone (never goes on the internet). can make a global network on the Azure network using network peering between multiple virtual network that spans regions across geographies.
+    - vnet in the same region? => **virtual network peering**
+    - vnet in the diff region? =? **Global virtual network peering**
+    - vnets can be across not just regions, but also Azure subscriptions, AD tenants and [deployment models](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/deployment-models?toc=/azure/virtual-network/toc.json) (classic vs ARM based).
+    - no down time to resources during peering
 - Communicate with on-prem resources
   - [Point-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/point-to-site-about) - a client (from on-prem) initiates a secured VPN connection to the Azure Virtual Network
   - [Site-to-site VPN](https://docs.microsoft.com/en-us/azure/vpn-gateway/design?toc=/azure/virtual-network/toc.json#s2smulti) - extend on-prem VPN to connect to Azure VPN gateway, bringing in AZ resources in the same network as the corp network
   - Express Route - dedicated private connection on the Microsoft backbone network, not through internet.
 - Route traffic using routing tables on the virtual network. Supports BGP with Azure VPN gateway.
-- Filter traffic using Network Security Groups (NSG) and Application Security Groups (ASG) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VMs) running firewall or WAN optimizations.
-- Connect virtual network using virtual network peering.  Peered traffic runs on the Microsoft backbone. Able to make a global network on the Azure network using network peering between multiple virtual network that spans regions across geographies.
+- Filter traffic using [Network Security Groups (NSG)](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview#network-security-groups) and [Application Security Groups (ASG)](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview#application-security-groups) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VMs) running firewall or WAN optimizations.
 - UDR - User Defined Route - to fine grained control over the routing tables between subnets within virtual network or between virtual networks.
+- [Azure Private Link](https://docs.microsoft.com/en-us/azure/private-link/private-link-overview) - to connect Azure PaaS services and Azure hosted customer-owned services over a private end point in the virtual network
+- No cost for using cost. Pricing only based on the resources.
 
 ### Azure VPN
 
