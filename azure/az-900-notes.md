@@ -1,5 +1,80 @@
 # AZ-900 Exam Notes
 
+- [AZ-900 Exam Notes](#az-900-exam-notes)
+  - [Core components](#core-components)
+    - [Infrastructure](#infrastructure)
+    - [Subscriptions](#subscriptions)
+    - [Management Groups](#management-groups)
+    - [Resources and Resource Groups](#resources-and-resource-groups)
+  - [Compute](#compute)
+    - [Azure VMs](#azure-vms)
+    - [Azure Containers](#azure-containers)
+    - [Azure Kubernetes Service - fully managed k8s service in Azure Cloud](#azure-kubernetes-service---fully-managed-k8s-service-in-azure-cloud)
+    - [Azure Functions](#azure-functions)
+    - [Azure App Service](#azure-app-service)
+    - [Azure Virtual Desktop](#azure-virtual-desktop)
+    - [Azure Batch](#azure-batch)
+    - [Logic Apps](#logic-apps)
+  - [Networking](#networking)
+    - [Azure Virtual Networking](#azure-virtual-networking)
+    - [Azure VPN](#azure-vpn)
+    - [Azure ExpressRoute](#azure-expressroute)
+    - [Azure DNS](#azure-dns)
+  - [Storage](#storage)
+    - [Azure Storage Services](#azure-storage-services)
+      - [Basics](#basics)
+      - [Storage Services (Blob, Files, Queue, Table, Disk)](#storage-services-blob-files-queue-table-disk)
+    - [Databases](#databases)
+      - [Cosmos DB](#cosmos-db)
+      - [Azure SQL Server](#azure-sql-server)
+      - [Azure SQL Database](#azure-sql-database)
+      - [Azure SQL Managed Instance](#azure-sql-managed-instance)
+      - [Azure Database for MySQL](#azure-database-for-mysql)
+      - [Azure Database for PostgreSQL](#azure-database-for-postgresql)
+      - [BigData Analytics](#bigdata-analytics)
+    - [Data migration](#data-migration)
+      - [Azure Migrate - unified platform to track migration from on-prem to Azure](#azure-migrate---unified-platform-to-track-migration-from-on-prem-to-azure)
+      - [Azure Data box - physical migration service to transfer large amounts of data to/from azure](#azure-data-box---physical-migration-service-to-transfer-large-amounts-of-data-tofrom-azure)
+      - [File movement (AzCopy, Azure Storage Explorer, Azure File Sync)](#file-movement-azcopy-azure-storage-explorer-azure-file-sync)
+  - [Azure Architecture and Services](#azure-architecture-and-services)
+    - [Idenity, Access and Security](#idenity-access-and-security)
+      - [Azure Active Directory - directory service to sign into MS cloud, other cloud applications and possibly on-prem](#azure-active-directory---directory-service-to-sign-into-ms-cloud-other-cloud-applications-and-possibly-on-prem)
+      - [Azure Active Directory Domain Services - managed domain services](#azure-active-directory-domain-services---managed-domain-services)
+      - [Authentication Methods](#authentication-methods)
+      - [Azure AD External Identities - secure interaction with users outside the org](#azure-ad-external-identities---secure-interaction-with-users-outside-the-org)
+      - [Azure Conditional Access - allow or deny access to resources based on identity signals](#azure-conditional-access---allow-or-deny-access-to-resources-based-on-identity-signals)
+      - [Azure RBAC](#azure-rbac)
+      - [Zero Trust Model](#zero-trust-model)
+      - [Defense-in-Depth - strategy to slow the advance of attack aimed to access data](#defense-in-depth---strategy-to-slow-the-advance-of-attack-aimed-to-access-data)
+      - [Defender for Cloud - monitoring tool for security posture management and threat protection](#defender-for-cloud---monitoring-tool-for-security-posture-management-and-threat-protection)
+  - [AI Services](#ai-services)
+  - [Azure DevOps](#azure-devops)
+  - [Security](#security)
+    - [Azure Security Center](#azure-security-center)
+    - [Azure Sentinel](#azure-sentinel)
+    - [Azure Key Vault](#azure-key-vault)
+    - [Azure Dedicated Hosts](#azure-dedicated-hosts)
+    - [Azure Firewall](#azure-firewall)
+  - [Fundamentals - Management and Governance](#fundamentals---management-and-governance)
+    - [Cost Management](#cost-management)
+      - [Pricing Calculator - estimate cost of provisioning Azure resources](#pricing-calculator---estimate-cost-of-provisioning-azure-resources)
+      - [TCO Calculator - compare cost of running on-prem infra vs Azure Cloud Infra](#tco-calculator---compare-cost-of-running-on-prem-infra-vs-azure-cloud-infra)
+      - [Cost Management Tool - check resource costs, create alerts, budgets](#cost-management-tool---check-resource-costs-create-alerts-budgets)
+      - [Tracking cost of resources organized by tags](#tracking-cost-of-resources-organized-by-tags)
+    - [Azure Blueprints - define repeatable settings and policies](#azure-blueprints---define-repeatable-settings-and-policies)
+    - [Azure Policy - enforce rules across resource configurations to maintain compliance](#azure-policy---enforce-rules-across-resource-configurations-to-maintain-compliance)
+    - [Azure Policy Initiatives - group of Azure policies](#azure-policy-initiatives---group-of-azure-policies)
+    - [Resource Locks - to prevent accidental changes and deletion to a resource](#resource-locks---to-prevent-accidental-changes-and-deletion-to-a-resource)
+    - [Service Trust Portal - to view Microsoft's security, privacy and compliance practices](#service-trust-portal---to-view-microsofts-security-privacy-and-compliance-practices)
+    - [Azure Arc - extend Azure compliance and monitoring to hybrid and multi-cloud environments](#azure-arc---extend-azure-compliance-and-monitoring-to-hybrid-and-multi-cloud-environments)
+    - [Azure Resource Manager - deployment and management service for Azure](#azure-resource-manager---deployment-and-management-service-for-azure)
+    - [Monitoring Tools](#monitoring-tools)
+      - [Azure Advisor - recommendations to optimize the cloud environment](#azure-advisor---recommendations-to-optimize-the-cloud-environment)
+      - [Azure Service Health - status of deployed resources and overall Azure services](#azure-service-health---status-of-deployed-resources-and-overall-azure-services)
+      - [Azure Monitor - platform to collect metrics and logs, analyze and act on the results](#azure-monitor---platform-to-collect-metrics-and-logs-analyze-and-act-on-the-results)
+      - [Application Insights - to monitor web applications in Azure, on-prem and multi cloud](#application-insights---to-monitor-web-applications-in-azure-on-prem-and-multi-cloud)
+  - [Resources](#resources)
+
 ## Core components
 
 ### Infrastructure
@@ -64,8 +139,8 @@
 - Ideal for solutions requiring total control over the OS, custom software
 - Use preconfigured image for rapid provisioning
 - Grouping of VMs - Scale Sets and Availability Sets
-  - Scale Sets - create and manage group of identical, load balanced VMs. Scale Set comes with load balancer. Automatic scale up or down.
-  - Availability Sets - to ensure staggered updates, and fault isolation in network and power connectivity
+  - **Scale Sets** - create and manage group of identical, load balanced VMs. Scale Set comes with load balancer. Automatic scale up or down.
+  - **Availability Sets** - to ensure staggered updates, and fault isolation in network and power connectivity
   - VMs grouped by fault-domain (failure in network/power in one domain doesn’t affect VMs in another fault domain) and update-domain (updates performed on one group at a time).
   - No additional cost for configuring availability set. Pay only for VMs
 - Use cases - dev/test, lift-and-shift of on-prem servers, extending on-prem datacenter to cloud by creating a virtual network and placing Azure VMs under that network
@@ -106,6 +181,10 @@
 - Type of app services - web apps, api apps, web jobs, mobile apps
 
 ### Azure Virtual Desktop
+
+### Azure Batch
+
+### Logic Apps
 
 ## Networking
 
@@ -222,7 +301,7 @@
   - Create and manage file shares through cmdlets, Azure CLI, Azure Portal or Azure Storage Explorer.
   - Data in the file shares can be accessed via file system I/O calls. Can also use Azure Storage Client libraries or Azure Storage REST API.
 - Queue storage - highly scalable message queue. Max individual message size 64KB. sample use case: user submits a form on the webpage. App adds that to a message queue. Message queue triggers an event which invokes a function in Azure Functions.
-- Disk storage - block storage for VMs. (#doubt aka Page Blobs?)
+- Disk storage - Azure Managed Disks for VMs. These are backed by page blobs.
 
 JSON view of the storage account created in the sandbox.
 
@@ -278,6 +357,27 @@ JSON view of the storage account created in the sandbox.
     }
 }
 ```
+
+### Databases
+
+#### Cosmos DB
+
+#### Azure SQL Server
+
+#### Azure SQL Database
+
+#### Azure SQL Managed Instance
+
+#### Azure Database for MySQL
+
+#### Azure Database for PostgreSQL
+
+#### BigData Analytics
+
+- Azure Synapse Analytics
+- Azure HD Insight
+- Azure Databricks
+- Azure Datalake Analytics
 
 ### Data migration
 
@@ -408,6 +508,118 @@ Two options available to migrate on-prem data (takes different form here: raw da
 - View the security health through the ![Security Score](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defender-for-cloud-d47a71d8.png)
 - Generates Alerts upon threat detection
 - Detection followed by protection (suggests remediation, trigger logic app in response), includes fusion kill-chain analysis
+
+## AI Services
+
+- Azure ML - to make predictions, train and test models.
+- Azure Cognitive Services - prebuilt ML models to see, hear and listen
+- Language services - sentiment analysis
+- Speech services - natural language understanding & processing, language conversion
+- Vision services
+- Decision making
+- Azure Bot Service - virtual agent to communicate with humans. Interact using natural language.
+  - e.g. FAQ to Bot - feed in FAQ, build Bot service to answer
+  - OOB integration with Power Automate
+  - Integrate with Azure Bot Framework
+  - For interactive chat experience, using natural language
+  - Can integrate with Azure Cognitive Services (for language understanding, object recognition)
+- Service to understand meaning in images, video or audio? - Azure Cognitive Services
+  - Speech to text
+  - Identify text, objects in images
+- ACS Personalizer
+  - Usage patterns and behavior in users
+  - Usage recommendation
+  - May not be adequate for decision support systems
+- Cognitive services for data analysis
+  - ACS Translator Service - supports around 60 languages
+
+## Azure DevOps
+
+- Aimed at SCM, CI/CD, Infra-as-code, setting up test environment
+- Azure DevOps Services
+  - Azure Boards - for agile. Kanban boards.
+  - Azure Repos - centralized source repo
+  - Azure Pipeline - CI/CD pipeline
+  - Azure Test Plans - to use in CI/CD pipelines
+  - Azure Artifacts - Like GCP Artifact Registry
+  - GitHub - seemless integration
+    - GitHub Actions - automating actions based on a trigger.
+  - Azure Repo vs Github dev/ops
+    - Azure Repos - more focused on enterprise software development, richer project management suite
+    - GitHub - more focused on open source software
+    - Third party tool support -> both are supported
+  - Azure Dev/Test Labs
+  - Automate manage test-lab creation? -> Azure Dev/Test Labs
+  - Building open-source? - Use GitHub Actions, Dev/Ops
+  - GitHub Vs Azure DevOps. Decision criteria.
+    - GH -> default to read/write, AZ -> more fine grained control
+    - Better project management tools? -> AZ > GH.
+- Managing application development cycle
+  - Some requirements and whether AZ or GH matches that requirement or not
+  - Using GitHub to contribute open source software
+  - Using Dev/Test Labs to manage test environment
+
+
+## Security
+ 
+Ensuring minimum level of security across the infrastructure. Collect and act on security events.
+
+### Azure Security Center
+
+- Visibility of security posture (policies and controls)
+- Monitor security settings
+- Security recommendations
+- Automatically apply
+- ML to detect threats, attacks
+- Just in time access control for network ports
+- Control which applications can run on VMs through application control rule in Azure Security Center
+- Secure Score 
+- Just-in time VM access, adaptive application controls, adaptive network controls (compare with NSG settings based the traffic), File Integrity Monitoring.
+- Workflow automation through Logic Apps
+
+### Azure Sentinel
+
+- Cloud based SIEM system - Security Information and Event Management
+- Collect security data in Open Source standard format, cloud scale
+- Detect and investigate threat
+- Respond to incidents
+- Supports variety of data sources - used with connectors - e.g. can connect to AWS Cloud Trail logs.
+- SIS Log Arrest API support
+- Incident response
+  - Raise incident, block or ignore threat etc.
+  - Update firewall restrictions
+
+### Azure Key Vault
+
+- Storing sensitive information (passwords, encryption keys, certificates, tokens, API keys etc.)
+- Key Management
+- Manage TLS certificates
+- Store secrets backed by HSM (Hardware Security Module)
+- Benefits -> centralized application secrets, access monitoring and access control, integration with other azure services (e.g. container registry)
+
+### Azure Dedicated Hosts
+
+- Hosting VMs on dedicated servers using Azure Dedicated Host
+- Some regulatory policies prohibit co-location, so shared server resources are not an option. Enter Azure Dedicated Host
+- Compliance enforcements
+- High availability - provision multiple hosts in a host group. Maintenance control in 35 day rolling window.
+- Pricing based on variety of factors
+
+### Azure Firewall
+
+- Managed network security service
+- Central location for connectivity policies
+- Azure Application Gateway - web application firewall (WAF)
+- Azure Front Door
+- Azure CDN
+- Azure DDoS protection
+- Service tiers
+  - Basic (default. Always-on)
+  - Standard (additional mitigation, tuned to Azure Virtual network resources). Standard fights against volumetric attacks, protocol attacks, resource/application layer attacks
+- Traffic filtering using Network Security Groups
+- NSG are like internal firewall, to filter traffic between azure resources
+- Combining Azure Services to create a net sec solution
+- Securing the perimeter layer
 
 ## Fundamentals - Management and Governance
 
