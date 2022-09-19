@@ -360,17 +360,79 @@ JSON view of the storage account created in the sandbox.
 
 ### Databases
 
-#### Cosmos DB
+#### For semi structured and unstructured data
 
-#### Azure SQL Server
+- semi-structured - data defined by serialization language (e.g. json, xml, yaml), can be organized by tags. data stored in formats like key-value pairs, graph, document.
+- unstructured - kitchen sink of data. media, photos, text files, logs, binary files etc.
 
-#### Azure SQL Database
+##### Cosmos DB
 
-#### Azure SQL Managed Instance
+- Best suited for applications handling semi-structured and unstructured data in real time
+- high throughput, low latency with built-in support for multi region geo replication
+- regions can be added or removed any time, with no downtime for application
+- uses multi-master replication protocol underneath. supports simultaneous read and writes from every region in which the db is configured to run. replication between regions depends on the configured consistency level
+- supports consistency levels on a spectrum. **strong, bounded staleness, session, consistent prefix and eventual**
 
-#### Azure Database for MySQL
+![consistency-levels](https://learn.microsoft.com/en-us/training/wwl-azure/explore-azure-cosmos-db/media/five-consistency-levels.png)
 
-#### Azure Database for PostgreSQL
+- Five 9's of availability across all the regions
+- resource hierarchy
+  - Azure Cosmos Account - unit of global distribution and high availability. comes with unique DNS name. max of 50 account per subscription (limit can be increased via support request)
+  - Azure Cosmos Container - unit of scalability. create one or more container under a cosmos account. replicated across regions with horizontal partitioning
+
+![resource-hierarchy-in-cosmos-db-account](https://learn.microsoft.com/en-us/training/wwl-azure/explore-azure-cosmos-db/media/cosmos-entities.png)
+
+- multi-modal support. data can be accessed in different formats using the appropriate API (SQL, Table, MongoDB, Cassandra and Gremlin APIs)
+- other benefits
+  - all fields are indexed by default. makes it easy and performant to query on multiple fields (querying on non-indexed fields in other dbs takes longer times)
+  - ACID compliant, so works good for OLTP use cases as well
+  - For use cases requiring high read throughput and infrequent writes (create, update), Azure Blob Storage serves better.
+- Costs
+  - pay for the provisioned throughput and storage consumed on hourly basis
+  - measured in **Request Units (RU)** - cost to do a point read of 1KB item
+
+![request-units](https://learn.microsoft.com/en-us/training/wwl-azure/explore-azure-cosmos-db/media/request-units.png)
+
+#### For structured data
+
+- [Material from MS Learn](https://learn.microsoft.com/en-us/training/modules/explore-provision-deploy-relational-database-offerings-azure/)
+- [Overview of PaaS and Iaas SQL offerings in Azure](https://learn.microsoft.com/en-us/azure/azure-sql/azure-sql-iaas-vs-paas-what-is-overview)
+
+##### Azure SQL Server
+
+- IaaS solution to run a full fledged SQL server on Azure VM
+- Good fit for lift-and-shift of on-prem SQL server, especially when PaaS offerings do not meet the needs
+- Customer must manage all aspects of the servecr
+
+##### Azure SQL Managed Instance
+
+- [PaaS solution](https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/sql-managed-instance-paas-overview) to run a fully controllable instance of SQL server in the cloud
+- combines the benefit of Azure SQL database and the SQL server
+- can install multiple databases in the same instance
+- automated backups, patches, monitoring
+- all communication encrypted using certs
+- good fit for most use cases of migrating on-prem SQL server to the cloud. Use [Migration Assistant](https://www.microsoft.com/download/details.aspx?id=53595) to check compatibility
+
+![overview-of-managed-instance](https://learn.microsoft.com/en-us/azure/azure-sql/managed-instance/media/sql-managed-instance-paas-overview/key-features.png)
+
+##### Azure SQL Database
+
+- Fully managed SQL database server in Azure cloud
+- available as **single database** (create and run single database server) or **elastic pool** (multiple databases share the resources in the pool)
+- resources are pre-allocated and charger per hour. If serverless mode is configured, resources are allocated by Azure and charged per use (resource can be shared with other tenants in this case)
+- not compatible with all functionalities of SQL server. e.g. Features like linked servers, Service Broker, Datbase Mail are not available with SQL database. Use SQL Managed Instance instead
+- fully automated updates, backup and recovery
+- advanced threat detection, vulnerabilty scanning, anamoly detection
+- encryption in transit and in rest
+- ideal for modern applications
+
+##### For Open Source Databases (MySQL, MariaDB and PostgreSQL)
+
+- fully managed PaaS implementation of open source DBs based on the community edition
+- highly available and scalable.
+- data encrypted in transit and rest
+- automatic backups and point-in-time restore up to 35 days
+- deployment modes - single server, [flexible server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/overview) and [hyperscale (citus)](https://learn.microsoft.com/en-us/azure/postgresql/hyperscale/overview) server. Hyperscale supports horizontal scaling
 
 #### BigData Analytics
 
@@ -401,9 +463,15 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - Transfer data larger than 40TB from the places with limited to no network connectivity
   - Moving media library from offline tapes into Azure
   - Migrating VM farms to Azure
+  - one time migration, initial bulk transfer followed by incremental transfers over network (e.g. using Azure Files), periodic uploads
 - Data movement - one time, periodic or initial bulk transfer followed by periodic transfer.
 - Export data out of Azure in to on-prem as well. Some common use cases => DR, compliance, migration of applications back into on-prem or other cloud providers.
+- Data from Databox can be ingested by multiple Azure services - Sharepoint, Azure File Sync, HDFS stores, [Azure Backup](https://learn.microsoft.com/en-us/azure/backup/backup-overview)
 - Data in Data Box wiped in accordance with NIST 800-88r1 standards
+- Service types
+  - [Azure Data Box Disk](https://learn.microsoft.com/en-us/azure/databox/data-box-disk-overview) - to migrate data sets less than 40TB. 1-5 8TB disks provided to copy the data.
+  - [Azure Data Box Heavy](https://learn.microsoft.com/en-us/azure/databox/data-box-heavy-overview) - to send hundreds of TBs data - databox device supports up to 1PB of raw storage
+  - [Azure Import/Export service](https://learn.microsoft.com/en-us/azure/import-export/storage-import-export-service) - to import and export data to/from Azure Blob storage and Azure Files
 
 #### File movement (AzCopy, Azure Storage Explorer, Azure File Sync)
 
