@@ -182,7 +182,20 @@
 
 ### Azure Virtual Desktop
 
+- Create full desktop virtualization environment in Azure
+- Setup multi-session Windows 11 deployments. Ability to run Microsoft 365 apps for enterprise in multi user virtual scenarios
+- automatic scaling up and down
+- connect fro many Azure Virtual Desktop client (native app on windows, macOS, iOS, Android, or web client)
+
+![Azure Virtual Desktop Architecture](https://learn.microsoft.com/en-us/azure/architecture/example-scenario/wvd/images/windows-virtual-desktop.png)
+
 ### Azure Batch
+
+- PaaS offering to run large scale parallel and HPC jobs in Azure
+- Azure takes care of creating the pool of compute nodes, application installation and job scheduling
+- provision jobs using Batch APIs and tool or Azure Portal. No cluster or job scheduler to manage
+- priced by the resources consumed in running the batch jobs. No extra charge for using Batch
+- sample target workloads - Monte Carlo simulations, image analysis, 3D image rendingering, OCR, Gene sequencing analysis, media transcoding
 
 ### Logic Apps
 
@@ -533,11 +546,17 @@ Two options available to migrate on-prem data (takes different form here: raw da
 
 #### Azure RBAC
 
-- allow access based on the principle of least privilege
-- use built-in roles (with common access rules) or define own roles (and associate set of access permissions)
-- ![relationship between role and scope](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/role-based-access-scope-4b12a8f3.png)
-- some built in roles - Reader, Owner, Contributor
+- [RBAC](https://learn.microsoft.com/en-us/azure/role-based-access-control/overview) allow access based on the principle of least privilege
+- use built-in roles (with common access rules) or define own roles (and associate set of access permissions) to control access
+- Security principals - **User, Group, Service Principal, Managed Identity**
+- role defintion is just a collection of permissions
+- some [built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) - Reader, Owner, Contributor, User Access Adminitrator. Under Compute, some built-in roles are *Disk Backup Reader, Disk Restore Operator, Virtual Machine Contributora
 - RBAC applied to a scope (*mgmt group, subscription, resource group, resource*). Each scope inherits from RBAC permissions from its parent scope
+
+![relationship between role and scope](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/role-based-access-scope-4b12a8f3.png)
+
+- Role assignment - attac role defition to a user, group, service principal or managed identity at a particular scope
+- assignments follow additive model. if one assignment provides read-access and other provides write access, user will have both read-write access
 - [ARM](#azure-resource-manager---deployment-and-management-service-for-azure) enforces the RBAC permissions when processing the requests to Azure resources
 - RBAC follows **allow-model**.
 
@@ -627,9 +646,8 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - Using GitHub to contribute open source software
   - Using Dev/Test Labs to manage test environment
 
-
 ## Security
- 
+
 Ensuring minimum level of security across the infrastructure. Collect and act on security events.
 
 ### Azure Security Center
@@ -641,7 +659,7 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - ML to detect threats, attacks
 - Just in time access control for network ports
 - Control which applications can run on VMs through application control rule in Azure Security Center
-- Secure Score 
+- Secure Score
 - Just-in time VM access, adaptive application controls, adaptive network controls (compare with NSG settings based the traffic), File Integrity Monitoring.
 - Workflow automation through Logic Apps
 
@@ -667,11 +685,16 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 
 ### Azure Dedicated Hosts
 
-- Hosting VMs on dedicated servers using Azure Dedicated Host
-- Some regulatory policies prohibit co-location, so shared server resources are not an option. Enter Azure Dedicated Host
+- Hosting VMs on dedicated servers using [Azure Dedicated Host](https://learn.microsoft.com/en-us/azure/virtual-machines/dedicated-hosts)
+- Some regulatory policies prohibit co-location, so shared server resources are not an option. ADH is perfect in such scenarios.
+- provision within a region, availability zone, and fault domain.
 - Compliance enforcements
 - High availability - provision multiple hosts in a host group. Maintenance control in 35 day rolling window.
-- Pricing based on variety of factors
+- **Host Group** - collection of dedicated hosts. Each host can have multiple VMs of the same size series (individual size can be different within the group).
+- VMs can be placed in host groups through manual or automatic placement. VM Scale Sets can be deployed in a host group.
+- some VM series are not supported on Dedicated Hosts
+- [Pricing](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/dedicated-host/) - charged per dedicated host, regardless of how many VMs deployed on that host
+- supports Azure Reservations
 
 ### Azure Firewall
 
