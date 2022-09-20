@@ -36,20 +36,19 @@
     - [Azure Migrate - unified platform to track migration from on-prem to Azure](#azure-migrate---unified-platform-to-track-migration-from-on-prem-to-azure)
     - [Azure Data box - physical migration service to transfer large amounts of data to/from azure](#azure-data-box---physical-migration-service-to-transfer-large-amounts-of-data-tofrom-azure)
     - [File movement (AzCopy, Azure Storage Explorer, Azure File Sync)](#file-movement-azcopy-azure-storage-explorer-azure-file-sync)
-- [Identity, Access and Security](#identity-access-and-security)
+- [Identity and Access](#identity-and-access)
   - [Azure Active Directory - directory service to sign into MS cloud, other cloud applications and possibly on-prem](#azure-active-directory---directory-service-to-sign-into-ms-cloud-other-cloud-applications-and-possibly-on-prem)
   - [Azure Active Directory Domain Services - managed domain services](#azure-active-directory-domain-services---managed-domain-services)
   - [Authentication Methods](#authentication-methods)
   - [Azure AD External Identities - secure interaction with users outside the org](#azure-ad-external-identities---secure-interaction-with-users-outside-the-org)
   - [Azure Conditional Access - allow or deny access to resources based on identity signals](#azure-conditional-access---allow-or-deny-access-to-resources-based-on-identity-signals)
   - [Azure RBAC](#azure-rbac)
-  - [Zero Trust Model](#zero-trust-model)
-  - [Defense-in-Depth - strategy to slow the advance of attack aimed to access data](#defense-in-depth---strategy-to-slow-the-advance-of-attack-aimed-to-access-data)
-  - [Defender for Cloud - monitoring tool for security posture management and threat protection](#defender-for-cloud---monitoring-tool-for-security-posture-management-and-threat-protection)
 - [AI Services](#ai-services)
 - [Azure DevOps](#azure-devops)
 - [Security](#security)
-  - [Azure Security Center](#azure-security-center)
+  - [Zero Trust Model](#zero-trust-model)
+  - [Defense-in-Depth - strategy to slow the advance of attack aimed to access data](#defense-in-depth---strategy-to-slow-the-advance-of-attack-aimed-to-access-data)
+  - [Defender for Cloud - monitoring tool for security posture management and threat protection](#defender-for-cloud---monitoring-tool-for-security-posture-management-and-threat-protection)
   - [Azure Sentinel](#azure-sentinel)
   - [Azure Key Vault](#azure-key-vault)
   - [Azure Dedicated Hosts](#azure-dedicated-hosts)
@@ -498,7 +497,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - Install File Sync in Windows Server to take advantage of this. Allows bi-directional sync.
   - Turns a Windows Server into mini CDN.
 
-## Identity, Access and Security
+## Identity and Access
 
 ### Azure Active Directory - directory service to sign into MS cloud, other cloud applications and possibly on-prem
 
@@ -557,50 +556,6 @@ Two options available to migrate on-prem data (takes different form here: raw da
 - [ARM](#azure-resource-manager---deployment-and-management-service-for-azure) enforces the RBAC permissions when processing the requests to Azure resources
 - RBAC follows **allow-model**.
 
-### Zero Trust Model
-
-- Adopt Zero Trust security model
-- Guiding principles
-  - *Verify explicitly* - authenticate and authorize at all points
-  - *Least privilege access* - Just in Time (JIT), Just Enough Access (JEA)
-  - *Assume breach* - minimize blaste radius and segment access
-- moving from trusted secure network to a network with centralized policy enforcing authentication and authorization at all points.
-
-### Defense-in-Depth - strategy to slow the advance of attack aimed to access data
-
-- Layered strategy to protect the most precious data
-- Layers: Physical, Identity & Access, Perimeter (for DDoS prevention), Network, Compute, Application, Data
-- Much of these are self explanatory and common sense
-- ![Defense-in-Depth-layers](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defense-depth-486afc12.png)
-
-### Defender for Cloud - monitoring tool for security posture management and threat protection
-
-- Formerly separate products -> Azure Security Center + Azure Defender. Merged into [one](https://techcommunity.microsoft.com/t5/microsoft-defender-for-cloud/a-new-name-for-multi-cloud-security-microsoft-defender-for-cloud/ba-p/2943020)
-- Cloud Security Posture Management (CSPM) and Cloud Workload Protection Platform (CWPP) for Azure
-- provides the tools to **harden resources, track security posture, protect against attacks and streamline security management**, not only in Azure but also in hybrid and multi-cloud deployments
-- **Defender for cloud score** - continuous assessment and scoring of security posture
-- **Defender for cloud recommendations** - recommendations to mitigate known risks
-- **Defender for cloud alerts** - real time alert system to prevent security incidents from happening
-- native service in Azure. enabled by default in many Azure services
-- Azure machines have the log Analystics Agent deployed by default to gather security related data
-- Extend to hybrid and multi cloud with the help of [Azure Arc](#azure-arc---extend-azure-compliance-and-monitoring-to-hybrid-and-multi-cloud-environments). An overview [here](https://docs.microsoft.com/en-us/azure/azure-arc/overview)
-- Native protections across many services
-  - Azure PaaS - such as Azure App Service, Azure SQL, Azure Storage Accounts. can also do anomaly detection on Azure Activity Logs using Defender for Cloud Apps
-  - Data services - perform classification of data in Azure SQL to find potential vulnerabilities
-  - Networks - limit exposure to brute force attacks. reduce access to VM ports, Just-In-Time access, allow only authorized users, source IP address ranges
-- For hybrid and multi cloud
-  - Agentless plan to assess other cloud (e.g. AWS) resources according to their security recommendations.
-  - Defender for Kubernetes - extend container threat detection and defenses to Amazon EKS Linux Cluster
-  - Defender for servers - to add threat detection and advanced features to Windows and Linux EC2 machines
-- Strategy followed => **Continuously Assess + Secure + Defend**
-- Defender for Cloud built on top of Azure Policy controls.. makes it easy to run on Azure scopes
-- Azure Security Benchmark - MS authored, Azure specific set of guidelines to ensure security and compliance
-- View the security health through the ![Security Score](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defender-for-cloud-d47a71d8.png)
-- Generates Alerts upon threat detection
-- Detection followed by protection (suggests remediation, trigger logic app in response), includes fusion kill-chain analysis
-
-![Sample-security-posture](https://learn.microsoft.com/en-us/azure/defender-for-cloud/media/defender-for-cloud-introduction/sc-secure-score.png)
-
 ## AI Services
 
 - Azure ML - to make predictions, train and test models.
@@ -655,18 +610,49 @@ Two options available to migrate on-prem data (takes different form here: raw da
 
 Ensuring minimum level of security across the infrastructure. Collect and act on security events.
 
-### Azure Security Center
+### Zero Trust Model
 
-- Visibility of security posture (policies and controls)
-- Monitor security settings
-- Security recommendations
-- Automatically apply
-- ML to detect threats, attacks
-- Just in time access control for network ports
-- Control which applications can run on VMs through application control rule in Azure Security Center
-- Secure Score
-- Just-in time VM access, adaptive application controls, adaptive network controls (compare with NSG settings based the traffic), File Integrity Monitoring.
-- Workflow automation through Logic Apps
+- Adopt Zero Trust security model
+- Guiding principles
+  - *Verify explicitly* - authenticate and authorize at all points
+  - *Least privilege access* - Just in Time (JIT), Just Enough Access (JEA)
+  - *Assume breach* - minimize blaste radius and segment access
+- moving from trusted secure network to a network with centralized policy enforcing authentication and authorization at all points.
+
+### Defense-in-Depth - strategy to slow the advance of attack aimed to access data
+
+- Layered strategy to protect the most precious data
+- Layers: Physical, Identity & Access, Perimeter (for DDoS prevention), Network, Compute, Application, Data
+- Much of these are self explanatory and common sense
+- ![Defense-in-Depth-layers](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defense-depth-486afc12.png)
+
+### Defender for Cloud - monitoring tool for security posture management and threat protection
+
+- Formerly separate products -> Azure Security Center + Azure Defender. Merged into [one](https://techcommunity.microsoft.com/t5/microsoft-defender-for-cloud/a-new-name-for-multi-cloud-security-microsoft-defender-for-cloud/ba-p/2943020)
+- Cloud Security Posture Management (CSPM) and Cloud Workload Protection Platform (CWPP) for Azure
+- provides the tools to **harden resources, track security posture, protect against attacks and streamline security management**, not only in Azure but also in hybrid and multi-cloud deployments
+- **Defender for cloud score** - continuous assessment and scoring of security posture
+- **Defender for cloud recommendations** - recommendations to mitigate known risks
+- **Defender for cloud alerts** - real time alert system to prevent security incidents from happening
+- native service in Azure. enabled by default in many Azure services
+- Azure machines have the log Analystics Agent deployed by default to gather security related data
+- Extend to hybrid and multi cloud with the help of [Azure Arc](#azure-arc---extend-azure-compliance-and-monitoring-to-hybrid-and-multi-cloud-environments). An overview [here](https://docs.microsoft.com/en-us/azure/azure-arc/overview)
+- Native protections across many services
+  - Azure PaaS - such as Azure App Service, Azure SQL, Azure Storage Accounts. can also do anomaly detection on Azure Activity Logs using Defender for Cloud Apps
+  - Data services - perform classification of data in Azure SQL to find potential vulnerabilities
+  - Networks - limit exposure to brute force attacks. reduce access to VM ports, Just-In-Time access, allow only authorized users, source IP address ranges
+- For hybrid and multi cloud
+  - Agentless plan to assess other cloud (e.g. AWS) resources according to their security recommendations.
+  - Defender for Kubernetes - extend container threat detection and defenses to Amazon EKS Linux Cluster
+  - Defender for servers - to add threat detection and advanced features to Windows and Linux EC2 machines
+- Strategy followed => **Continuously Assess + Secure + Defend**
+- Defender for Cloud built on top of Azure Policy controls.. makes it easy to run on Azure scopes
+- Azure Security Benchmark - MS authored, Azure specific set of guidelines to ensure security and compliance
+- View the security health through the ![Security Score](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defender-for-cloud-d47a71d8.png)
+- Generates Alerts upon threat detection
+- Detection followed by protection (suggests remediation, trigger logic app in response), includes fusion kill-chain analysis
+
+![Sample-security-posture](https://learn.microsoft.com/en-us/azure/defender-for-cloud/media/defender-for-cloud-introduction/sc-secure-score.png)
 
 ### Azure Sentinel
 
