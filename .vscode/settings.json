@@ -1,5 +1,6 @@
 {
     "files.associations": {
         "netdb.h": "c"
-    }
+    },
+    "markdown.extension.toc.levels": "2..6"
 }
