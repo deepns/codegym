@@ -2,6 +2,7 @@
 
 Welcome to my learning ground. This is my space where I try to learn new things, fail, learn and share.
 
+- [Azure Fundamentals](azure/az-900-notes.md)
 - [Learning Golang](go/learning/)
 - [Playing with signal handling](c/signals/)
 - [I/O Multiplexing with epoll](c/epoll/)
