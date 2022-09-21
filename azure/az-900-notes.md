@@ -49,9 +49,9 @@
   - [Zero Trust Model](#zero-trust-model)
   - [Defense-in-Depth - strategy to slow the advance of attack aimed to access data](#defense-in-depth---strategy-to-slow-the-advance-of-attack-aimed-to-access-data)
   - [Defender for Cloud - monitoring tool for security posture management and threat protection](#defender-for-cloud---monitoring-tool-for-security-posture-management-and-threat-protection)
-  - [Azure Sentinel](#azure-sentinel)
-  - [Azure Key Vault](#azure-key-vault)
-  - [Azure Dedicated Hosts](#azure-dedicated-hosts)
+  - [Azure Sentinel - cloud native SIEM and SOAR system](#azure-sentinel---cloud-native-siem-and-soar-system)
+  - [Azure Key Vault - manage secrets, keys and certificates](#azure-key-vault---manage-secrets-keys-and-certificates)
+  - [Azure Dedicated Hosts - dedicated physical servers to host VMs](#azure-dedicated-hosts---dedicated-physical-servers-to-host-vms)
   - [Azure Firewall](#azure-firewall)
 - [Management and Governance](#management-and-governance)
   - [Cost Management](#cost-management)
@@ -654,27 +654,37 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 
 ![Sample-security-posture](https://learn.microsoft.com/en-us/azure/defender-for-cloud/media/defender-for-cloud-introduction/sc-secure-score.png)
 
-### Azure Sentinel
+### Azure Sentinel - cloud native SIEM and SOAR system
 
-- Cloud based SIEM system - Security Information and Event Management
-- Collect security data in Open Source standard format, cloud scale
-- Detect and investigate threat
-- Respond to incidents
-- Supports variety of data sources - used with connectors - e.g. can connect to AWS Cloud Trail logs.
+- Cloud native **Security Information and Event Management (SIEM)**, security analytics and **Security orchestration, automation, and response (SOAR)**
+
+![sentinel](https://learn.microsoft.com/en-us/azure/sentinel/media/overview/core-capabilities.png)
+
+- Collect security data in Open Source standard format at cloud scale
+- Detect threats, investigate and respond (with custom automated tasks)
+- Supports variety of data sources - used with connectors - e.g. can connect to AWS Cloud Trail logs. servers and VMs can use the Log Analytics Agent to forward the logs to Sentinel. Enable Azure AD data connector to stream logs from Azure AD to Sentinel
 - SIS Log Arrest API support
 - Incident response
   - Raise incident, block or ignore threat etc.
   - Update firewall restrictions
+- [Pricing](https://azure.microsoft.com/en-us/pricing/details/microsoft-sentinel/) is based on the volume of data stored and analyzed in the Azure Monitor Log Analytics workspace. Supports both *pay-as-you-go* or *commitment-tier* pricing model.
+- Collected log types - analytics logs and basic logs. retreival, analysis and retention costs are different between the log types
+- Microsoft Sentinel solution for SAP - for SAP protection in Azure, on-prem and multi cloud SAP deployments
 
-### Azure Key Vault
+### Azure Key Vault - manage secrets, keys and certificates
 
-- Storing sensitive information (passwords, encryption keys, certificates, tokens, API keys etc.)
-- Key Management
-- Manage TLS certificates
+- Storing sensitive information (passwords, encryption keys, certificates, tokens, API keys etc.), Key Management and Certificate management
+- short overview [here](https://learn.microsoft.com/en-us/azure/key-vault/general/overview)
+- Key vaults offered in two tiers
+  - Standard
+  - Premium - *Hardware Security Module (HSM)* protected keys
 - Store secrets backed by HSM (Hardware Security Module)
 - Benefits -> centralized application secrets, access monitoring and access control, integration with other azure services (e.g. container registry)
+- applications can access the secrets/keys/certificates in the key vault using the URIs for a particular resource. Access granted only after proper authentication (e.g. through Azure AD) and authorization (e.g. via Azure RBAC). can access a particular version of the resource if needed
+- Resource URI can vary depending on the resource and the tier. About DNS suffixes [here](https://learn.microsoft.com/en-us/azure/key-vault/general/about-keys-secrets-certificates). For e.g. keys in Azure Cloud accessed at `https://{vault-name}.vault.azure.net/keys/{key-name}/{version}`
+- [pricing](https://azure.microsoft.com/en-us/pricing/details/key-vault/#pricing) based on number of transactions on the vault, certificate renewals and key types
 
-### Azure Dedicated Hosts
+### Azure Dedicated Hosts - dedicated physical servers to host VMs
 
 - Hosting VMs on dedicated servers using [Azure Dedicated Host](https://learn.microsoft.com/en-us/azure/virtual-machines/dedicated-hosts)
 - Some regulatory policies prohibit co-location, so shared server resources are not an option. ADH is perfect in such scenarios.
