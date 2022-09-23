@@ -221,18 +221,24 @@
 - Filter traffic using [Network Security Groups (NSG)](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview#network-security-groups) and [Application Security Groups (ASG)](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview#application-security-groups) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VMs) running firewall or WAN optimizations.
 - UDR - User Defined Route - to fine grained control over the routing tables between subnets within virtual network or between virtual networks.
 - [Azure Private Link](https://docs.microsoft.com/en-us/azure/private-link/private-link-overview) - to connect Azure PaaS services and Azure hosted customer-owned services over a private end point in the virtual network
-- No cost for using cost. Pricing only based on the resources.
+- No cost for using virtual networks. Pricing only based on the resources.
 
 ### Azure VPN
 
-- VPN gateways deployed in dedicated subnet of the virtual network
+- [VPN gateways](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways) deployed in dedicated subnet (**gateway subnet**) of the virtual network
+- Azure supports two types of **virtual network gateway**
+  - VPN Gateway
+  - Express Route Gateway
+- Set the virtual network gateway type to **vpn** during creation to create VPN gateway
 - Used to
-  - connect on-prem data center to Azure virtual network through site-to-site connection
-  - Connect devices to virtual network securely through point-to-site connections
-  - Network-to-network connection
+  - connect on-prem data center to Azure virtual network through **site-to-site** connection
+  - Connect devices to virtual network securely through **point-to-site** connections
+  - Network-to-network connection (**vnet-to-vnet**)
+- At most one VPN Gateway per virtual network. can have VPN gateway and Express Route Gateway in the same virtual network
+- bandwidth, redudancy and pricing varies based on SKUs (e.g. *Basic, VpnGw1, VpnGw1AZ*).s Pay for the compute of the VMs and egress traffic
 - Type of VPN
-  - Policy based - IP address of the tunnel is specified statically
-  - Route based - modeled after IPSec tunnel. Specify which network (or virtual network) interface to use for tunneling. Preferred VPN type. Use it for connections between virtual networks, point-to-site connections, multi-site connections, coexistence with Azure Express Route Gateway (for failover reasons)
+  - Policy based - IP address of the tunnel is specified statically (for point-to-site networks)
+  - Route based - modeled after IPSec tunnel. Specify which network (or virtual network) interface to use for tunneling. Preferred VPN type. Use it for connections between virtual networks, site-to-site connections, multi-site connections, coexistence with Azure Express Route Gateway (for failover reasons)
 - High Availability
   - Active/Standby - default option. Azure provisions a standby VPN by default. Failover in few seconds for planned events, under 90 seconds for unplanned disruption
   - Active/Active - enabled by the support of BGP. Assign a public IP address for each instance. Create separate tunnels to each IP address.
@@ -442,8 +448,23 @@ JSON view of the storage account created in the sandbox.
 - fully managed PaaS implementation of open source DBs based on the community edition
 - highly available and scalable.
 - data encrypted in transit and rest
-- automatic backups and point-in-time restore up to 35 days
-- deployment modes - single server, [flexible server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/overview) and [hyperscale (citus)](https://learn.microsoft.com/en-us/azure/postgresql/hyperscale/overview) server. Hyperscale supports horizontal scaling
+- automatic backups and point-in-time restore up to 35 days (default: 7 days)
+- deployment modes
+  - [single server](https://learn.microsoft.com/en-us/azure/postgresql/single-server/overview-single-server)
+    - best suited for cloud native apps requiring automatic backups, HA and no custom PostgreSQL configs
+    - DB engine runs in a compute container, data files reside in Azure storage (can be LRS or GRS)
+    - supports PostgreSQL 10, 11
+    - Available SKUs - **Basic, General Purpose, and Memory Optimized** - Basic for low concurrency and low cost (less predictability and scalability)
+  - [flexible server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/overview)
+    - more flexibility and server configuration customizations. Supports zone redudancy
+    - DB engine runs in a container in a Linux VM, data resides in Azure Storage
+    - supports PostgreSQL 11, 12, 13, and 14
+    - ![zone-redudnant-flexible-server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/media/business-continuity/concepts-zone-redundant-high-availability-architecture.png)
+    - Available SKUs - **Burstable, General Purpose, and Memory Optimized** (Burstable is like Basic in Single Server mode)
+    - can stop and start server on-demand
+    - data encrypted in transit with TLS, in rest with FIPS-104-2 validation
+    - Azure encourages to use Flexible Server over Single Server. The latter is supported for now, may soon be retired
+  - [hyperscale (citus)](https://learn.microsoft.com/en-us/azure/postgresql/hyperscale/overview) server. Hyperscale supports horizontal scaling. Based on Citus extension to PostgreSQL
 
 #### BigData Analytics
 
