@@ -71,6 +71,7 @@
     - [Azure Service Health - status of deployed resources and overall Azure services](#azure-service-health---status-of-deployed-resources-and-overall-azure-services)
     - [Azure Monitor - platform to collect metrics and logs, analyze and act on the results](#azure-monitor---platform-to-collect-metrics-and-logs-analyze-and-act-on-the-results)
     - [Application Insights - to monitor web applications in Azure, on-prem and multi cloud](#application-insights---to-monitor-web-applications-in-azure-on-prem-and-multi-cloud)
+- [Cloud Adoption Framework (CAF)](#cloud-adoption-framework-caf)
 - [Links](#links)
 
 ## Core components
@@ -108,6 +109,9 @@
 - Resource Groups - group of resources. Resources inherit properties, access policies from the resource groups. A resource can’t be in multiple resource groups. No nesting either. Deleting a resource group will delete the resources under the group too.
 - Subscription - grouping of resource groups.
 - Every Azure account required to have at least one subscription. more is optional. Subscription links to an Azure Account, which is an identity in the Azure Active Directory or in a directory that Azure AD trusts.
+- can start with a [Free Trial](https://azure.microsoft.com/en-us/offers/ms-azr-0044p/) subscription. Upgrade to [pay-as-you-go](https://azure.microsoft.com/en-us/offers/ms-azr-0003p/) subscription after trial ends.
+  - [Azure For Students](https://azure.microsoft.com/en-us/offers/ms-azr-0170p/) - get started with $100 in credits, valid for use in 12 months, no credit card needed
+  - other [azure offers](https://azure.microsoft.com/en-us/support/legal/offer-details/)
 - Subscription Boundaries
   - Billing boundary - separate billing reports and invoices for each subscription. e.g. subscription for every dept within an org.
   - Access control boundary - apply access management policies at the subscription level.
@@ -127,6 +131,7 @@
 
 - Resource Group - logical container for resource group
 - grouping typically based on Lifecycle of the resource
+- can group resources from different regions
 - Azure Resource Manager - control plane for the resources. Manage the resources through declarative templates. Template defined in JSON file.
 
 ## Compute
@@ -144,6 +149,12 @@
 - Use cases - dev/test, lift-and-shift of on-prem servers, extending on-prem datacenter to cloud by creating a virtual network and placing Azure VMs under that network
 - Common VM resources - Size (purpose, cores, processors), Storage disks (for persistence), networking (virtual network, public IP, port configurations)
 - Azure Virtual Desktop - Cloud hosted Windows desktop. Data and apps separated from the underlying hardware. Supports MFA and granular RBAC. Also supports multi session Windows 10 or 11 with the Enterprise version.
+- OS disk storage options - *Premium SSD, Standard SSD, Standard HDD, Ephemeral*
+- data disk storage options
+  - Ultra Disk Storage - high throughput, IO intensive, transactional workloads. sub ms latency - max throughput of 4000 MB/s, 160K IOPS
+  - Premium SSD - for production and performance intensive workloads - max throughput of 900 MB/s, 20000 IOPS
+  - Standard SSD - for webservers, light weight enterprise apps - max throughput of 750 MB/s, 6000 IOPS
+  - Standard HDD - for backup and non critical data, 500 MB/s throughput, 2000 IOPS
 
 ### Azure Containers
 
@@ -177,6 +188,14 @@
 - Supports windows and linux environments. Multiple languages supported (.NET, .NET Core, Java, Ruby, Node.js, PHP, or Python.)
 - Supports automated deployments from source repo (e.g. Github)
 - Type of app services - web apps, api apps, web jobs, mobile apps
+- An app in App Service always run in a App Service Plan.
+- App Service plan pricing tier determines the location, features, cost and compute resources associated with the app. 
+- Plan defines
+  - OS (Windows, Linux)
+  - Region
+  - Number of VM instances
+  - Size of VM instances
+  - Pricing tier (Free, Shared, Basic, Standard, Premium, PremiumV2, PremiumV3, Isolated, IsolatedV2)
 
 ### Azure Virtual Desktop
 
@@ -504,6 +523,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - [Azure Data Box Disk](https://learn.microsoft.com/en-us/azure/databox/data-box-disk-overview) - to migrate data sets less than 40TB. 1-5 8TB disks provided to copy the data.
   - [Azure Data Box Heavy](https://learn.microsoft.com/en-us/azure/databox/data-box-heavy-overview) - to send hundreds of TBs data - databox device supports up to 1PB of raw storage
   - [Azure Import/Export service](https://learn.microsoft.com/en-us/azure/import-export/storage-import-export-service) - to import and export data to/from Azure Blob storage and Azure Files
+  - [Data Box Gateway](https://learn.microsoft.com/en-us/azure/databox-gateway/data-box-gateway-overview) - data transfered using a virtual databox appliance installed on-prem, transfered over SMB/NFS. Ideal for initial bulk transfer followed by incremental transfer, cloud archival, continuous data ingestion
 
 #### File movement (AzCopy, Azure Storage Explorer, Azure File Sync)
 
@@ -567,7 +587,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
 - use built-in roles (with common access rules) or define own roles (and associate set of access permissions) to control access
 - Security principals - **User, Group, Service Principal, Managed Identity**
 - role defintion is just a collection of permissions
-- some [built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) - Reader, Owner, Contributor, User Access Adminitrator. Under Compute, some built-in roles are *Disk Backup Reader, Disk Restore Operator, Virtual Machine Contributora
+- some [built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) - Reader, Owner, Contributor, User Access Adminitrator. Under Compute, some built-in roles are *Disk Backup Reader, Disk Restore Operator, Virtual Machine Contributor*
 - RBAC applied to a scope (*mgmt group, subscription, resource group, resource*). Each scope inherits from RBAC permissions from its parent scope
 
 ![relationship between role and scope](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/role-based-access-scope-4b12a8f3.png)
@@ -672,6 +692,7 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - View the security health through the ![Security Score](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defender-for-cloud-d47a71d8.png)
 - Generates Alerts upon threat detection
 - Detection followed by protection (suggests remediation, trigger logic app in response), includes fusion kill-chain analysis
+- Provides native integration with Defender Antivirus in Windows
 
 ![Sample-security-posture](https://learn.microsoft.com/en-us/azure/defender-for-cloud/media/defender-for-cloud-introduction/sc-secure-score.png)
 
@@ -717,6 +738,7 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - some VM series are not supported on Dedicated Hosts
 - [Pricing](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/dedicated-host/) - charged per dedicated host, regardless of how many VMs deployed on that host
 - supports Azure Reservations
+- A dedicated host can be used only within a subscription. can't be shared between resources in multiple susbscriptions
 
 ### Azure Firewall
 
@@ -871,12 +893,17 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - logging and metric data stored in central repositories and fed to other components (visualizers, analyzers etc.)
 - **Azure Log Analytics** - tool to write and run log queries on the data gather in Azure Monitor. Run simple to complex queries to filter records, visualize the results etc.
 - **Azure Monitor Alerts** - set up alerts to monitor the logs or metrics, to get notified when specified threshold is crossed for a resource. (e.g. VM CPU usage exceeding 80%, disk usage exceeding certain size etc.).
+- curated monitoring views for specific resources - **Application insights, Container insights, VM insights, Network insights, Databases (for CosmosDB, Azure Cache for Redis)**
 
 #### Application Insights - to monitor web applications in Azure, on-prem and multi cloud
 
 - add Application Insight support to an application through Application Insight SDK or Agent
 - provides lot of information such as request rates, response times, page views, performance counters from VMs etc.
 - can also be used to send artificial traffic to the application during periods of low-activicty to check the status
+
+## Cloud Adoption Framework (CAF)
+
+![CAF-lifecycle](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/_images/caf-overview-graphic.png)
 
 ## Links
 
