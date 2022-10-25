@@ -71,6 +71,7 @@
     - [Azure Service Health - status of deployed resources and overall Azure services](#azure-service-health---status-of-deployed-resources-and-overall-azure-services)
     - [Azure Monitor - platform to collect metrics and logs, analyze and act on the results](#azure-monitor---platform-to-collect-metrics-and-logs-analyze-and-act-on-the-results)
     - [Application Insights - to monitor web applications in Azure, on-prem and multi cloud](#application-insights---to-monitor-web-applications-in-azure-on-prem-and-multi-cloud)
+- [Cloud Adoption Framework (CAF)](#cloud-adoption-framework-caf)
 - [Links](#links)
 
 ## Core components
@@ -88,9 +89,9 @@
 - Availability Zone - isolation boundary for resources. physically separate data centers within a region. Some regions may not support availability zones. Used for high availability.
   - primarily for VMs, managed disks, load balancers, and SQL databases.
   - Services that support az fall under three types
-    - Zonal - resource pinned to specific zone
-    - Zone-redundant - Azure automatically replicates the resource to another zone within the region
-    - Non-regional - resource not affected by zone-wide or region-wide outages.
+    - **Zonal** - resource pinned to specific zone
+    - **Zone-redundant** - Azure automatically replicates the resource to another zone within the region
+    - **Non-regional** - resource not affected by zone-wide or region-wide outages.
   - ![availability-zone-and-regions](https://docs.microsoft.com/en-us/azure/availability-zones/media/availability-zones.png)
 - Region Pairs - high availability for regions
   - Most regions are paired with another region that is at least 300km apart. For disaster recovery.
@@ -108,6 +109,9 @@
 - Resource Groups - group of resources. Resources inherit properties, access policies from the resource groups. A resource can’t be in multiple resource groups. No nesting either. Deleting a resource group will delete the resources under the group too.
 - Subscription - grouping of resource groups.
 - Every Azure account required to have at least one subscription. more is optional. Subscription links to an Azure Account, which is an identity in the Azure Active Directory or in a directory that Azure AD trusts.
+- can start with a [Free Trial](https://azure.microsoft.com/en-us/offers/ms-azr-0044p/) subscription. Upgrade to [pay-as-you-go](https://azure.microsoft.com/en-us/offers/ms-azr-0003p/) subscription after trial ends.
+  - [Azure For Students](https://azure.microsoft.com/en-us/offers/ms-azr-0170p/) - get started with $100 in credits, valid for use in 12 months, no credit card needed
+  - other [azure offers](https://azure.microsoft.com/en-us/support/legal/offer-details/)
 - Subscription Boundaries
   - Billing boundary - separate billing reports and invoices for each subscription. e.g. subscription for every dept within an org.
   - Access control boundary - apply access management policies at the subscription level.
@@ -127,6 +131,7 @@
 
 - Resource Group - logical container for resource group
 - grouping typically based on Lifecycle of the resource
+- can group resources from different regions
 - Azure Resource Manager - control plane for the resources. Manage the resources through declarative templates. Template defined in JSON file.
 
 ## Compute
@@ -144,6 +149,12 @@
 - Use cases - dev/test, lift-and-shift of on-prem servers, extending on-prem datacenter to cloud by creating a virtual network and placing Azure VMs under that network
 - Common VM resources - Size (purpose, cores, processors), Storage disks (for persistence), networking (virtual network, public IP, port configurations)
 - Azure Virtual Desktop - Cloud hosted Windows desktop. Data and apps separated from the underlying hardware. Supports MFA and granular RBAC. Also supports multi session Windows 10 or 11 with the Enterprise version.
+- OS disk storage options - *Premium SSD, Standard SSD, Standard HDD, Ephemeral*
+- data disk storage options
+  - Ultra Disk Storage - high throughput, IO intensive, transactional workloads. sub ms latency - max throughput of 4000 MB/s, 160K IOPS
+  - Premium SSD - for production and performance intensive workloads - max throughput of 900 MB/s, 20000 IOPS
+  - Standard SSD - for webservers, light weight enterprise apps - max throughput of 750 MB/s, 6000 IOPS
+  - Standard HDD - for backup and non critical data, 500 MB/s throughput, 2000 IOPS
 
 ### Azure Containers
 
@@ -177,6 +188,14 @@
 - Supports windows and linux environments. Multiple languages supported (.NET, .NET Core, Java, Ruby, Node.js, PHP, or Python.)
 - Supports automated deployments from source repo (e.g. Github)
 - Type of app services - web apps, api apps, web jobs, mobile apps
+- An app in App Service always run in a App Service Plan.
+- App Service plan pricing tier determines the location, features, cost and compute resources associated with the app. 
+- Plan defines
+  - OS (Windows, Linux)
+  - Region
+  - Number of VM instances
+  - Size of VM instances
+  - Pricing tier (Free, Shared, Basic, Standard, Premium, PremiumV2, PremiumV3, Isolated, IsolatedV2)
 
 ### Azure Virtual Desktop
 
@@ -221,18 +240,24 @@
 - Filter traffic using [Network Security Groups (NSG)](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview#network-security-groups) and [Application Security Groups (ASG)](https://docs.microsoft.com/en-us/azure/virtual-network/network-security-groups-overview#application-security-groups) with defined inbound and outbound rules, or dedicated Network Appliances (specialized VMs) running firewall or WAN optimizations.
 - UDR - User Defined Route - to fine grained control over the routing tables between subnets within virtual network or between virtual networks.
 - [Azure Private Link](https://docs.microsoft.com/en-us/azure/private-link/private-link-overview) - to connect Azure PaaS services and Azure hosted customer-owned services over a private end point in the virtual network
-- No cost for using cost. Pricing only based on the resources.
+- No cost for using virtual networks. Pricing only based on the resources.
 
 ### Azure VPN
 
-- VPN gateways deployed in dedicated subnet of the virtual network
+- [VPN gateways](https://learn.microsoft.com/en-us/azure/vpn-gateway/vpn-gateway-about-vpngateways) deployed in dedicated subnet (**gateway subnet**) of the virtual network
+- Azure supports two types of **virtual network gateway**
+  - VPN Gateway
+  - Express Route Gateway
+- Set the virtual network gateway type to **vpn** during creation to create VPN gateway
 - Used to
-  - connect on-prem data center to Azure virtual network through site-to-site connection
-  - Connect devices to virtual network securely through point-to-site connections
-  - Network-to-network connection
+  - connect on-prem data center to Azure virtual network through **site-to-site** connection
+  - Connect devices to virtual network securely through **point-to-site** connections
+  - Network-to-network connection (**vnet-to-vnet**)
+- At most one VPN Gateway per virtual network. can have VPN gateway and Express Route Gateway in the same virtual network
+- bandwidth, redudancy and pricing varies based on SKUs (e.g. *Basic, VpnGw1, VpnGw1AZ*).s Pay for the compute of the VMs and egress traffic
 - Type of VPN
-  - Policy based - IP address of the tunnel is specified statically
-  - Route based - modeled after IPSec tunnel. Specify which network (or virtual network) interface to use for tunneling. Preferred VPN type. Use it for connections between virtual networks, point-to-site connections, multi-site connections, coexistence with Azure Express Route Gateway (for failover reasons)
+  - Policy based - IP address of the tunnel is specified statically (for point-to-site networks)
+  - Route based - modeled after IPSec tunnel. Specify which network (or virtual network) interface to use for tunneling. Preferred VPN type. Use it for connections between virtual networks, site-to-site connections, multi-site connections, coexistence with Azure Express Route Gateway (for failover reasons)
 - High Availability
   - Active/Standby - default option. Azure provisions a standby VPN by default. Failover in few seconds for planned events, under 90 seconds for unplanned disruption
   - Active/Active - enabled by the support of BGP. Assign a public IP address for each instance. Create separate tunnels to each IP address.
@@ -442,8 +467,23 @@ JSON view of the storage account created in the sandbox.
 - fully managed PaaS implementation of open source DBs based on the community edition
 - highly available and scalable.
 - data encrypted in transit and rest
-- automatic backups and point-in-time restore up to 35 days
-- deployment modes - single server, [flexible server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/overview) and [hyperscale (citus)](https://learn.microsoft.com/en-us/azure/postgresql/hyperscale/overview) server. Hyperscale supports horizontal scaling
+- automatic backups and point-in-time restore up to 35 days (default: 7 days)
+- deployment modes
+  - [single server](https://learn.microsoft.com/en-us/azure/postgresql/single-server/overview-single-server)
+    - best suited for cloud native apps requiring automatic backups, HA and no custom PostgreSQL configs
+    - DB engine runs in a compute container, data files reside in Azure storage (can be LRS or GRS)
+    - supports PostgreSQL 10, 11
+    - Available SKUs - **Basic, General Purpose, and Memory Optimized** - Basic for low concurrency and low cost (less predictability and scalability)
+  - [flexible server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/overview)
+    - more flexibility and server configuration customizations. Supports zone redudancy
+    - DB engine runs in a container in a Linux VM, data resides in Azure Storage
+    - supports PostgreSQL 11, 12, 13, and 14
+    - ![zone-redudnant-flexible-server](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/media/business-continuity/concepts-zone-redundant-high-availability-architecture.png)
+    - Available SKUs - **Burstable, General Purpose, and Memory Optimized** (Burstable is like Basic in Single Server mode)
+    - can stop and start server on-demand
+    - data encrypted in transit with TLS, in rest with FIPS-104-2 validation
+    - Azure encourages to use Flexible Server over Single Server. The latter is supported for now, may soon be retired
+  - [hyperscale (citus)](https://learn.microsoft.com/en-us/azure/postgresql/hyperscale/overview) server. Hyperscale supports horizontal scaling. Based on Citus extension to PostgreSQL
 
 #### BigData Analytics
 
@@ -483,6 +523,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - [Azure Data Box Disk](https://learn.microsoft.com/en-us/azure/databox/data-box-disk-overview) - to migrate data sets less than 40TB. 1-5 8TB disks provided to copy the data.
   - [Azure Data Box Heavy](https://learn.microsoft.com/en-us/azure/databox/data-box-heavy-overview) - to send hundreds of TBs data - databox device supports up to 1PB of raw storage
   - [Azure Import/Export service](https://learn.microsoft.com/en-us/azure/import-export/storage-import-export-service) - to import and export data to/from Azure Blob storage and Azure Files
+  - [Data Box Gateway](https://learn.microsoft.com/en-us/azure/databox-gateway/data-box-gateway-overview) - data transfered using a virtual databox appliance installed on-prem, transfered over SMB/NFS. Ideal for initial bulk transfer followed by incremental transfer, cloud archival, continuous data ingestion
 
 #### File movement (AzCopy, Azure Storage Explorer, Azure File Sync)
 
@@ -490,7 +531,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - cmdline tool to copy blobs/files to and from a storage account.
   - Copy & sync files between storage account. No bi-directional support.
   - Can move files back and forth between Azure and other clouds as well.
-- Azure storage explorer (https://azure.microsoft.com/en-us/products/storage/storage-explorer/#overview)
+- [Azure storage explorer](https://azure.microsoft.com/en-us/products/storage/storage-explorer/#overview)
   - Standalone GUI app to manage files and blobs. Uses AzCopy under the hood.
 - Azure File Sync
   - Centralize file shares in Azure Files with the compatibility of a Windows Server.
@@ -546,7 +587,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
 - use built-in roles (with common access rules) or define own roles (and associate set of access permissions) to control access
 - Security principals - **User, Group, Service Principal, Managed Identity**
 - role defintion is just a collection of permissions
-- some [built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) - Reader, Owner, Contributor, User Access Adminitrator. Under Compute, some built-in roles are *Disk Backup Reader, Disk Restore Operator, Virtual Machine Contributora
+- some [built-in roles](https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles) - Reader, Owner, Contributor, User Access Adminitrator. Under Compute, some built-in roles are *Disk Backup Reader, Disk Restore Operator, Virtual Machine Contributor*
 - RBAC applied to a scope (*mgmt group, subscription, resource group, resource*). Each scope inherits from RBAC permissions from its parent scope
 
 ![relationship between role and scope](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/role-based-access-scope-4b12a8f3.png)
@@ -651,6 +692,7 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - View the security health through the ![Security Score](https://docs.microsoft.com/en-us/training/wwl-azure/describe-azure-identity-access-security/media/defender-for-cloud-d47a71d8.png)
 - Generates Alerts upon threat detection
 - Detection followed by protection (suggests remediation, trigger logic app in response), includes fusion kill-chain analysis
+- Provides native integration with Defender Antivirus in Windows
 
 ![Sample-security-posture](https://learn.microsoft.com/en-us/azure/defender-for-cloud/media/defender-for-cloud-introduction/sc-secure-score.png)
 
@@ -696,6 +738,7 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - some VM series are not supported on Dedicated Hosts
 - [Pricing](https://azure.microsoft.com/en-us/pricing/details/virtual-machines/dedicated-host/) - charged per dedicated host, regardless of how many VMs deployed on that host
 - supports Azure Reservations
+- A dedicated host can be used only within a subscription. can't be shared between resources in multiple susbscriptions
 
 ### Azure Firewall
 
@@ -850,12 +893,17 @@ Ensuring minimum level of security across the infrastructure. Collect and act on
 - logging and metric data stored in central repositories and fed to other components (visualizers, analyzers etc.)
 - **Azure Log Analytics** - tool to write and run log queries on the data gather in Azure Monitor. Run simple to complex queries to filter records, visualize the results etc.
 - **Azure Monitor Alerts** - set up alerts to monitor the logs or metrics, to get notified when specified threshold is crossed for a resource. (e.g. VM CPU usage exceeding 80%, disk usage exceeding certain size etc.).
+- curated monitoring views for specific resources - **Application insights, Container insights, VM insights, Network insights, Databases (for CosmosDB, Azure Cache for Redis)**
 
 #### Application Insights - to monitor web applications in Azure, on-prem and multi cloud
 
 - add Application Insight support to an application through Application Insight SDK or Agent
 - provides lot of information such as request rates, response times, page views, performance counters from VMs etc.
 - can also be used to send artificial traffic to the application during periods of low-activicty to check the status
+
+## Cloud Adoption Framework (CAF)
+
+![CAF-lifecycle](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/_images/caf-overview-graphic.png)
 
 ## Links
 
