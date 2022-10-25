@@ -89,9 +89,9 @@
 - Availability Zone - isolation boundary for resources. physically separate data centers within a region. Some regions may not support availability zones. Used for high availability.
   - primarily for VMs, managed disks, load balancers, and SQL databases.
   - Services that support az fall under three types
-    - Zonal - resource pinned to specific zone
-    - Zone-redundant - Azure automatically replicates the resource to another zone within the region
-    - Non-regional - resource not affected by zone-wide or region-wide outages.
+    - **Zonal** - resource pinned to specific zone
+    - **Zone-redundant** - Azure automatically replicates the resource to another zone within the region
+    - **Non-regional** - resource not affected by zone-wide or region-wide outages.
   - ![availability-zone-and-regions](https://docs.microsoft.com/en-us/azure/availability-zones/media/availability-zones.png)
 - Region Pairs - high availability for regions
   - Most regions are paired with another region that is at least 300km apart. For disaster recovery.
@@ -531,7 +531,7 @@ Two options available to migrate on-prem data (takes different form here: raw da
   - cmdline tool to copy blobs/files to and from a storage account.
   - Copy & sync files between storage account. No bi-directional support.
   - Can move files back and forth between Azure and other clouds as well.
-- Azure storage explorer (https://azure.microsoft.com/en-us/products/storage/storage-explorer/#overview)
+- [Azure storage explorer](https://azure.microsoft.com/en-us/products/storage/storage-explorer/#overview)
   - Standalone GUI app to manage files and blobs. Uses AzCopy under the hood.
 - Azure File Sync
   - Centralize file shares in Azure Files with the compatibility of a Windows Server.
