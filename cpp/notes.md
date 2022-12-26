@@ -2,7 +2,11 @@
 
 Been a long time did any C++ stuff. Refreshing my rusted memory to unlearn my old C++ knowledge and learn the current standards.
 
-## Day 1
+## Day 2 - Anonymous namespaces
+
+- using anonymous namespaces to restrict global names to file scope (just like static)
+
+## Day 1 - Hello World
 
 - Set up vscode on mac
 - have installed xcode before, came with clang compiler. `/usr/bin` shows multiple compilers, but all seem to point to only Apple's clang.
