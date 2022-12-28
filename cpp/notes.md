@@ -2,6 +2,37 @@
 
 Been a long time did any C++ stuff. Refreshing my rusted memory to unlearn my old C++ knowledge and learn the current standards.
 
+## Topics to learn
+
+Growing list of topics to learn
+
+- Namespaces
+- Classes
+  - Constructors
+  - Inheritance
+  - Abstract base classes
+- Templates
+- Advancements from C++11 and beyond
+- Data structures from the standard library
+  - list
+  - vector
+  - set
+  - map
+  - stack
+  - queue
+- smart pointers
+
+## Day 4 - namespaces - continued
+
+- Wrote a basic namespaces within .cpp files and using header files
+- what next? - nested namespace, std namespace, using directive vs declaration, namespace alias
+
+## Day 3 - Reading namespaces, watching OOP concepts on YT CodeBeauty
+
+- Links to read
+  - [ ] [Modern C++](https://learn.microsoft.com/en-us/cpp/cpp/welcome-back-to-cpp-modern-cpp)
+  - [ ] [Namespaces](https://learn.microsoft.com/en-us/cpp/cpp/namespaces-cpp)
+
 ## Day 2 - Anonymous namespaces
 
 - using anonymous namespaces to restrict global names to file scope (just like static)
