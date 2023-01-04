@@ -22,6 +22,27 @@ Growing list of topics to learn
   - queue
 - smart pointers
 
+## Day 8
+
+- Some more hands on with constructor initialization and default constructors
+
+## Day 7
+
+- Hands on with some lambda and class constructor basics
+
+## Day 6
+
+- Reading about constructors from https://learn.microsoft.com/en-us/cpp/cpp/constructors-cpp
+
+## Day 5
+
+- Review of modern c++. Range based loops, auto keyword, lambda expressions, constexpr in place of macros, std::variant in place of unions.
+- Things to try out more
+  - Lambdas
+  - Callable objects
+  - Exception handling
+  - Move constructor and assignment
+
 ## Day 4 - namespaces - continued
 
 - Wrote a basic namespaces within .cpp files and using header files
