@@ -11,6 +11,9 @@ Growing list of topics to learn
   - Constructors
   - Inheritance
   - Abstract base classes
+- Virtual stuff
+  - virtual classes
+  - virtual functions
 - Templates
 - Advancements from C++11 and beyond
 - Data structures from the standard library
@@ -21,6 +24,8 @@ Growing list of topics to learn
   - stack
   - queue
 - smart pointers
+- logging framework
+- date and time manipulations
 
 ## Day 8
 
