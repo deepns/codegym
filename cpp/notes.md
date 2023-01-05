@@ -27,6 +27,11 @@ Growing list of topics to learn
 - logging framework
 - date and time manipulations
 
+## Day 9
+
+- Hands on with explicit constructors, typeid and const_cast operators.
+- found out the diff between using stdio and cstdio headers
+
 ## Day 8
 
 - Some more hands on with constructor initialization and default constructors
