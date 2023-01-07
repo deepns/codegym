@@ -32,6 +32,17 @@ Growing list of topics to learn
 - Hands on with explicit constructors, typeid and const_cast operators.
 - found out the diff between using stdio and cstdio headers
 
+## Day 10
+
+- More on simple classes
+- Inheritance vs composition
+- playing with std::vector
+
+## Day 9
+
+- typid, const_cast and simple classes
+- getting started to play with std::list
+
 ## Day 8
 
 - Some more hands on with constructor initialization and default constructors
