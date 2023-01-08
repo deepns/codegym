@@ -27,21 +27,28 @@ Growing list of topics to learn
 - logging framework
 - date and time manipulations
 
-## Day 9
+## Day 12
 
-- Hands on with explicit constructors, typeid and const_cast operators.
-- found out the diff between using stdio and cstdio headers
+- vector operations and access
+- Factory and AbstractFactory patterns
+- Review of Google style guide
+- brush up on vector operations
 
-## Day 10
+## Day 11
 
 - More on simple classes
 - Inheritance vs composition
 - playing with std::vector
 
-## Day 9
+## Day 10
 
 - typid, const_cast and simple classes
 - getting started to play with std::list
+
+## Day 9
+
+- Hands on with explicit constructors, typeid and const_cast operators.
+- found out the diff between using stdio and cstdio headers
 
 ## Day 8
 

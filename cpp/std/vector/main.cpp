@@ -30,7 +30,10 @@ int main() {
     
     // direct access
     std::cout << "names.at(1) = " << names.at(1) << std::endl;
-
+    std::cout << "names.front() = " << names.front() << std::endl;
+    std::cout << "names.back() = " << names.back() << std::endl;
+    std::cout << "using [] operator: names[0] = " << names[0] << std::endl;
+ 
     // iterators
 
     // using range
@@ -54,7 +57,18 @@ int main() {
 
     // modifiers
 
-    // operators
+    // clear vector
+    names.clear();
+
+    // push new element..can only push to the back
+    names.push_back("banana");
+
+    // insert based on the iterator position
+    names.insert(names.begin(), "apple");
+
+    std::cout << "popping from names..." << std::endl;
+ 
+    ListNames();
 
     return 0;
-}
+};
