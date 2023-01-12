@@ -16,16 +16,35 @@ Growing list of topics to learn
   - virtual functions
 - Templates
 - Advancements from C++11 and beyond
-- Data structures from the standard library
-  - list
-  - vector
-  - set
-  - map
-  - stack
-  - queue
-- smart pointers
-- logging framework
-- date and time manipulations
+- Fom the standard library
+  - [ ] array
+  - [ ] list
+  - [ ] vector
+  - [ ] set
+  - [ ] map
+  - [ ] stack
+  - [ ] queue
+  - [ ] function
+- [ ] smart pointers
+- [ ] logging framework
+- [ ] date and time manipulations
+- [ ] constexpr
+- [ ] lambdas
+- [ ] initializer_list
+
+## Day 16
+
+- exploring std::array
+
+## Day 14-15
+
+- didn't have much time to focus on this
+- did little reading on lambda, and command line parsing
+- getopt and getopt_long
+
+## Day 13
+
+- More on lambdas. Read some sections of this [page](https://www.learncpp.com/cpp-tutorial/introduction-to-lambdas-anonymous-functions/)
 
 ## Day 12
 
