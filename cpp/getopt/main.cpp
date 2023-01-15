@@ -1,6 +1,8 @@
+// A sample program to learn getopt_long
+
 #include <iostream>
 #include <getopt.h>
-#include <unistd.h>
+#include <stdlib.h>
 
 // Thanks to https://cfengine.com/blog/2021/optional-arguments-with-getopt-long/
 // for this macro
@@ -11,147 +13,65 @@
 
 namespace
 {
-
     void ShowHelp()
     {
-        // TODO update the help description
-        std::cout << "./main -r/--required ";
+        std::cout << "./si -p/--principal <value> -n/--num-of-years <value> [-r/--rate <value>] [-h/--help]" << std::endl;
     }
 
-    void ParseArgsWithGetOpt(int argc, char **argv)
+    void ParseOptions(int argc, char *argv[], double &p, double &n, double &r)
     {
-        // getopt can parse three types of options
-        //  - an option that require argument   // specified by option letter followed by :
-        //  - an option that takes an optional argument // specified by option letter followed by ::
-        //  - an option that doesn't need any argument // specified by just the option letter
-        const char *short_options = "r:o::h";
-
-        // argument for an option may or may not be separated by spaces.
-        // both are valid here.
-        // -o val
-        // -oval
-
-        // getopt returns -1 when it has no more arguments to process
-        int ch = -1;
-        while ((ch = getopt(argc, argv, short_options)) != -1)
-        {
-            switch (ch)
-            {
-            case 'r':
-                std::cout << "r=" << optarg << std::endl;
-                break;
-            case 'o':
-                // There is a gotcha here. If the optional argument and its value are
-                // separated by space, then getopt cannot differentiate whether the
-                // next token in the command option is another argument or value to
-                // the preceding argument. In this example, with "-o someval", optarg
-                // will be NULL when parsing the option 'o'.
-                //
-                // man page for getopt says this
-                // On return from getopt(), optarg points to an option argument, if it
-                // is anticipated, and the variable optind contains the index to the next
-                // argv argument for a subsequent call to getopt().  The variable optopt
-                // saves the last known option character returned by getopt().
-
-                // for optional arguments where argument and value are separated by space,
-                // we can look ahead into argv using optind index since optind is set to
-                // next argv argument for the subsequent getopt().
-
-                std::cout << "o="
-                          << (optarg ? optarg : "NULL")
-                          << std::endl;
-                if (OPTIONAL_ARGUMENT_IS_PRESENT)
-                {
-                    std::cout << "o=" << optarg << std::endl;
-                }
-                break;
-            case '?':
-                // returned when an option not specified in the short_options is encountered
-                // an error message is written to stderr as well (can be disabled by setting
-                // opterr to 0)
-            case 'h':
-                ShowHelp();
-            default:
-                break;
-            }
-        }
-    }
-
-    void ParseArgsWithGetOptLong(int argc, char **argv)
-    {
-        // TODO
-        // Clean up the comments here.
-        
         option long_options[] = {
-            {"required", required_argument, NULL, 'r'},
-            {"optional", optional_argument, NULL, 'o'},
-            {"help", no_argument, NULL, 'h'},
+            {"principal", required_argument, nullptr, 'p'},
+            {"num-of-years", required_argument, nullptr, 'n'},
+            {"rate", optional_argument, nullptr, 'r'},
+            {"help", no_argument, nullptr, 'h'},
             {nullptr, 0, nullptr, 0}};
 
-        // getopt can parse three types of options
-        //  - an option that require argument   // specified by option letter followed by :
-        //  - an option that takes an optional argument // specified by option letter followed by ::
-        //  - an option that doesn't need any argument // specified by just the option letter
-        const char *short_options = "r:o::h";
+        const char *short_options = "p:n:r::h";
 
-        // with short options,
-        // -o val
-        // -oval
-
-        // With the long options, it supports two more ways of specifying the options.
-        //
-        // --option=val
-        // --option val
-
-        // getopt_long returns -1 when it has no more arguments to process
         int ch = -1;
         while ((ch = getopt_long(argc, argv, short_options, long_options, nullptr)) != -1)
         {
             switch (ch)
             {
-            case 'r':
-                std::cout << "r=" << optarg << std::endl;
+            case 'p':
+                p = std::stod(optarg);
                 break;
-            case 'o':
-                // There is a gotcha here. If the optional argument and its value are
-                // separated by space, then getopt cannot differentiate whether the
-                // next token in the command option is another argument or value to
-                // the preceding argument. In this example, with "-o someval", optarg
-                // will be NULL when parsing the option 'o'.
-                //
-                // man page for getopt says this
-                // On return from getopt(), optarg points to an option argument, if it
-                // is anticipated, and the variable optind contains the index to the next
-                // argv argument for a subsequent call to getopt().  The variable optopt
-                // saves the last known option character returned by getopt().
-
-                // for optional arguments where argument and value are separated by space,
-                // we can look ahead into argv using optind index since optind is set to
-                // next argv argument for the subsequent getopt().
-
-                std::cout << "o="
-                          << (optarg ? optarg : "NULL")
-                          << std::endl;
+            case 'n':
+                n = std::stod(optarg);
+                break;
+            case 'r':
                 if (OPTIONAL_ARGUMENT_IS_PRESENT)
                 {
-                    std::cout << "o=" << optarg << std::endl;
+                    r = std::stod(optarg) / 100;
+                    if (r < 0 or r > 100)
+                    {
+                        std::cerr << "You kidding??..Rate must be between 0..100" << std::endl;
+                        exit(1);
+                    }
                 }
                 break;
             case '?':
-                // returned when an option not specified in the short_options is encountered
-                // an error message is written to stderr as well (can be disabled by setting
-                // opterr to 0)
             case 'h':
-                ShowHelp();
             default:
+                ShowHelp();
+                exit(1);
                 break;
             }
         }
     }
-
 } // namespace
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-    ParseArgsWithGetOptLong(argc, argv);
+    double principal = 0;
+    double num_of_years = 1;
+    double rate = .05;
+
+    ParseOptions(argc, argv, principal, num_of_years, rate);
+
+    double si = principal * rate * num_of_years;
+    std::cout << "Simple interest = " << si << std::endl;
+    std::cout << "Principal + interest = " << principal + si << std::endl;
+    return 0;
 }

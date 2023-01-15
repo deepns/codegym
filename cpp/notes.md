@@ -25,12 +25,23 @@ Growing list of topics to learn
   - [ ] stack
   - [ ] queue
   - [ ] function
+  - [ ] tie
+  - [ ] tuple
 - [ ] smart pointers
 - [ ] logging framework
 - [ ] date and time manipulations
 - [ ] constexpr
 - [ ] lambdas
 - [ ] initializer_list
+
+## Day 18
+
+- added a concrete example to learn getopt/getopt_long
+- explored std::tuple, std::tie, nullptr, std::stod along the way
+
+## Day 17
+
+- understanding getopt and getopt_long further..finally cleared the doubts on the optional argument
 
 ## Day 16
 
