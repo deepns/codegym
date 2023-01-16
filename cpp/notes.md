@@ -34,6 +34,10 @@ Growing list of topics to learn
 - [ ] lambdas
 - [ ] initializer_list
 
+## Day 19
+
+- explored more on std::tuple, std::tie, std::make_tuple, [structured bindings](https://riptutorial.com/cplusplus/example/3384/structured-bindings)
+
 ## Day 18
 
 - added a concrete example to learn getopt/getopt_long
