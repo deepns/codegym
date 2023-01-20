@@ -2,6 +2,8 @@
 #include <iostream>
 #include <typeinfo>
 
+using std::vector;
+
 int main() {
     // Exploring std::vector
 
@@ -70,5 +72,32 @@ int main() {
  
     ListNames();
 
+    auto ListNums = [](const vector<int> vec, std::string name) {
+        std::cout << "Listing " << name << ", size=" << vec.size() << ", cap=" << vec.capacity() << std::endl;
+        for (const auto& n : vec) {
+            std::cout << n << ",";
+        }
+        std::cout << std::endl;
+    };
+
+    // different types of constructing vectors
+    vector<int> nums{1, 2, 3, 4, 5};
+    ListNums(nums, "nums");
+
+    vector<int> nums_after_3{std::find_if(nums.begin(), nums.end(), [&](int x) { 
+        return x > 3;
+    }), nums.end()};
+    ListNums(nums_after_3, "nums_after_3");
+
+    // invokes the copy constructor
+    vector<int> nums2 = nums;
+    nums2.push_back(6);
+    ListNums(nums2, "nums2");
+
+    // invokes the move constructor
+    vector<int> nums3 = std::move(nums2);
+    ListNums(nums2, "nums2");
+    ListNums(nums3, "nums3");
+        
     return 0;
 };
