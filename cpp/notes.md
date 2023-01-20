@@ -33,6 +33,23 @@ Growing list of topics to learn
 - [ ] constexpr
 - [ ] lambdas
 - [ ] initializer_list
+- [ ] Design patterns
+  - [ ] Factory
+  - [ ] Observer
+  - [ ] Command
+
+## Day 22
+
+- List remove and erase
+- Getting started with design patterns. exploring observer pattern
+
+## Day 21
+
+- Didn't work
+
+## Day 20
+
+- little bit of std::reference_wrapper, std::shared_ptr
 
 ## Day 19
 

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <functional>
 #include <list>
 
 int main() {
@@ -94,6 +95,14 @@ int main() {
 
     
     names.emplace_back("alice");
+    listNames();
+
+    // remove from list
+    names.remove("bar");
+    listNames();
+
+    // difference between remove and erase?
+    names.erase(std::find(names.begin(), names.end(),  "baz"));
     listNames();
 
     return 0;
