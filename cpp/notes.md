@@ -18,7 +18,7 @@ Growing list of topics to learn
 - Advancements from C++11 and beyond
 - Fom the standard library
   - [ ] array
-  - [ ] list
+  - [x] list
   - [ ] vector
   - [ ] set
   - [ ] map
@@ -33,10 +33,22 @@ Growing list of topics to learn
 - [ ] constexpr
 - [ ] lambdas
 - [ ] initializer_list
+- [ ] std::allocator
+- [x] nullptr
 - [ ] Design patterns
   - [ ] Factory
   - [ ] Observer
   - [ ] Command
+
+## Day 24
+
+- exploring list and maps
+- list - remove, remove_if and erase (using ranges)
+- map - just getting started. map iteration, insertion and capacity methods
+
+## Day 23
+
+- Reading [Command design pattern](https://refactoring.guru/design-patterns/command)
 
 ## Day 22
 

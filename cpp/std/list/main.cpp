@@ -1,5 +1,5 @@
 #include <iostream>
-#include <functional>
+#include <iterator>
 #include <list>
 
 int main() {
@@ -12,7 +12,7 @@ int main() {
     std::list<int> nums = {1, 2, 3, 4};
 
     // list of strings
-    std::list<std::string> names = { "foo", "bar", "baz" };
+    std::list<std::string> names = { "foo", "bar", "baz", "zebra", "cat" };
 
     // capacity checks
     std::cout << "nums.empty()=" << nums.empty() << std::endl;
@@ -69,8 +69,8 @@ int main() {
         std::cout << std::endl;
     };
 
-    auto listNames = [&] () {
-        std::cout << "Listing names: " << std::endl;
+    auto listNames = [&] (std::string desc="") {
+        std::cout << "Listing names: " << desc << std::endl;
         for (auto& name: names) {
             std::cout << name << " ";
         }
@@ -93,17 +93,49 @@ int main() {
     nums.emplace_back(2);
     listNums();
 
-    
     names.emplace_back("alice");
     listNames();
 
     // remove from list
-    names.remove("bar");
+    // remove() returns the number of elements removed (only from c++20)
+    auto numNamesRemoved = names.remove("bar");
+    std::cout << "numNamesRemoved=" << numNamesRemoved << std::endl;
     listNames();
 
-    // difference between remove and erase?
+    // no error or exception when removing an non-existing element
+    numNamesRemoved = names.remove("bar");
+    std::cout << "numNamesRemoved=" << numNamesRemoved << std::endl;
+    listNames("after remove bar again");
+
+    // remove_if
+    names.remove_if([](const std::string& name) {
+        return name.starts_with("c");
+    });
+    listNames("after remove_if");
+
+    // erase from the list
     names.erase(std::find(names.begin(), names.end(),  "baz"));
-    listNames();
+    listNames("after erase:");
+    
+    // difference between remove and erase?
+    // erase takes the iterator pos as input, and can also take 
+    // range of elements
+    nums = {1, 10, 23, 24, 12, 84, 24};
+    auto start = nums.begin();
+    auto end = nums.end();
+    std::advance(start, 2);
+    std::advance(end, -2);
 
+    listNums();
+
+    std::cout << "Erasing these elements..." << std::endl;
+    for (auto it=start; it != end; ++it) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    nums.erase(start, end);
+    listNums();
+    
     return 0;
 }
