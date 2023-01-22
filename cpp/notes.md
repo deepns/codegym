@@ -40,6 +40,43 @@ Growing list of topics to learn
   - [ ] Observer
   - [ ] Command
 
+## Day 25
+
+- more on std::map
+- didn't understand extract & insert handling of node-type
+- ran into segfault when inserted a node that was extracted
+- c++ google style guide
+  - Filenames
+    - all lower case and can include `-` or `_`
+    - name end with `.cc` and header files with `.h`
+  - Type names
+    - PascalCase / CamelCase
+    - applies to classes, structs, type alias, enums and type template
+  - Variables - local variables, function parameters, class members
+    - all lower case, with words separated by `_`
+    - e.g. `a_variable`, `a_class_member_`, `a_struct_member`
+  - Constants
+    - constexpr or const variables named with a leading `k`
+    - e.g. `const double kPi = 3.14`
+  - Functions
+    - regular functions and class methods in CamelCase/PascalCase
+    - accessors (getters / setters) may be named like variables. e.g. `int size()` and `void set_size()`, with `size_` as the member variable
+  - Namespace - all lower case, separated by underscores
+  - Enums
+    - type name in PascalCase and enum values named like constants
+  - Macros
+    - avoid as much as possible. if must, use ALL_CAPS_NAMING_LIKE_THIS
+  - Comments
+    - `//` more common, but `/* a comment */` syntax is also fine.
+    - class comments - describe what it is and how it should be used
+    - function comments - describe how to use in declaration comments and the operation details in the definition comments
+    - class members - comments optional when the purpose is non obvious
+    - global variables - must have comments describe what they are and intended usage
+    - to do - TODO (context)
+  - Spaces vs tabs -> Spaces!!!
+  - Lambda expression
+    - Format parameters and bodies as for any other function, and capture lists like other comma-separated lists
+
 ## Day 24
 
 - exploring list and maps
