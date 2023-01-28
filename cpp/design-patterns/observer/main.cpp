@@ -13,7 +13,8 @@
 // method.
 //
 // A way to use?
-// - Subscriber(Observer) and Publisher interfaces implemented with abstract base classes
+// - Subscriber(Observer) and Publisher interfaces implemented with abstract
+//   base classes
 // - Subscribers registers with the publisher
 // - Publisher keeps a list of active subscribers
 // - When publisher has something to notify, iterate the subscribers
@@ -69,7 +70,8 @@ public:
         // if multithreaded, then subscribers need to be protected
         // when notification is in progress.
         for (auto& subscriber : subscribers) {
-            std::cout << "publisher: notifying subscriber=" << subscriber << std::endl;
+            std::cout << "publisher: notifying subscriber="
+                      << subscriber << std::endl;
             std::string message = "hello-" + std::to_string(subscriber->Id());
             subscriber->Update(message);
         }
