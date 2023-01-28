@@ -1,98 +1,106 @@
-// Observer design pattern
+// Design patterns - Observer
 //
-// similar to pub-sub model.
+// When to use?
 // subscribers/observers wanting to be notified register with the publisher.
 // publisher notifies the subscriber when there is an event to be notified.
 // one-to-many relationship between publisher and subscriber
-
+// similar to pub-sub model.
+//
+// Notes
 // publisher and subscriber loosely coupled
 // publisher expects the subscribers to adhere to an interface,
 // so publisher can notify the subscribers through appropriate
 // method.
-
-// Interfaces implemented with aubstract base classes
-// TBD
-//  Need virtual destructors?
-//  typedef pointers or use shared-ptr
+//
+// A way to use?
+// - Subscriber(Observer) and Publisher interfaces implemented with abstract base classes
+// - Subscribers registers with the publisher
+// - Publisher keeps a list of active subscribers
+// - When publisher has something to notify, iterate the subscribers
+//   and notify them through the method defined in the subscriber interface
 
 #include <iostream>
 #include <list>
+#include <memory>
 #include <unistd.h>
 
 class ISubscribe {
 public:
     virtual void Update(std::string& message) = 0;
+    virtual int Id() = 0;
 };
 
-class Subscriber : public ISubscribe {
+class Subscriber final : public ISubscribe {
 public:
-    void Update(std::string& message) override;
+    Subscriber(int id) : id_(id) { // do something 
+    }
+    void Update(std::string& message) override {
+        std::cout << "subscriber:" << id_
+                  <<  " Server sent:" << "message=" << message << std::endl;
+    }
+    int Id() override {
+        return id_;
+    };
+private:
+    int id_;    
 };
 
-void Subscriber::Update(std::string& message) {
-    std::cout << "Server sent:" << "message=" << message << std::endl;
-}
+typedef std::shared_ptr<Subscriber> SubscriberPtr;
+typedef std::shared_ptr<ISubscribe> ISubscribePtr;
 
 class IPublish {
 public:
-    virtual void Subscribe(ISubscribe* subscriber) = 0;
-    virtual void UnSubscribe(ISubscribe* subscriber) = 0;
+    virtual void Subscribe(ISubscribePtr subscriber) = 0;
+    virtual void UnSubscribe(ISubscribePtr subscriber) = 0;
     virtual void Notify() = 0;
     
 };
 
 class Publisher : public IPublish {
 public:
-    void Subscribe(ISubscribe* subscriber) override;
-    void UnSubscribe(ISubscribe* subscriber) override;
-    void Notify() override;
-    void DoSomething();
-private:
-    std::list<ISubscribe *> subscribers;
-};
-
-void Publisher::Subscribe(ISubscribe* subscriber) {
-    subscribers.push_back(subscriber);
-}
-
-void Publisher::UnSubscribe(ISubscribe* subscriber) {
-    subscribers.remove(subscriber);
-}
-
-void Publisher::Notify() {
-    int subscriber_id = 0;
-    for (auto& subscriber : subscribers) {
-        std::cout << "publisher: notifying subscriber=" << subscriber << std::endl;
-        std::string message = "hello-" + std::to_string(++subscriber_id);
-        subscriber->Update(message);
+    void Subscribe(ISubscribePtr subscriber) override {
+        subscribers.push_back(subscriber);
     }
-}
-
-void Publisher::DoSomething() {
-    // Notify the clients every 10
-    for (auto i=0; i < 100; i++) {
-        if (i % 10 == 0) {
-            sleep(1);
-            Notify();
+    void UnSubscribe(ISubscribePtr subscriber) override {
+        subscribers.remove(subscriber);
+    }
+    void Notify() override {
+        int subscriber_id = 0;
+        // if multithreaded, then subscribers need to be protected
+        // when notification is in progress.
+        for (auto& subscriber : subscribers) {
+            std::cout << "publisher: notifying subscriber=" << subscriber << std::endl;
+            std::string message = "hello-" + std::to_string(subscriber->Id());
+            subscriber->Update(message);
         }
     }
-}
+    void DoSomething() {
+        // Notify the clients every 10 seconds 5 times
+        for (auto i=0; i < 50; i++) {
+            if (i % 10 == 0) {
+                sleep(1);
+                Notify();
+            }
+        }
+    }
+private:
+    std::list<ISubscribePtr> subscribers;
+};
 
 int main() {
     Publisher p;
-    Subscriber s1;
-    Subscriber s2;
+    
+    ISubscribePtr s1(new Subscriber(101));
+    ISubscribePtr s2(new Subscriber(102));
+    SubscriberPtr s3 = std::make_shared<Subscriber>(103);
 
-    p.Subscribe(&s1);
-    p.Subscribe(&s2);
+    p.Subscribe(s1);
+    p.Subscribe(s2);
+    p.Subscribe(s3);
 
     p.DoSomething();
 
-    p.UnSubscribe(&s2);
+    p.UnSubscribe(s2);
     p.DoSomething();
     return 0;
 }
-
-
-
-

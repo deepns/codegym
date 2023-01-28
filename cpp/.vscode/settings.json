@@ -61,7 +61,11 @@
         "algorithm": "cpp",
         "concepts": "cpp",
         "list": "cpp",
-        "map": "cpp",
-        "__tree": "cpp"
+        "map": "cpp"
+    },
+    "[cpp][c][h]" : {
+        "editor.rulers": [
+            80
+        ]
     }
 }
