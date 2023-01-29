@@ -37,8 +37,13 @@ Growing list of topics to learn
 - [x] nullptr
 - [ ] Design patterns
   - [ ] Factory
-  - [ ] Observer
+  - [x] Observer
   - [ ] Command
+  - [x] Singleton
+
+## Day 26..28
+
+- Design patterns - observer, singleton
 
 ## Day 25
 
