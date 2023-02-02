@@ -41,6 +41,11 @@ Growing list of topics to learn
   - [ ] Command
   - [x] Singleton
 
+## Day 29
+
+- Basics of factory design pattern
+- exploring std::filesystem, getting and setting current working directory
+
 ## Day 26..28
 
 - Design patterns - observer, singleton

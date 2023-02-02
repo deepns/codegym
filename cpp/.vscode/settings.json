@@ -62,7 +62,8 @@
         "concepts": "cpp",
         "list": "cpp",
         "map": "cpp",
-        "__tree": "cpp"
+        "__tree": "cpp",
+        "filesystem": "cpp"
     },
     "[cpp][c][h]" : {
         "editor.rulers": [
