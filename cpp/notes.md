@@ -41,6 +41,10 @@ Growing list of topics to learn
   - [ ] Command
   - [x] Singleton
 
+## Day 30
+
+- more on std::filesystem::path - they look very similar to python path
+
 ## Day 29
 
 - Basics of factory design pattern

@@ -63,7 +63,11 @@
         "list": "cpp",
         "map": "cpp",
         "__tree": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "deque": "cpp",
+        "iomanip": "cpp",
+        "stack": "cpp",
+        "thread": "cpp"
     },
     "[cpp][c][h]" : {
         "editor.rulers": [
