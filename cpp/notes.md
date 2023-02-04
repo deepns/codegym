@@ -41,6 +41,11 @@ Growing list of topics to learn
   - [ ] Command
   - [x] Singleton
 
+## Day 31
+
+- little refresher on std::vector
+- explored [set](https://learn.microsoft.com/en-us/cpp/standard-library/set-class)
+
 ## Day 30
 
 - more on std::filesystem::path - they look very similar to python path

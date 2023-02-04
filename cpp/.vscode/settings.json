@@ -67,7 +67,8 @@
         "deque": "cpp",
         "iomanip": "cpp",
         "stack": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "set": "cpp"
     },
     "[cpp][c][h]" : {
         "editor.rulers": [

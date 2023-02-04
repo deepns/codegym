@@ -2,6 +2,8 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "command.h"
+
 using std::vector;
 
 int main() {
@@ -98,6 +100,15 @@ int main() {
     vector<int> nums3 = std::move(nums2);
     ListNums(nums2, "nums2");
     ListNums(nums3, "nums3");
+
+    Command c1("foo");
+    std::vector<std::string> args = {"bar", "baz"};
+    Command c2(args);
+
+    args.push_back("hello");
+
+    c1.ListArgs();
+    c2.ListArgs();
         
     return 0;
 };
