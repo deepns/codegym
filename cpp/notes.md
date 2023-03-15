@@ -41,6 +41,21 @@ Growing list of topics to learn
   - [ ] Command
   - [x] Singleton
 
+## Day 33
+
+- little more on std::set functions (erase, lowerbound, upperbound)
+- std::next and std::prev functions
+- generate random numbers (thanks to chatgpt)
+
+## Day 32
+
+Cheat day!
+
+## Day 31
+
+- little refresher on std::vector
+- explored [set](https://learn.microsoft.com/en-us/cpp/standard-library/set-class)
+
 ## Day 30
 
 - more on std::filesystem::path - they look very similar to python path
