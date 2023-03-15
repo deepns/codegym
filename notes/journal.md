@@ -3,7 +3,7 @@
 ## Things to try out
 
 - [x] Nonblocking TCP client/server
-- [ ] Running zookeeper cluster locally with docker
+- [-] Running zookeeper cluster locally with docker
 - [x] poll
 - [x] epoll
 - [x] async IO
@@ -55,13 +55,38 @@
     - [ ] maps
     - [ ] make vs new
     - [ ] embedding
-    - [ ] variadic functions
-    - [ ] interfaces
+    - [x] variadic functions
+    - [x] interfaces
     - [ ] tempfiles
     - [ ] custom logging
 - [ ] syslog, journalctl
 - [ ] gc pause
 - [ ] json path
+
+## Daily log - attempt#2
+
+Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+### Day 1 (grpc basics)
+
+- running protoc with go requires the extension (protoc-gen-go and protoc-gen-go-grpc). Installed them using `go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28` and `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2`
+
+```console
+➜  ~ ls $HOME/go/bin
+inputs             protoc-gen-go      protoc-gen-go-grpc tempfiles
+➜  ~ export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+- went through the [routeguide example](https://github.com/grpc/grpc-go/tree/master/examples/route_guide), server code and client code. Ran them. what next?
+  - [x] create a route guide client on my own to interact with the server
+  - [ ] create my own server and client
+- server listens at `50051` by default. Unfortunately, that port is already taken by launchd.
+
+```console
+➜  ~ sudo lsof -iTCP -sTCP:LISTEN | grep 50051
+launchd      1     root   11u  IPv6 0x70998e80006793b3      0t0  TCP *:50051 (LISTEN)
+launchd      1     root   50u  IPv4 0x70998e76698d643b      0t0  TCP *:50051 (LISTEN)
+```
 
 ## Daily log
 

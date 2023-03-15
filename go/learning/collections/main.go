@@ -12,8 +12,8 @@ package main
  */
 
 import (
-	"github.com/deepns/codegarage/go/learning/collections/arrays"
-	"github.com/deepns/codegarage/go/learning/collections/maps"
+	"github.com/deepns/codegym/go/learning/collections/arrays"
+	"github.com/deepns/codegym/go/learning/collections/maps"
 )
 
 func main() {

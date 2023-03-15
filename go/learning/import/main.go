@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/deepns/codegarage/go/learning/functions"
+	"github.com/deepns/codegym/go/learning/functions"
 )
 
 func main() {
