@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/helloworld/helloworld"
 	"google.golang.org/grpc"
@@ -16,8 +17,10 @@ type helloServer struct {
 	pb.UnimplementedHelloServiceServer
 }
 
+// Server side definition of the rpc method
 func (s *helloServer) SayHello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
-	return &pb.HelloResponse{HelloMsg: fmt.Sprintf("Hello, %v", req.Name)}, nil
+	helloMsg := strings.Repeat(fmt.Sprintf("Hello, %v\n", req.Name), int(req.Count))
+	return &pb.HelloResponse{HelloMsg: helloMsg}, nil
 }
 
 func main() {
