@@ -67,6 +67,12 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 3 (grpc helloworld, go context)
+
+- Went through the grpc generated code
+- Updated the arguments
+- started reading about context package...will explore more on that tomorrow.
+
 ### Day 2 (grpc helloworld)
 
 - Wrote my own helloworld program on grpc with go
