@@ -1,0 +1,25 @@
+// Following the instructions from https://protobuf.dev/programming-guides/proto3/
+// must be the first non-empty non-comment line in a proto file
+// when not specified, proto2 is assumed.
+syntax = "proto3";
+
+// when used, this is used as the package name in the resulting go code;
+// ignored in python.
+// package helloworld;
+
+// overrides value specified in package
+option go_package = "github.com/deepns/codegym/go/learning/grpc/helloworld";
+
+message HelloRequest {
+    string name = 1; // best practice: use field numbers 1..15 for frequently used elements
+    uint32 count = 2; // number of times to say hello
+    // field numbers should not be changed once the message is in use
+}
+
+message HelloResponse {
+    string hello_msg = 1;
+}
+
+service HelloService {
+    rpc SayHello(HelloRequest) returns (HelloResponse);
+}

@@ -25,6 +25,8 @@ func GetFeatureSample(client pb.RouteGuideClient) {
 
 func main() {
 	var serverAddr = flag.String("addr", "localhost:30303", "host:port of the server addr to connect to")
+	flag.Parse()
+
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	conn, err := grpc.Dial(*serverAddr, opts...)
 	if err != nil {

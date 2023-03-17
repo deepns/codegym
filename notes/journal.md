@@ -67,6 +67,15 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 2 (grpc helloworld)
+
+- Wrote my own helloworld program on grpc with go
+- defined the proto file, explored the marshaling and unmarshalling of proto buffers
+- implemented the server and client to test request and response processing
+- what next?
+  - [ ] Read the auto generated files and understand how they are used in general
+  - [ ] add comments as necessary
+
 ### Day 1 (grpc basics)
 
 - running protoc with go requires the extension (protoc-gen-go and protoc-gen-go-grpc). Installed them using `go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28` and `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2`
