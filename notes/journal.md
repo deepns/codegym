@@ -67,6 +67,15 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 5 (go contexts)
+
+- More on go contexts
+- added a sample program to my learning collection
+
+### Day 4 (go contexts)
+
+- Learning about go contexts
+
 ### Day 3 (grpc helloworld, go context)
 
 - Went through the grpc generated code
