@@ -67,6 +67,17 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 7 (grpc echo server)
+
+- added a echo server, with proto definition and client and server code
+- added a simple echo and server side streaming
+- will add client side streaming and bidirectional streaming tomorrow
+- read the tutorial page again...finding new information on each read
+
+### Day 6
+
+- went over some patterns from educative
+
 ### Day 5 (go contexts)
 
 - More on go contexts

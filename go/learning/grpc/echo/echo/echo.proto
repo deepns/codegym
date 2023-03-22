@@ -1,0 +1,31 @@
+// must be the first non-empty non-comment line in a proto file
+syntax = "proto3";
+
+option go_package = "github.com/deepns/codegym/go/learning/grpc/echo";
+
+message EchoRequest {
+    string message = 1;
+}
+
+message EchoResponse {
+    string message = 1;
+}
+
+message EchoRequestWithCount {
+    string message = 1;
+    int32 count = 2;  
+}
+
+service EchoService {
+    rpc SimpleEcho(EchoRequest) returns (EchoResponse) {}
+
+    rpc ServerSideStreamEcho(EchoRequestWithCount) returns (stream EchoResponse) {}
+}
+
+/*
+ * Command to compile with protoc
+    export PATH="$PATH:$(go env GOPATH)/bin";
+    protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    echo/echo.proto
+ */
