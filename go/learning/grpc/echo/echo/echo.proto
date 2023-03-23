@@ -20,6 +20,8 @@ service EchoService {
     rpc SimpleEcho(EchoRequest) returns (EchoResponse) {}
 
     rpc ServerSideStreamEcho(EchoRequestWithCount) returns (stream EchoResponse) {}
+
+    rpc ClientSideStreamEcho(stream EchoRequest) returns (EchoResponse) {}
 }
 
 /*

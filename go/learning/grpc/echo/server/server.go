@@ -4,8 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net"
+	"strings"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
 	"google.golang.org/grpc"
@@ -32,6 +34,26 @@ func (s *echoServer) ServerSideStreamEcho(req *pb.EchoRequestWithCount, stream p
 		}
 	}
 	return nil
+}
+
+func (s *echoServer) ClientSideStreamEcho(stream pb.EchoService_ClientSideStreamEchoServer) error {
+	reqCount := 0
+	var reqs []string
+	for {
+		req, err := stream.Recv()
+		reqCount += 1
+		if err == io.EOF || reqCount >= 10 {
+			log.Println("No more incoming messages")
+			break
+		}
+		if err != nil {
+			log.Fatalf("Failed to receive from stream: %v", err)
+		}
+		log.Printf("Received: %v", req.Message)
+		reqs = append(reqs, req.Message)
+	}
+
+	return stream.SendAndClose(&pb.EchoResponse{Message: strings.Join(reqs, "::")})
 }
 
 func main() {

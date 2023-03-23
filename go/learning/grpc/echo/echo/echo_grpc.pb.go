@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type EchoServiceClient interface {
 	SimpleEcho(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
 	ServerSideStreamEcho(ctx context.Context, in *EchoRequestWithCount, opts ...grpc.CallOption) (EchoService_ServerSideStreamEchoClient, error)
+	ClientSideStreamEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ClientSideStreamEchoClient, error)
 }
 
 type echoServiceClient struct {
@@ -75,12 +76,47 @@ func (x *echoServiceServerSideStreamEchoClient) Recv() (*EchoResponse, error) {
 	return m, nil
 }
 
+func (c *echoServiceClient) ClientSideStreamEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ClientSideStreamEchoClient, error) {
+	stream, err := c.cc.NewStream(ctx, &EchoService_ServiceDesc.Streams[1], "/EchoService/ClientSideStreamEcho", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &echoServiceClientSideStreamEchoClient{stream}
+	return x, nil
+}
+
+type EchoService_ClientSideStreamEchoClient interface {
+	Send(*EchoRequest) error
+	CloseAndRecv() (*EchoResponse, error)
+	grpc.ClientStream
+}
+
+type echoServiceClientSideStreamEchoClient struct {
+	grpc.ClientStream
+}
+
+func (x *echoServiceClientSideStreamEchoClient) Send(m *EchoRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *echoServiceClientSideStreamEchoClient) CloseAndRecv() (*EchoResponse, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(EchoResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // EchoServiceServer is the server API for EchoService service.
 // All implementations must embed UnimplementedEchoServiceServer
 // for forward compatibility
 type EchoServiceServer interface {
 	SimpleEcho(context.Context, *EchoRequest) (*EchoResponse, error)
 	ServerSideStreamEcho(*EchoRequestWithCount, EchoService_ServerSideStreamEchoServer) error
+	ClientSideStreamEcho(EchoService_ClientSideStreamEchoServer) error
 	mustEmbedUnimplementedEchoServiceServer()
 }
 
@@ -93,6 +129,9 @@ func (UnimplementedEchoServiceServer) SimpleEcho(context.Context, *EchoRequest) 
 }
 func (UnimplementedEchoServiceServer) ServerSideStreamEcho(*EchoRequestWithCount, EchoService_ServerSideStreamEchoServer) error {
 	return status.Errorf(codes.Unimplemented, "method ServerSideStreamEcho not implemented")
+}
+func (UnimplementedEchoServiceServer) ClientSideStreamEcho(EchoService_ClientSideStreamEchoServer) error {
+	return status.Errorf(codes.Unimplemented, "method ClientSideStreamEcho not implemented")
 }
 func (UnimplementedEchoServiceServer) mustEmbedUnimplementedEchoServiceServer() {}
 
@@ -146,6 +185,32 @@ func (x *echoServiceServerSideStreamEchoServer) Send(m *EchoResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
+func _EchoService_ClientSideStreamEcho_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(EchoServiceServer).ClientSideStreamEcho(&echoServiceClientSideStreamEchoServer{stream})
+}
+
+type EchoService_ClientSideStreamEchoServer interface {
+	SendAndClose(*EchoResponse) error
+	Recv() (*EchoRequest, error)
+	grpc.ServerStream
+}
+
+type echoServiceClientSideStreamEchoServer struct {
+	grpc.ServerStream
+}
+
+func (x *echoServiceClientSideStreamEchoServer) SendAndClose(m *EchoResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *echoServiceClientSideStreamEchoServer) Recv() (*EchoRequest, error) {
+	m := new(EchoRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // EchoService_ServiceDesc is the grpc.ServiceDesc for EchoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -163,6 +228,11 @@ var EchoService_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "ServerSideStreamEcho",
 			Handler:       _EchoService_ServerSideStreamEcho_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "ClientSideStreamEcho",
+			Handler:       _EchoService_ClientSideStreamEcho_Handler,
+			ClientStreams: true,
 		},
 	},
 	Metadata: "echo/echo.proto",

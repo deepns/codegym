@@ -67,6 +67,13 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 9 (grpc echo server)
+
+- added a client side streaming method to the service
+- updated the client and server to use the newly added method
+
+### Day 8 (sick day)
+
 ### Day 7 (grpc echo server)
 
 - added a echo server, with proto definition and client and server code

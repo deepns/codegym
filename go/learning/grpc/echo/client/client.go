@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io"
 	"log"
+	"strings"
 	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
@@ -56,9 +57,34 @@ func EchoMultiple(client pb.EchoServiceClient, message string, count int) {
 	}
 }
 
+func StreamMessages(client pb.EchoServiceClient, messages []string) {
+	// timeout if response is not received within two seconds
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
+	defer cancel()
+
+	stream, err := client.ClientSideStreamEcho(ctx)
+	if err != nil {
+		log.Fatalf("client.ClientSideStreamEcho failed: %v", err)
+	}
+
+	for _, message := range messages {
+		if err := stream.Send(&pb.EchoRequest{Message: message}); err != nil {
+			log.Fatalf("stream.Send() failed: %v", err)
+		}
+	}
+
+	response, err := stream.CloseAndRecv()
+	if err != nil {
+		log.Fatalf("stream.CloseAndRecv() failed: %v", err)
+	}
+
+	log.Println("echo:", response.Message)
+}
+
 func main() {
 	addr := flag.String("addr", "localhost:50505", "address of the server to connect to")
-	message := flag.String("msg", "foobar", "message to be sent to the echo server")
+	message := flag.String("msg", "hello", "message to be sent to the echo server")
+	stream := flag.String("stream", "", "comma separated list of messages to streamed to server")
 	count := flag.Int("count", 1, "number of times to echo")
 	flag.Parse()
 
@@ -86,7 +112,12 @@ func main() {
 	client := pb.NewEchoServiceClient(conn)
 
 	if *count == 1 {
-		SimpleEcho(client, *message)
+		if len(*stream) > 0 {
+			StreamMessages(client, strings.Split(*stream, ","))
+		} else {
+			SimpleEcho(client, *message)
+		}
+
 	} else {
 		EchoMultiple(client, *message, *count)
 	}
