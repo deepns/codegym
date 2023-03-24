@@ -25,6 +25,10 @@ type EchoServiceClient interface {
 	SimpleEcho(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
 	ServerSideStreamEcho(ctx context.Context, in *EchoRequestWithCount, opts ...grpc.CallOption) (EchoService_ServerSideStreamEchoClient, error)
 	ClientSideStreamEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ClientSideStreamEchoClient, error)
+	// A Bidirectional streaming RPC
+	//
+	// Accepts a stream of messages and echoes it back as it receives
+	ChatEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ChatEchoClient, error)
 }
 
 type echoServiceClient struct {
@@ -110,6 +114,37 @@ func (x *echoServiceClientSideStreamEchoClient) CloseAndRecv() (*EchoResponse, e
 	return m, nil
 }
 
+func (c *echoServiceClient) ChatEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ChatEchoClient, error) {
+	stream, err := c.cc.NewStream(ctx, &EchoService_ServiceDesc.Streams[2], "/EchoService/ChatEcho", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &echoServiceChatEchoClient{stream}
+	return x, nil
+}
+
+type EchoService_ChatEchoClient interface {
+	Send(*EchoRequest) error
+	Recv() (*EchoResponse, error)
+	grpc.ClientStream
+}
+
+type echoServiceChatEchoClient struct {
+	grpc.ClientStream
+}
+
+func (x *echoServiceChatEchoClient) Send(m *EchoRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *echoServiceChatEchoClient) Recv() (*EchoResponse, error) {
+	m := new(EchoResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // EchoServiceServer is the server API for EchoService service.
 // All implementations must embed UnimplementedEchoServiceServer
 // for forward compatibility
@@ -117,6 +152,10 @@ type EchoServiceServer interface {
 	SimpleEcho(context.Context, *EchoRequest) (*EchoResponse, error)
 	ServerSideStreamEcho(*EchoRequestWithCount, EchoService_ServerSideStreamEchoServer) error
 	ClientSideStreamEcho(EchoService_ClientSideStreamEchoServer) error
+	// A Bidirectional streaming RPC
+	//
+	// Accepts a stream of messages and echoes it back as it receives
+	ChatEcho(EchoService_ChatEchoServer) error
 	mustEmbedUnimplementedEchoServiceServer()
 }
 
@@ -132,6 +171,9 @@ func (UnimplementedEchoServiceServer) ServerSideStreamEcho(*EchoRequestWithCount
 }
 func (UnimplementedEchoServiceServer) ClientSideStreamEcho(EchoService_ClientSideStreamEchoServer) error {
 	return status.Errorf(codes.Unimplemented, "method ClientSideStreamEcho not implemented")
+}
+func (UnimplementedEchoServiceServer) ChatEcho(EchoService_ChatEchoServer) error {
+	return status.Errorf(codes.Unimplemented, "method ChatEcho not implemented")
 }
 func (UnimplementedEchoServiceServer) mustEmbedUnimplementedEchoServiceServer() {}
 
@@ -211,6 +253,32 @@ func (x *echoServiceClientSideStreamEchoServer) Recv() (*EchoRequest, error) {
 	return m, nil
 }
 
+func _EchoService_ChatEcho_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(EchoServiceServer).ChatEcho(&echoServiceChatEchoServer{stream})
+}
+
+type EchoService_ChatEchoServer interface {
+	Send(*EchoResponse) error
+	Recv() (*EchoRequest, error)
+	grpc.ServerStream
+}
+
+type echoServiceChatEchoServer struct {
+	grpc.ServerStream
+}
+
+func (x *echoServiceChatEchoServer) Send(m *EchoResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *echoServiceChatEchoServer) Recv() (*EchoRequest, error) {
+	m := new(EchoRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // EchoService_ServiceDesc is the grpc.ServiceDesc for EchoService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -232,6 +300,12 @@ var EchoService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "ClientSideStreamEcho",
 			Handler:       _EchoService_ClientSideStreamEcho_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "ChatEcho",
+			Handler:       _EchoService_ChatEcho_Handler,
+			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},

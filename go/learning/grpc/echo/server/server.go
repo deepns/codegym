@@ -56,6 +56,32 @@ func (s *echoServer) ClientSideStreamEcho(stream pb.EchoService_ClientSideStream
 	return stream.SendAndClose(&pb.EchoResponse{Message: strings.Join(reqs, "::")})
 }
 
+func (s *echoServer) ChatEcho(stream pb.EchoService_ChatEchoServer) error {
+	// TODO
+	// Is there a way to identify client connection details from the stream?
+	// Like IP or some unique identifier for a connection?
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			// If the client connection is closed, stream.Recv() may fail with
+			// error "Canceled". That's ok.
+			log.Printf("stream.Recv() failed: %v", err)
+			return err
+		}
+
+		log.Printf("received: %v", req.Message)
+		if err = stream.Send(&pb.EchoResponse{Message: req.Message}); err != nil {
+			log.Printf("stream.Send() failed: message: %v, err:%v", req.Message, err)
+			return err
+		}
+	}
+	return nil
+}
+
 func main() {
 	port := flag.Int("port", 50505, "port to listen to")
 	flag.Parse()

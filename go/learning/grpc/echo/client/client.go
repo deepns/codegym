@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io"
 	"log"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -81,11 +82,61 @@ func StreamMessages(client pb.EchoServiceClient, messages []string) {
 	log.Println("echo:", response.Message)
 }
 
+func randomStrings() []string {
+	// Step 1: Pick a random number between 1..100
+	rand.Seed(time.Now().UnixNano())
+	numStrings := rand.Intn(10) + 1
+
+	// Step 2: Create a slice of strings
+	stringSlice := make([]string, numStrings)
+
+	// Step 3: Fill the slice with random strings
+	for i := 0; i < numStrings; i++ {
+		// Generate a random string of length 5 using alphabets
+		const letters = "abcdefghijklmnopqrstuvwxyz"
+		b := make([]byte, 5)
+		for j := range b {
+			b[j] = letters[rand.Intn(len(letters))]
+		}
+		stringSlice[i] = string(b)
+	}
+
+	// Step 4: Return the slice
+	return stringSlice
+}
+
+func ChitChat(client pb.EchoServiceClient) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	stream, err := client.ChatEcho(ctx)
+	if err != nil {
+		log.Fatalf("client.ChatEcho failed: %v", err)
+	}
+
+	for _, message := range randomStrings() {
+		log.Printf("send: %v", message)
+		if err = stream.Send(&pb.EchoRequest{Message: message}); err != nil {
+			log.Fatalf("stream.Send() failed: %v", err)
+		}
+
+		resp, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatalf("stream.Recv() failed: %v", err)
+		}
+		log.Printf("recv: %v", resp.Message)
+	}
+}
+
 func main() {
 	addr := flag.String("addr", "localhost:50505", "address of the server to connect to")
 	message := flag.String("msg", "hello", "message to be sent to the echo server")
 	stream := flag.String("stream", "", "comma separated list of messages to streamed to server")
 	count := flag.Int("count", 1, "number of times to echo")
+	chitchat := flag.Bool("chitchat", false, "exchange random messages through bidirectional streaming rpc")
 	flag.Parse()
 
 	if *count < 1 {
@@ -111,13 +162,14 @@ func main() {
 	// Create a new client to the chosen service
 	client := pb.NewEchoServiceClient(conn)
 
-	if *count == 1 {
+	if *chitchat {
+		ChitChat(client)
+	} else if *count == 1 {
 		if len(*stream) > 0 {
 			StreamMessages(client, strings.Split(*stream, ","))
 		} else {
 			SimpleEcho(client, *message)
 		}
-
 	} else {
 		EchoMultiple(client, *message, *count)
 	}

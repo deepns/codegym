@@ -67,6 +67,12 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 10 (grpc echo server bidirectional streaming)
+
+- added bidirectional streaming rpc to the service
+- works, but connection closure is not proper. ~~need to follow up with that tomorrow~~ that error is expected when the stream is closed. Just returned the error.
+- TODO - add some comments and clean up the code
+
 ### Day 9 (grpc echo server)
 
 - added a client side streaming method to the service
