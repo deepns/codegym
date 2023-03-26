@@ -11,6 +11,7 @@ import (
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/peer"
 )
 
 type echoServer struct {
@@ -18,6 +19,12 @@ type echoServer struct {
 }
 
 func (s *echoServer) SimpleEcho(ctx context.Context, req *pb.EchoRequest) (*pb.EchoResponse, error) {
+	peer, ok := peer.FromContext(ctx)
+	if !ok {
+		log.Println("Unable to get peer info from the context")
+	}
+	log.Printf("peer:%v", peer.Addr)
+
 	// Just a simple echo.
 	// Send the request message back to the client
 	return &pb.EchoResponse{Message: req.Message}, nil
@@ -25,7 +32,6 @@ func (s *echoServer) SimpleEcho(ctx context.Context, req *pb.EchoRequest) (*pb.E
 
 func (s *echoServer) ServerSideStreamEcho(req *pb.EchoRequestWithCount, stream pb.EchoService_ServerSideStreamEchoServer) error {
 	// Echo as many times as requested in the request
-
 	var i int32
 	for i = 0; i < req.Count; i++ {
 		if err := stream.Send(&pb.EchoResponse{Message: req.Message}); err != nil {
@@ -59,7 +65,14 @@ func (s *echoServer) ClientSideStreamEcho(stream pb.EchoService_ClientSideStream
 func (s *echoServer) ChatEcho(stream pb.EchoService_ChatEchoServer) error {
 	// TODO
 	// Is there a way to identify client connection details from the stream?
-	// Like IP or some unique identifier for a connection?
+	// Like IP or some unique identifier for a connection? - Yes. can do that
+	// using peer package.
+	peer, ok := peer.FromContext(stream.Context())
+	if !ok {
+		log.Println("Unable to get peer info from context")
+	}
+	log.Printf("peer: %v", peer.Addr)
+
 	for {
 		req, err := stream.Recv()
 		if err == io.EOF {
@@ -69,7 +82,6 @@ func (s *echoServer) ChatEcho(stream pb.EchoService_ChatEchoServer) error {
 		if err != nil {
 			// If the client connection is closed, stream.Recv() may fail with
 			// error "Canceled". That's ok.
-			log.Printf("stream.Recv() failed: %v", err)
 			return err
 		}
 

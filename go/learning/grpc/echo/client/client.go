@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"flag"
 	"io"
 	"log"
 	"math/rand"
+	"os"
 	"strings"
 	"time"
 
@@ -82,23 +84,31 @@ func StreamMessages(client pb.EchoServiceClient, messages []string) {
 	log.Println("echo:", response.Message)
 }
 
-func randomStrings() []string {
+// randomStringSlice generates a slice of random words selected from a dictionary.
+// The number of random words generated is determined by a random integer between 1 and 100.
+// The function returns a slice of the randomly generated words.
+func randomStringSlice(count int) []string {
 	// Step 1: Pick a random number between 1..100
 	rand.Seed(time.Now().UnixNano())
-	numStrings := rand.Intn(10) + 1
+	numStrings := rand.Intn(count) + 1
 
 	// Step 2: Create a slice of strings
 	stringSlice := make([]string, numStrings)
 
 	// Step 3: Fill the slice with random strings
+	wordList, err := os.Open("/usr/share/dict/words") // change path to your system's word list file
+	if err != nil {
+		panic(err)
+	}
+	defer wordList.Close()
+	scanner := bufio.NewScanner(wordList)
+	words := []string{}
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
 	for i := 0; i < numStrings; i++ {
-		// Generate a random string of length 5 using alphabets
-		const letters = "abcdefghijklmnopqrstuvwxyz"
-		b := make([]byte, 5)
-		for j := range b {
-			b[j] = letters[rand.Intn(len(letters))]
-		}
-		stringSlice[i] = string(b)
+		// Generate a random word from the dictionary
+		stringSlice[i] = words[rand.Intn(len(words))]
 	}
 
 	// Step 4: Return the slice
@@ -114,7 +124,7 @@ func ChitChat(client pb.EchoServiceClient) {
 		log.Fatalf("client.ChatEcho failed: %v", err)
 	}
 
-	for _, message := range randomStrings() {
+	for _, message := range randomStringSlice(10) {
 		log.Printf("send: %v", message)
 		if err = stream.Send(&pb.EchoRequest{Message: message}); err != nil {
 			log.Fatalf("stream.Send() failed: %v", err)
