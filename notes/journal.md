@@ -67,6 +67,11 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 11, 12 (grpc peer, protobuf definitions)
+
+- explored protobuf [definitions](https://protobuf.dev/programming-guides/proto3/)
+- got connection details from context using peer package
+
 ### Day 10 (grpc echo server bidirectional streaming)
 
 - added bidirectional streaming rpc to the service

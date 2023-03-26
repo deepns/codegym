@@ -1,0 +1,87 @@
+// Just exploring about defining a proto file
+// What data types supported? how are they defined? etc.
+// Supports C style // and /* style */ comments
+
+syntax = "proto3";
+
+// Tried to specify the package with flag M, as mentioned at
+// https://protobuf.dev/reference/go/go-generated/#package
+// But wasn't successful.
+option go_package = "github.com/deepns/codegym/go/learning/grpc/protobuf/books";
+
+// Book attributes defined with singular scalar fields
+message Book {
+    string title = 1;
+    uint32 year = 2;
+    double price = 3;
+    bool is_released = 4;
+    BookGenre genre = 5;
+}
+
+// How this shows up in a generated Go file?
+/*
+
+// Book attributes defined with singular scalar fields
+type Book struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Title      string    `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Year       uint32    `protobuf:"varint,2,opt,name=year,proto3" json:"year,omitempty"`
+	Price      float64   `protobuf:"fixed64,3,opt,name=price,proto3" json:"price,omitempty"`
+	IsReleased bool      `protobuf:"varint,4,opt,name=is_released,json=isReleased,proto3" json:"is_released,omitempty"`
+	Genre      BookGenre `protobuf:"varint,5,opt,name=genre,proto3,enum=BookGenre" json:"genre,omitempty"`
+}
+*/
+
+// defining enums with enum keyword
+enum BookGenre {
+    FICTION = 0;
+    THRILLER = 1;
+    MEMOIR = 2;
+}
+
+// list defined using 'repeated'
+message Bookshelf { 
+    repeated Book books = 1;
+}
+
+// How message with repeated field show up in the generated code?
+/*
+type Bookshelf struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Books []*Book `protobuf:"bytes,1,rep,name=books,proto3" json:"books,omitempty"`
+}
+*/
+
+// map defined using 'map'
+message BooksByAuthor {
+    map<string, Bookshelf> books = 1;
+}
+
+// How the maps are generated?
+/*
+// map defined using 'map'
+type BooksByAuthor struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Books map[string]*Bookshelf `protobuf:"bytes,1,rep,name=books,proto3" json:"books,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+*/
+
+/*
+ * To compile with protoc
+ 
+ protoc --go_out=. --go-grpc_out=. \
+> --go_opt=paths=source_relative \
+> --go-grpc_opt=paths=source_relative \
+> books/books.proto 
+
+*/
