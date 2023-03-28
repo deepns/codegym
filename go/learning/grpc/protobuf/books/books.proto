@@ -43,35 +43,41 @@ enum BookGenre {
 }
 
 // list defined using 'repeated'
-message Bookshelf { 
-    repeated Book books = 1;
+message Shelf { 
+    repeated Book books_to_read = 1;
+    repeated Book books_read = 2;
 }
 
 // How message with repeated field show up in the generated code?
 /*
-type Bookshelf struct {
+type Shelf struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Books []*Book `protobuf:"bytes,1,rep,name=books,proto3" json:"books,omitempty"`
+	BooksToRead []*Book `protobuf:"bytes,1,rep,name=books_to_read,json=booksToRead,proto3" json:"books_to_read,omitempty"`
+	BooksRead   []*Book `protobuf:"bytes,2,rep,name=books_read,json=booksRead,proto3" json:"books_read,omitempty"`
 }
 */
 
+message BookList {
+    repeated Book books = 1;
+}
+
 // map defined using 'map'
-message BooksByAuthor {
-    map<string, Bookshelf> books = 1;
+message BooksByAuthorResponse {
+    map<string, BookList> books = 1;
 }
 
 // How the maps are generated?
 /*
 // map defined using 'map'
-type BooksByAuthor struct {
+type BooksByAuthorResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Books map[string]*Bookshelf `protobuf:"bytes,1,rep,name=books,proto3" json:"books,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Books map[string]*BookList `protobuf:"bytes,1,rep,name=books,proto3" json:"books,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
 }
 
 */

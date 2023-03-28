@@ -67,6 +67,10 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 14 (protobuf serialization)
+
+- Explored the possibility of serializing protobuf generated types, in both binary and json format
+
 ## Day 13 (grpc)
 
 - Revisit the examples. Updated the service definitions in echo service
