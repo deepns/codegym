@@ -18,7 +18,7 @@ type echoServer struct {
 	pb.UnimplementedEchoServiceServer
 }
 
-func (s *echoServer) SimpleEcho(ctx context.Context, req *pb.EchoRequest) (*pb.EchoResponse, error) {
+func (s *echoServer) UnaryEcho(ctx context.Context, req *pb.EchoRequest) (*pb.EchoResponse, error) {
 	peer, ok := peer.FromContext(ctx)
 	if !ok {
 		log.Println("Unable to get peer info from the context")
@@ -62,7 +62,7 @@ func (s *echoServer) ClientSideStreamEcho(stream pb.EchoService_ClientSideStream
 	return stream.SendAndClose(&pb.EchoResponse{Message: strings.Join(reqs, "::")})
 }
 
-func (s *echoServer) ChatEcho(stream pb.EchoService_ChatEchoServer) error {
+func (s *echoServer) BidrectionalStreamEcho(stream pb.EchoService_BidrectionalStreamEchoServer) error {
 	// TODO
 	// Is there a way to identify client connection details from the stream?
 	// Like IP or some unique identifier for a connection? - Yes. can do that

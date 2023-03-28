@@ -8,7 +8,6 @@ import (
 	"log"
 	"math/rand"
 	"os"
-	"strings"
 	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
@@ -16,7 +15,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func SimpleEcho(client pb.EchoServiceClient, message string) {
+func UnaryEcho(client pb.EchoServiceClient, message string) {
 	request := pb.EchoRequest{
 		Message: message,
 	}
@@ -26,7 +25,7 @@ func SimpleEcho(client pb.EchoServiceClient, message string) {
 	defer cancel()
 
 	// connect to the service
-	response, err := client.SimpleEcho(ctx, &request)
+	response, err := client.UnaryEcho(ctx, &request)
 	if err != nil {
 		log.Fatalf("Failed to run SimpleEcho. err=%v", err)
 	}
@@ -34,7 +33,7 @@ func SimpleEcho(client pb.EchoServiceClient, message string) {
 	log.Printf("echo: %v", response.Message)
 }
 
-func EchoMultiple(client pb.EchoServiceClient, message string, count int) {
+func ServerSideStream(client pb.EchoServiceClient, message string, count int) {
 	log.Printf("Echoing %v, %v times", message, count)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
 	defer cancel()
@@ -60,7 +59,7 @@ func EchoMultiple(client pb.EchoServiceClient, message string, count int) {
 	}
 }
 
-func StreamMessages(client pb.EchoServiceClient, messages []string) {
+func ClientSideStream(client pb.EchoServiceClient, messages []string) {
 	// timeout if response is not received within two seconds
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 	defer cancel()
@@ -115,11 +114,11 @@ func randomStringSlice(count int) []string {
 	return stringSlice
 }
 
-func ChitChat(client pb.EchoServiceClient) {
+func BidirectionalStream(client pb.EchoServiceClient) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
 
-	stream, err := client.ChatEcho(ctx)
+	stream, err := client.BidrectionalStreamEcho(ctx)
 	if err != nil {
 		log.Fatalf("client.ChatEcho failed: %v", err)
 	}
@@ -142,20 +141,11 @@ func ChitChat(client pb.EchoServiceClient) {
 }
 
 func main() {
-	addr := flag.String("addr", "localhost:50505", "address of the server to connect to")
-	message := flag.String("msg", "hello", "message to be sent to the echo server")
-	stream := flag.String("stream", "", "comma separated list of messages to streamed to server")
-	count := flag.Int("count", 1, "number of times to echo")
-	chitchat := flag.Bool("chitchat", false, "exchange random messages through bidirectional streaming rpc")
+	var addr, rpc string
+
+	flag.StringVar(&addr, "addr", "localhost:50505", "address of the server to connect to")
+	flag.StringVar(&rpc, "rpc", "", "Specify the RPC value (valid options: unary, clientstream, serverstream, bidirectional)")
 	flag.Parse()
-
-	if *count < 1 {
-		log.Fatalf("Too low count to repeat. Must be between 1...10")
-	}
-
-	if *count > 10 {
-		log.Fatalf("Too high to repeat Must be between 1...10")
-	}
 
 	// Not using TLS. So using insecure credentials
 	options := []grpc.DialOption{
@@ -163,24 +153,28 @@ func main() {
 	}
 
 	// Create a connection to the server
-	conn, err := grpc.Dial(*addr, options...)
+	conn, err := grpc.Dial(addr, options...)
 	if err != nil {
-		log.Fatalf("Failed to connect to the server %v. err=%v", *addr, err)
+		log.Fatalf("Failed to connect to the server %v. err=%v", addr, err)
 	}
 	defer conn.Close()
 
 	// Create a new client to the chosen service
 	client := pb.NewEchoServiceClient(conn)
 
-	if *chitchat {
-		ChitChat(client)
-	} else if *count == 1 {
-		if len(*stream) > 0 {
-			StreamMessages(client, strings.Split(*stream, ","))
-		} else {
-			SimpleEcho(client, *message)
-		}
+	if rpc == "unary" {
+		UnaryEcho(client, "test-unary-echo")
+	} else if rpc == "clientstream" {
+		ClientSideStream(client, []string{
+			"test-clientstream-msg-1",
+			"test-clientstream-msg-2",
+			"test-clientstream-msg-3",
+		})
+	} else if rpc == "serverstream" {
+		ServerSideStream(client, "test-serverstream-msg", 5)
+	} else if rpc == "bidirectional" {
+		BidirectionalStream(client)
 	} else {
-		EchoMultiple(client, *message, *count)
+		log.Fatalf("Invalid RPC: %v", rpc)
 	}
 }

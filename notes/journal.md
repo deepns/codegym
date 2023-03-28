@@ -67,6 +67,13 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 13 (grpc)
+
+- Revisit the examples. Updated the service definitions in echo service
+- what next?
+  - Read the [core concepts](https://grpc.io/docs/what-is-grpc/core-concepts/) again
+  - Pick an example feature and explore it
+
 ### Day 11, 12 (grpc peer, protobuf definitions)
 
 - explored protobuf [definitions](https://protobuf.dev/programming-guides/proto3/)
@@ -117,8 +124,8 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - defined the proto file, explored the marshaling and unmarshalling of proto buffers
 - implemented the server and client to test request and response processing
 - what next?
-  - [ ] Read the auto generated files and understand how they are used in general
-  - [ ] add comments as necessary
+  - [x] Read the auto generated files and understand how they are used in general
+  - [x] add comments as necessary
 
 ### Day 1 (grpc basics)
 

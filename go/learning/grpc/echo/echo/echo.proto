@@ -17,16 +17,19 @@ message EchoRequestWithCount {
 }
 
 service EchoService {
-    rpc SimpleEcho(EchoRequest) returns (EchoResponse) {}
+    // An Unary RPC. Send the request and get the response
+    rpc UnaryEcho(EchoRequest) returns (EchoResponse) {}
 
-    rpc ServerSideStreamEcho(EchoRequestWithCount) returns (stream EchoResponse) {}
-
+    // Streams the response from the client side
     rpc ClientSideStreamEcho(stream EchoRequest) returns (EchoResponse) {}
+
+    // Streams the response from the server side
+    rpc ServerSideStreamEcho(EchoRequestWithCount) returns (stream EchoResponse) {}
 
     // A Bidirectional streaming RPC
     //
     // Accepts a stream of messages and echoes it back as it receives
-    rpc ChatEcho(stream EchoRequest) returns (stream EchoResponse) {}
+    rpc BidrectionalStreamEcho(stream EchoRequest) returns (stream EchoResponse) {}
 }
 
 /*

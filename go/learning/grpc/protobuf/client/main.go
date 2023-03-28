@@ -41,7 +41,7 @@ func main() {
 
 	danBrownBooks := pb.Bookshelf{Books: []*pb.Book{&origin, &lostSymbol}}
 
-	// The naming (or probably the composition) looks little misplaced..
+// The naming (or probably the composition) looks little misplaced..
 	// That's okay for this example.
 	bookMap := pb.BooksByAuthor{}
 	bookMap.Books["Walter Issacson"] = &pb.Bookshelf{Books: []*pb.Book{&steveJobs}}

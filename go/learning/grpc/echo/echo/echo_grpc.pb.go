@@ -22,13 +22,13 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EchoServiceClient interface {
-	SimpleEcho(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
+	UnaryEcho(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error)
 	ServerSideStreamEcho(ctx context.Context, in *EchoRequestWithCount, opts ...grpc.CallOption) (EchoService_ServerSideStreamEchoClient, error)
 	ClientSideStreamEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ClientSideStreamEchoClient, error)
 	// A Bidirectional streaming RPC
 	//
 	// Accepts a stream of messages and echoes it back as it receives
-	ChatEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ChatEchoClient, error)
+	BidrectionalStreamEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_BidrectionalStreamEchoClient, error)
 }
 
 type echoServiceClient struct {
@@ -39,9 +39,9 @@ func NewEchoServiceClient(cc grpc.ClientConnInterface) EchoServiceClient {
 	return &echoServiceClient{cc}
 }
 
-func (c *echoServiceClient) SimpleEcho(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
+func (c *echoServiceClient) UnaryEcho(ctx context.Context, in *EchoRequest, opts ...grpc.CallOption) (*EchoResponse, error) {
 	out := new(EchoResponse)
-	err := c.cc.Invoke(ctx, "/EchoService/SimpleEcho", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/EchoService/UnaryEcho", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -114,30 +114,30 @@ func (x *echoServiceClientSideStreamEchoClient) CloseAndRecv() (*EchoResponse, e
 	return m, nil
 }
 
-func (c *echoServiceClient) ChatEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_ChatEchoClient, error) {
-	stream, err := c.cc.NewStream(ctx, &EchoService_ServiceDesc.Streams[2], "/EchoService/ChatEcho", opts...)
+func (c *echoServiceClient) BidrectionalStreamEcho(ctx context.Context, opts ...grpc.CallOption) (EchoService_BidrectionalStreamEchoClient, error) {
+	stream, err := c.cc.NewStream(ctx, &EchoService_ServiceDesc.Streams[2], "/EchoService/BidrectionalStreamEcho", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &echoServiceChatEchoClient{stream}
+	x := &echoServiceBidrectionalStreamEchoClient{stream}
 	return x, nil
 }
 
-type EchoService_ChatEchoClient interface {
+type EchoService_BidrectionalStreamEchoClient interface {
 	Send(*EchoRequest) error
 	Recv() (*EchoResponse, error)
 	grpc.ClientStream
 }
 
-type echoServiceChatEchoClient struct {
+type echoServiceBidrectionalStreamEchoClient struct {
 	grpc.ClientStream
 }
 
-func (x *echoServiceChatEchoClient) Send(m *EchoRequest) error {
+func (x *echoServiceBidrectionalStreamEchoClient) Send(m *EchoRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *echoServiceChatEchoClient) Recv() (*EchoResponse, error) {
+func (x *echoServiceBidrectionalStreamEchoClient) Recv() (*EchoResponse, error) {
 	m := new(EchoResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -149,13 +149,13 @@ func (x *echoServiceChatEchoClient) Recv() (*EchoResponse, error) {
 // All implementations must embed UnimplementedEchoServiceServer
 // for forward compatibility
 type EchoServiceServer interface {
-	SimpleEcho(context.Context, *EchoRequest) (*EchoResponse, error)
+	UnaryEcho(context.Context, *EchoRequest) (*EchoResponse, error)
 	ServerSideStreamEcho(*EchoRequestWithCount, EchoService_ServerSideStreamEchoServer) error
 	ClientSideStreamEcho(EchoService_ClientSideStreamEchoServer) error
 	// A Bidirectional streaming RPC
 	//
 	// Accepts a stream of messages and echoes it back as it receives
-	ChatEcho(EchoService_ChatEchoServer) error
+	BidrectionalStreamEcho(EchoService_BidrectionalStreamEchoServer) error
 	mustEmbedUnimplementedEchoServiceServer()
 }
 
@@ -163,8 +163,8 @@ type EchoServiceServer interface {
 type UnimplementedEchoServiceServer struct {
 }
 
-func (UnimplementedEchoServiceServer) SimpleEcho(context.Context, *EchoRequest) (*EchoResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SimpleEcho not implemented")
+func (UnimplementedEchoServiceServer) UnaryEcho(context.Context, *EchoRequest) (*EchoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UnaryEcho not implemented")
 }
 func (UnimplementedEchoServiceServer) ServerSideStreamEcho(*EchoRequestWithCount, EchoService_ServerSideStreamEchoServer) error {
 	return status.Errorf(codes.Unimplemented, "method ServerSideStreamEcho not implemented")
@@ -172,8 +172,8 @@ func (UnimplementedEchoServiceServer) ServerSideStreamEcho(*EchoRequestWithCount
 func (UnimplementedEchoServiceServer) ClientSideStreamEcho(EchoService_ClientSideStreamEchoServer) error {
 	return status.Errorf(codes.Unimplemented, "method ClientSideStreamEcho not implemented")
 }
-func (UnimplementedEchoServiceServer) ChatEcho(EchoService_ChatEchoServer) error {
-	return status.Errorf(codes.Unimplemented, "method ChatEcho not implemented")
+func (UnimplementedEchoServiceServer) BidrectionalStreamEcho(EchoService_BidrectionalStreamEchoServer) error {
+	return status.Errorf(codes.Unimplemented, "method BidrectionalStreamEcho not implemented")
 }
 func (UnimplementedEchoServiceServer) mustEmbedUnimplementedEchoServiceServer() {}
 
@@ -188,20 +188,20 @@ func RegisterEchoServiceServer(s grpc.ServiceRegistrar, srv EchoServiceServer) {
 	s.RegisterService(&EchoService_ServiceDesc, srv)
 }
 
-func _EchoService_SimpleEcho_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EchoService_UnaryEcho_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EchoRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EchoServiceServer).SimpleEcho(ctx, in)
+		return srv.(EchoServiceServer).UnaryEcho(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/EchoService/SimpleEcho",
+		FullMethod: "/EchoService/UnaryEcho",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EchoServiceServer).SimpleEcho(ctx, req.(*EchoRequest))
+		return srv.(EchoServiceServer).UnaryEcho(ctx, req.(*EchoRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -253,25 +253,25 @@ func (x *echoServiceClientSideStreamEchoServer) Recv() (*EchoRequest, error) {
 	return m, nil
 }
 
-func _EchoService_ChatEcho_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(EchoServiceServer).ChatEcho(&echoServiceChatEchoServer{stream})
+func _EchoService_BidrectionalStreamEcho_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(EchoServiceServer).BidrectionalStreamEcho(&echoServiceBidrectionalStreamEchoServer{stream})
 }
 
-type EchoService_ChatEchoServer interface {
+type EchoService_BidrectionalStreamEchoServer interface {
 	Send(*EchoResponse) error
 	Recv() (*EchoRequest, error)
 	grpc.ServerStream
 }
 
-type echoServiceChatEchoServer struct {
+type echoServiceBidrectionalStreamEchoServer struct {
 	grpc.ServerStream
 }
 
-func (x *echoServiceChatEchoServer) Send(m *EchoResponse) error {
+func (x *echoServiceBidrectionalStreamEchoServer) Send(m *EchoResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *echoServiceChatEchoServer) Recv() (*EchoRequest, error) {
+func (x *echoServiceBidrectionalStreamEchoServer) Recv() (*EchoRequest, error) {
 	m := new(EchoRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -287,8 +287,8 @@ var EchoService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*EchoServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SimpleEcho",
-			Handler:    _EchoService_SimpleEcho_Handler,
+			MethodName: "UnaryEcho",
+			Handler:    _EchoService_UnaryEcho_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -303,8 +303,8 @@ var EchoService_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 		{
-			StreamName:    "ChatEcho",
-			Handler:       _EchoService_ChatEcho_Handler,
+			StreamName:    "BidrectionalStreamEcho",
+			Handler:       _EchoService_BidrectionalStreamEcho_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},
