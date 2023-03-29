@@ -67,6 +67,11 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 15 (exercise|happy number)
+
+- Just picked up [this leetcode problem](https://leetcode.com/problems/happy-number/description/) at random
+- recollected some of my forgetten python knowledge.. `//` operator, generators, unittest
+
 ## Day 14 (protobuf serialization)
 
 - Explored the possibility of serializing protobuf generated types, in both binary and json format
