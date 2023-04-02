@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -48,9 +49,9 @@ func main() {
 	flag.Parse()
 
 	kacs := keepalive.ClientParameters{
-		Time:                10 * time.Second,
-		Timeout:             5 * time.Second,
-		PermitWithoutStream: true,
+		Time:                10 * time.Second, // send pings every 10 seconds if there is no activity
+		Timeout:             5 * time.Second,  // wait 5 seconds for ping ack before considering the connection dead
+		PermitWithoutStream: true,             // send pings even without active streams
 	}
 
 	options := []grpc.DialOption{
@@ -65,11 +66,23 @@ func main() {
 	defer conn.Close()
 
 	client := pb.NewEchoServiceClient(conn)
-	UnaryEcho(client, *msg)
+	pingCount := 0
+	UnaryEcho(client, fmt.Sprintf("%d: %v", pingCount, *msg))
+	pingCount += 1
+	UnaryEcho(client, fmt.Sprintf("%d: %v", pingCount, *msg))
+	pingCount += 1
 
-	// Wait for 20 seconds to observe GOAWAY due to idleness.
-	select {
-	case <-time.After(20 * time.Second):
-		log.Println("Done")
-	}
+	log.Println("Waiting for 20 seconds to observe GOAWAY due to idleness...")
+	<-time.After(20 * time.Second)
+	log.Println("Done waiting.")
+
+	// TODO:
+	// How client handles GOAWAY message?
+	// Is the connection really closed?
+	// Is it possible to send the PING explicitly?
+	// Sending a message before GOAWAY is received and after GOAWAY is received
+	// makes no difference.
+
+	log.Println("Sending another request to observe that the connection is still alive...")
+	UnaryEcho(client, fmt.Sprintf("%d: %v", pingCount, *msg))
 }

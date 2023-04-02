@@ -67,6 +67,30 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 18 (grpc keepalive continued)
+
+- quick recap of basic grpc client and server
+- server
+  - create a server type with embedded type of the unimplemented server
+  - implement the necessary rpc with the server type
+  - create a listener on a chosen address and port
+  - choose the server options (e.g TLS, KeepAliveParams, KeepAliveEnforcementPolicy etc.)
+  - create new server `grpc.NewServer` and register with the service
+  - start serving
+- client
+  - get the server address (host:port)
+  - choose the dial options (e.g. tls credentials, keepalive params)
+  - dial to the server address with the chosen options. get the connection
+  - create a client on the connection returned by dial
+  - call the rpc on the client object with the necessary parameters
+- keepalive
+  - both client and server sends pings...behavior can be controlled by ClientParameters and ServerParameters in `google.golang.org/grpc/keepalive`
+  - If no ping, server sends a GOAWAY message to the client to close the connection. I may be missing something here. How the client handles GOAWAY message? I tried to send another message after GOAWAY is received, and the message still went through fine on the same connection. The behavior seem to be library dependent. In general, client is expected to gracefully shutdown the connection upon receiving GOAWAY.
+  - http2debug
+    - `GODEBUG=http2debug=2` enables verbose logging of the grpc http2 communication. [Doc](https://go.dev/src/net/http/doc.go) says `http2debug=1` also throws some debug logs, but didn't see any in my client testing.
+  - ok..didn't know that GOAWAY is a frame type in http2..see [rfc](https://www.rfc-editor.org/rfc/rfc7540#page-43)
+  - while looking to find more info about GOAWAY, found [this](https://nuvalence.io/insights/lessons-learned-investigating-goaways-in-grpc-apis/) article. will read through it tomorrow
+
 ## Day 17 (grpc keepalive features)
 
 - explored the keepalive features on the client and server side of grpc
