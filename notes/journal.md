@@ -60,12 +60,23 @@
     - [ ] tempfiles
     - [ ] custom logging
 - [ ] syslog, journalctl
-- [ ] gc pause
+- [x] gc pause
 - [ ] json path
 
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+## Day 17 (grpc keepalive features)
+
+- explored the keepalive features on the client and server side of grpc
+- added a client and server application for echo service
+- enabled copilot and used it to code the client/server code for keepalive..using it first time...truly game changing experience.
+
+## Day 16 (protobuf serialization)
+
+- added code to serialize protobuf types to pb and json
+- explored [keepalive](https://github.com/grpc/grpc-go/blob/master/Documentation/keepalive.md) feature. will add an example shortly.
 
 ## Day 15 (exercise|happy number)
 

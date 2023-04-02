@@ -4,14 +4,39 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 
+	echo "github.com/deepns/codegym/go/learning/grpc/echo/echo"
 	pb "github.com/deepns/codegym/go/learning/grpc/protobuf/books"
-	"google.golang.org/protobuf/proto"
+	"github.com/golang/protobuf/proto"
 )
 
 func main() {
+	// serializing a simple request
+	echoRequest := echo.EchoRequestWithCount{
+		Message: "Woof!",
+		Count:   10101,
+	}
+	echoRequestBinary, _ := proto.Marshal(&echoRequest)
+	fmt.Println("echoRequestBinary:", echoRequestBinary)
+
+	someBook := pb.Book{
+		Title:      "Some book",
+		Year:       2023,
+		Price:      10,
+		IsReleased: true,
+		Genre:      pb.BookGenre_MEMOIR,
+	}
+
+	bookBinary, _ := proto.Marshal(&someBook)
+	fmt.Println("someBook in bytes:", bookBinary)
+
+	bookJson, _ := json.Marshal(&someBook)
+	fmt.Println("someBook in json:", bookJson)
+	ioutil.WriteFile("somebook.json", bookJson, 0644)
+
 	shelf := &pb.Shelf{
 		BooksToRead: []*pb.Book{
 			{
