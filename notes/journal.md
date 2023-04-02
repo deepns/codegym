@@ -3,7 +3,7 @@
 ## Things to try out
 
 - [x] Nonblocking TCP client/server
-- [ ] Running zookeeper cluster locally with docker
+- [-] Running zookeeper cluster locally with docker
 - [x] poll
 - [x] epoll
 - [x] async IO
@@ -55,13 +55,118 @@
     - [ ] maps
     - [ ] make vs new
     - [ ] embedding
-    - [ ] variadic functions
-    - [ ] interfaces
+    - [x] variadic functions
+    - [x] interfaces
     - [ ] tempfiles
     - [ ] custom logging
 - [ ] syslog, journalctl
-- [ ] gc pause
+- [x] gc pause
 - [ ] json path
+
+## Daily log - attempt#2
+
+Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+## Day 17 (grpc keepalive features)
+
+- explored the keepalive features on the client and server side of grpc
+- added a client and server application for echo service
+- enabled copilot and used it to code the client/server code for keepalive..using it first time...truly game changing experience.
+
+## Day 16 (protobuf serialization)
+
+- added code to serialize protobuf types to pb and json
+- explored [keepalive](https://github.com/grpc/grpc-go/blob/master/Documentation/keepalive.md) feature. will add an example shortly.
+
+## Day 15 (exercise|happy number)
+
+- Just picked up [this leetcode problem](https://leetcode.com/problems/happy-number/description/) at random
+- recollected some of my forgetten python knowledge.. `//` operator, generators, unittest
+
+## Day 14 (protobuf serialization)
+
+- Explored the possibility of serializing protobuf generated types, in both binary and json format
+
+## Day 13 (grpc)
+
+- Revisit the examples. Updated the service definitions in echo service
+- what next?
+  - Read the [core concepts](https://grpc.io/docs/what-is-grpc/core-concepts/) again
+  - Pick an example feature and explore it
+
+### Day 11, 12 (grpc peer, protobuf definitions)
+
+- explored protobuf [definitions](https://protobuf.dev/programming-guides/proto3/)
+- got connection details from context using peer package
+
+### Day 10 (grpc echo server bidirectional streaming)
+
+- added bidirectional streaming rpc to the service
+- works, but connection closure is not proper. ~~need to follow up with that tomorrow~~ that error is expected when the stream is closed. Just returned the error.
+- TODO - add some comments and clean up the code
+
+### Day 9 (grpc echo server)
+
+- added a client side streaming method to the service
+- updated the client and server to use the newly added method
+
+### Day 8 (sick day)
+
+### Day 7 (grpc echo server)
+
+- added a echo server, with proto definition and client and server code
+- added a simple echo and server side streaming
+- will add client side streaming and bidirectional streaming tomorrow
+- read the tutorial page again...finding new information on each read
+
+### Day 6
+
+- went over some patterns from educative
+
+### Day 5 (go contexts)
+
+- More on go contexts
+- added a sample program to my learning collection
+
+### Day 4 (go contexts)
+
+- Learning about go contexts
+
+### Day 3 (grpc helloworld, go context)
+
+- Went through the grpc generated code
+- Updated the arguments
+- started reading about context package...will explore more on that tomorrow.
+
+### Day 2 (grpc helloworld)
+
+- Wrote my own helloworld program on grpc with go
+- defined the proto file, explored the marshaling and unmarshalling of proto buffers
+- implemented the server and client to test request and response processing
+- what next?
+  - [x] Read the auto generated files and understand how they are used in general
+  - [x] add comments as necessary
+
+### Day 1 (grpc basics)
+
+- running protoc with go requires the extension (protoc-gen-go and protoc-gen-go-grpc). Installed them using `go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28` and `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2`
+
+```console
+➜  ~ ls $HOME/go/bin
+inputs             protoc-gen-go      protoc-gen-go-grpc tempfiles
+➜  ~ export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+- went through the [routeguide example](https://github.com/grpc/grpc-go/tree/master/examples/route_guide), server code and client code. Ran them. what next?
+  - [x] create a route guide client on my own to interact with the server
+  - [ ] create my own server and client
+- server listens at `50051` by default. Unfortunately, that port is already taken by launchd.
+
+```console
+➜  ~ sudo lsof -iTCP -sTCP:LISTEN | grep 50051
+launchd      1     root   11u  IPv6 0x70998e80006793b3      0t0  TCP *:50051 (LISTEN)
+launchd      1     root   50u  IPv4 0x70998e76698d643b      0t0  TCP *:50051 (LISTEN)
+```
 
 ## Daily log
 

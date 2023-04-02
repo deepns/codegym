@@ -1,0 +1,41 @@
+// must be the first non-empty non-comment line in a proto file
+syntax = "proto3";
+
+option go_package = "github.com/deepns/codegym/go/learning/grpc/echo";
+
+message EchoRequest {
+    string message = 1;
+}
+
+message EchoResponse {
+    string message = 1;
+}
+
+message EchoRequestWithCount {
+    string message = 1;
+    int32 count = 2;  
+}
+
+service EchoService {
+    // An Unary RPC. Send the request and get the response
+    rpc UnaryEcho(EchoRequest) returns (EchoResponse) {}
+
+    // Streams the response from the client side
+    rpc ClientSideStreamEcho(stream EchoRequest) returns (EchoResponse) {}
+
+    // Streams the response from the server side
+    rpc ServerSideStreamEcho(EchoRequestWithCount) returns (stream EchoResponse) {}
+
+    // A Bidirectional streaming RPC
+    //
+    // Accepts a stream of messages and echoes it back as it receives
+    rpc BidrectionalStreamEcho(stream EchoRequest) returns (stream EchoResponse) {}
+}
+
+/*
+ * Command to compile with protoc
+    export PATH="$PATH:$(go env GOPATH)/bin";
+    protoc --go_out=. --go_opt=paths=source_relative \
+    --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+    echo/echo.proto
+ */
