@@ -67,6 +67,23 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 21 (grpc authentication)
+
+- looked into adding authentication to grpc calls
+- client and server can be configured to provide authentication using OAuth2.
+- client can be configured to use same token for all rpc over the same connection or use token per rpc
+- server needs to intercept the call (requires the use of interceptor), validate the token (provided in the metadata) and then return the handler to the original call.
+  - This requires learning about metadata handling and interceptor pattern.
+- next?
+  - [ ] metadata
+  - [ ] interceptor
+
+## Day 20 (skip)
+
+## Day 19 (exercise | sliding window maximum)
+
+- picked up [this problem](https://leetcode.com/problems/sliding-window-maximum/), but didn't finish it
+
 ## Day 18 (grpc keepalive continued)
 
 - quick recap of basic grpc client and server
