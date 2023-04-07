@@ -67,6 +67,13 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 22 (grpc metadata)
+
+- Learning about metadata handling in grpc
+- added a sample echo client/service..sending and receiving some key/value pairs in header and trailer
+- the header and trailer goes in the respective frames in http/2. how does http/2 frame look like? something to explore next.
+- [ ] what are the use cases of custom metadata?
+
 ## Day 21 (grpc authentication)
 
 - looked into adding authentication to grpc calls
@@ -75,7 +82,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - server needs to intercept the call (requires the use of interceptor), validate the token (provided in the metadata) and then return the handler to the original call.
   - This requires learning about metadata handling and interceptor pattern.
 - next?
-  - [ ] metadata
+  - [x] metadata - in progress
   - [ ] interceptor
 
 ## Day 20 (skip)
