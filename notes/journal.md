@@ -67,12 +67,17 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 23 (grpc metadata)
+
+- explored more on metadata, where it is used and why
+- see [notes](../go/learning/grpc/features/metadata/readme.md)
+
 ## Day 22 (grpc metadata)
 
 - Learning about metadata handling in grpc
 - added a sample echo client/service..sending and receiving some key/value pairs in header and trailer
 - the header and trailer goes in the respective frames in http/2. how does http/2 frame look like? something to explore next.
-- [ ] what are the use cases of custom metadata?
+- [x] what are the use cases of custom metadata? - one common use case is authentication
 
 ## Day 21 (grpc authentication)
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
@@ -40,7 +41,7 @@ func (s *echoServer) UnaryEcho(ctx context.Context, req *pb.EchoRequest) (*pb.Ec
 	}
 
 	for k, v := range md {
-		log.Printf("metadata: %v=%v", k, v)
+		log.Printf("metadata: %v=%v", k, strings.Join(v, ","))
 	}
 
 	header := metadata.New(map[string]string{"timestamp": time.Now().Format(time.StampNano)})

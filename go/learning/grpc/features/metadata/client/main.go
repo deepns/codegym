@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"log"
+	"strings"
 	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
@@ -30,11 +31,11 @@ func UnaryEcho(client pb.EchoServiceClient, message string) {
 
 	// Dump the header and trailer
 	for k, v := range header {
-		log.Printf("header: %v=%v", k, v)
+		log.Printf("header: %v=%v", k, strings.Join(v, ","))
 	}
 
 	for k, v := range trailer {
-		log.Printf("trailer: %v=%v", k, v)
+		log.Printf("trailer: %v=%v", k, strings.Join(v, ","))
 	}
 
 	log.Printf("echo: %v", response.Message)
