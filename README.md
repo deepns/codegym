@@ -2,6 +2,7 @@
 
 Welcome to my learning ground. This is my space where I try to learn new things, fail, learn and share.
 
+- [Learning gRPC](go/learning/grpc)
 - [Refreshing C++](cpp)
 - [Azure Fundamentals](azure/az-900-notes.md)
 - [Learning Golang](go/learning/)
