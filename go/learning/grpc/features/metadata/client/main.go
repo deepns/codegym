@@ -44,8 +44,8 @@ func UnaryEcho(client pb.EchoServiceClient, message string) {
 func main() {
 	addr := flag.String("addr", "localhost:50505", "address to connect to")
 
-	conn, err := grpc.Dial(*addr, []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials())}...)
+	conn, err := grpc.Dial(*addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Failed to connect to server. err=%v", err)
 	}

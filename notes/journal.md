@@ -67,6 +67,18 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 24 (grpc metadata, interceptor, realworld examples)
+
+- was wondering how the headers and trailers are used. [this cloudfare article](https://blog.cloudflare.com/road-to-grpc/) had some clear explanation related to that. Usage of trailers in http2 is not so common, grpc uses it to **send status** after the body. e.g. in case of streaming rpcs, **send a checksum** of the content at the end for the client to verify. For streaming data, can't send checksum in the headers since we may not know all the data ahead.
+- ![this image](https://blog.cloudflare.com/content/images/2020/10/image3-24.png) neatly summarizes.
+- Found these mulesoft articles related to real world use cases. interesting read.
+  - [How Gitlab uses grpc](https://www.mulesoft.com/api-university/how-gitlab-puts-grpc-real-world)
+  - [How Kubernetes CRI uses grpc](https://www.mulesoft.com/api-university/grpc-real-world-kubernetes-container-runtime-interface)
+- read more about interceptors..added a client side example for UnaryInterceptor.
+- next?
+  - [ ] server side unary interceptor
+  - [ ] client side streaming interceptor
+
 ## Day 23 (grpc metadata)
 
 - explored more on metadata, where it is used and why
