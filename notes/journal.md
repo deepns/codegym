@@ -67,6 +67,17 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 25 (grpc interceptor)
+
+- Added a server side unary interceptor
+- learnt about how `net.Listen` binds
+- came to know about [twirp](https://twitchtv.github.io/twirp/docs/intro.html) - Twirp is similar to gRPC, but without the custom HTTP server and transport implementations: it runs on the standard library's extremely-well-tested-and-high-performance net/http Server. It can run on HTTP 1.1, not just http/2, and supports JSON serialization for easy debugging.
+- [ ] can use cURL with gRPC?
+- Some links to read
+  - [ ] [gRPC use cases](https://www.redhat.com/architect/grpc-use-cases)
+  - [ ] [messaging patterns](https://www.redhat.com/architect/architectural-messaging-patterns)
+  - [ ] [async message patterns](https://blogs.mulesoft.com/api-integration/patterns/asynchronous-messaging-patterns/)
+
 ## Day 24 (grpc metadata, interceptor, realworld examples)
 
 - was wondering how the headers and trailers are used. [this cloudfare article](https://blog.cloudflare.com/road-to-grpc/) had some clear explanation related to that. Usage of trailers in http2 is not so common, grpc uses it to **send status** after the body. e.g. in case of streaming rpcs, **send a checksum** of the content at the end for the client to verify. For streaming data, can't send checksum in the headers since we may not know all the data ahead.
@@ -76,8 +87,8 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
   - [How Kubernetes CRI uses grpc](https://www.mulesoft.com/api-university/grpc-real-world-kubernetes-container-runtime-interface)
 - read more about interceptors..added a client side example for UnaryInterceptor.
 - next?
-  - [ ] server side unary interceptor
-  - [ ] client side streaming interceptor
+  - [x] server side unary interceptor
+  - [-] client side streaming interceptor
 
 ## Day 23 (grpc metadata)
 
