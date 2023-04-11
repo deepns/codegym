@@ -1,4 +1,4 @@
-# What's happening in the garage?
+# What's happening in the gym?
 
 ## Things to try out
 
@@ -54,18 +54,42 @@
     - [ ] arrays
     - [ ] maps
     - [ ] make vs new
-    - [ ] embedding
+    - [x] embedding
     - [x] variadic functions
     - [x] interfaces
-    - [ ] tempfiles
-    - [ ] custom logging
+    - [x] tempfiles
+    - [x] custom logging
 - [ ] syslog, journalctl
 - [x] gc pause
 - [ ] json path
+- [ ] grpc
+  - [x] basics
+  - [x] protobuf basics
+  - [ ] features
+    - [x] keepalive
+    - [ ] authentication
+    - [ ] authorization
+    - [x] metadata
+    - [x] interceptor
+    - [x] metadata-interceptor
+    - [ ] multiplexing
+    - [ ] compression
+    - [ ] reflection
+    - [ ] health
 
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+## Day 26 (grpc multiplexing)
+
+- updated interceptor to insert new metadata (to show example for metadata-interceptor)
+- read through multiplexing code, added my own client and server for multiplexing
+- read the links saved before
+- what next?
+  - [ ] find some examples of multiplexing in real world scenarios
+  - [ ] learn reflection, grpcurl
+  - [ ] add another service to the mix
 
 ## Day 25 (grpc interceptor)
 
@@ -74,9 +98,9 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - came to know about [twirp](https://twitchtv.github.io/twirp/docs/intro.html) - Twirp is similar to gRPC, but without the custom HTTP server and transport implementations: it runs on the standard library's extremely-well-tested-and-high-performance net/http Server. It can run on HTTP 1.1, not just http/2, and supports JSON serialization for easy debugging.
 - [ ] can use cURL with gRPC?
 - Some links to read
-  - [ ] [gRPC use cases](https://www.redhat.com/architect/grpc-use-cases)
-  - [ ] [messaging patterns](https://www.redhat.com/architect/architectural-messaging-patterns)
-  - [ ] [async message patterns](https://blogs.mulesoft.com/api-integration/patterns/asynchronous-messaging-patterns/)
+  - [x] [gRPC use cases](https://www.redhat.com/architect/grpc-use-cases)
+  - [x] [messaging patterns](https://www.redhat.com/architect/architectural-messaging-patterns)
+  - [x] [async message patterns](https://blogs.mulesoft.com/api-integration/patterns/asynchronous-messaging-patterns/)
 
 ## Day 24 (grpc metadata, interceptor, realworld examples)
 

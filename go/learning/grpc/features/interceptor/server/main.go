@@ -25,6 +25,15 @@ func (s *echoServer) UnaryEcho(ctx context.Context, req *pb.EchoRequest) (*pb.Ec
 	}
 	log.Printf("peer:%v", peer.Addr)
 
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		log.Println("Unable to get metadata from the context")
+		return nil, fmt.Errorf("unable to get metadata from the context")
+	}
+	for k, v := range md {
+		log.Printf("metadata: %v=%v", k, strings.Join(v, ","))
+	}
+
 	// Just a simple echo.
 	// Send the request message back to the client
 	return &pb.EchoResponse{Message: req.Message}, nil
@@ -51,6 +60,12 @@ func unaryInterceptor(ctx context.Context,
 			log.Printf("Metadata: %v=%v", k, strings.Join(v, ","))
 		}
 	}
+
+	// Add some metadata to the context
+	md.Append("timestamp", "2023-04-09 08:07:30")
+
+	// Update the context with the new metadata
+	ctx = metadata.NewIncomingContext(ctx, md)
 
 	// Sample output of the above log statements:
 	// 2023/04/09 08:07:30 Unary interceptor: /EchoService/UnaryEcho
