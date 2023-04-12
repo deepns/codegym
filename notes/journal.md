@@ -72,7 +72,7 @@
     - [x] metadata
     - [x] interceptor
     - [x] metadata-interceptor
-    - [ ] multiplexing
+    - [x] multiplexing
     - [ ] compression
     - [ ] reflection
     - [ ] health
@@ -80,6 +80,13 @@
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+## Day 27 (grpc reflection)
+
+- Reading about [reflection protocol](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md) and [grpcurl](https://github.com/fullstorydev/grpcurl)
+- added reflection to multiplex server, installed grpcurl, listed the services.
+- will play some more with grpcurl, invoke the service methods tomorrow
+- also address the TODOs from Day 26
 
 ## Day 26 (grpc multiplexing)
 
