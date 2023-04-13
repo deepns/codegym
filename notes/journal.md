@@ -74,12 +74,18 @@
     - [x] metadata-interceptor
     - [x] multiplexing
     - [ ] compression
-    - [ ] reflection
+    - [x] reflection
     - [ ] health
 
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+
+## Day 28 (grpcurl)
+
+- Explored more about the grpc reflection and grpcurl.
+- read some basics of merkle tree, its usability and applications. Yet to declare my own.
 
 ## Day 27 (grpc reflection)
 
@@ -95,7 +101,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - read the links saved before
 - what next?
   - [ ] find some examples of multiplexing in real world scenarios
-  - [ ] learn reflection, grpcurl
+  - [x] learn reflection, grpcurl
   - [ ] add another service to the mix
 
 ## Day 25 (grpc interceptor)

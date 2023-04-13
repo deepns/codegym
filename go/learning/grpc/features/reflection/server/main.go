@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 
 	pbec "github.com/deepns/codegym/go/learning/grpc/echo/echo"
 	pbhw "github.com/deepns/codegym/go/learning/grpc/helloworld/helloworld"
@@ -36,7 +37,14 @@ func (s *helloServer) SayHello(ctx context.Context, req *pbhw.HelloRequest) (*pb
 	if client, ok := peer.FromContext(ctx); ok {
 		log.Printf("client:%v", client.Addr)
 	}
-	return &pbhw.HelloResponse{HelloMsg: fmt.Sprintf("Hello, %v", req.Name)}, nil
+
+	// Limit the number of times we say hello
+	if req.Count > 10 {
+		req.Count = 10
+	}
+
+	helloMsg := strings.Repeat(fmt.Sprintf("Hello, %v\n", req.Name), int(req.Count))
+	return &pbhw.HelloResponse{HelloMsg: helloMsg}, nil
 }
 
 func main() {
