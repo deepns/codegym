@@ -81,6 +81,9 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 28 (merkletree)
+
+- No code day.. just reading about merkle tree and its applications
 
 ## Day 28 (grpcurl)
 
