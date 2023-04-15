@@ -81,7 +81,19 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
-## Day 28 (merkletree)
+## Day 30 (grpc http2 reading)
+
+- another no code day
+- Found some interesting articles to read
+  - [grpc on http2](https://grpc.io/blog/grpc-on-http2/) - talks about how grpc utilizes http/2 underneath, how the http/2 connections are managed, usage of name resolvers and load balancers.
+    - ClientConn (aka channels (not the golang channel)) backed by multiple http2 connections. gRPC handles multiplexing the rpcs between the http2 connections. Makes use of streams in HTTP/2 to handle multiple concurrent conversations over single connection.
+    - RPC messages sent over the connection as http/2 data frames
+  - [http2 smartness](https://www.cncf.io/blog/2018/07/03/http-2-smarter-at-scale/) - talks about http/2 streams, concurrent handling of messages, flow control in streams.
+  - [gRPC in Cloud Run](https://cloud.google.com/blog/products/compute/serve-cloud-run-requests-with-grpc-not-just-http)
+  - [golang grpc in Cloud Run](https://github.com/grpc-ecosystem/grpc-cloud-run-example/blob/master/golang/README.md) - example Go application to deploy in Cloud Run
+- also found some interesting uses of gRPC in Istio ([echo server](https://github.com/istio/istio/blob/de9fc7bd3e9cdeda1c30398970fac103ea3cae8c/pkg/test/echo/server/endpoint/grpc.go), [nodeagent sds server](https://github.com/istio/istio/blob/2b39b30c7f69efdf2421482662540455a37584b9/security/pkg/nodeagent/sds/server.go)), [Kubernetes KMS](https://github.com/kubernetes/kms/blob/f5c193c64781ed405774ecfaa5c28375d2cf05a1/pkg/service/grpc_service.go#L66)
+
+## Day 29 (merkletree)
 
 - No code day.. just reading about merkle tree and its applications
 
