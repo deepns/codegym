@@ -76,10 +76,63 @@
     - [ ] compression
     - [x] reflection
     - [ ] health
+    - [ ] load balancing
+    - [ ] grpc-gateway
+    - [x] grpcurl
 
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+## Day 32 (grpc proto)
+
+- Added a server side implementation for the reminder service
+- Skipped grpc-gateway functionalities as I haven't read that yet
+- Tried to use `grpcurl` to interact with the server
+- first failed with the below error as the timestamp object wasn't specified properly.. [Timestamp](https://pkg.go.dev/google.golang.org/protobuf/types/known/timestamppb#Timestamp) specifies the json representation of the object
+- good to know that enums can be specified as string representation
+
+```console
+✗ grpcurl -plaintext -d '{"what": "Buy coffee", "when": {"seconds": 1618222800, "nanos": 0},  "type": "PUSH"}' localhost:50505 ReminderServiceCreateReminder
+
+
+Error invoking method "ReminderService/CreateReminder": error getting request data: json: cannot unmarshal object into Go value of type string
+```
+
+- only when I updated the timestamp to [RFC 3339](https://rfc-editor.org/rfc/rfc3339.html) format, it worked
+
+```console
+✗ grpcurl -plaintext -d '{"what": "Buy coffee", "when": "2022-04-13T13:30:00Z", "type": "SMS"}' localhost:50505 ReminderService/Crlocalhost:50505 ReminderService/CreateReminder
+
+{
+  "id": 2
+}
+
+✗ grpcurl -plaintext localhost:50505 ReminderService/GetReminders
+{
+  "reminders": [
+    {
+      "what": "Buy milk",
+      "type": "PUSH"
+    },
+    {
+      "what": "Buy coffee",
+      "when": "2022-04-13T13:30:00Z",
+      "type": "SMS"
+    }
+  ]
+}
+```
+
+- read through the **load balancer** example, which required **name resolver** to be understood first. was able to folow what they were doing, need to spend some more time on the name resolver builder stuff. may be tomorrow
+- too sleepy, done for the day
+
+## Day 31 (grpc proto)
+
+- Tried to add a new service, just for learning aspects.
+- used Timestamp type from `google/protobuf/timestamp.proto`
+- Copilot suggested equivalent REST endpoints, but missed to add the annotations in the right way.
+- ran into few problems, then resolved it with custom header files, based on the instructions from [here](https://grpc-ecosystem.github.io/grpc-gateway/docs/tutorials/adding_annotations/#using-protoc)
 
 ## Day 30 (grpc http2 reading)
 

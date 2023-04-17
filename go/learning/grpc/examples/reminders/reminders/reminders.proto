@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+option go_package = "github.com/deepns/codegym/go/learning/grpc/examples/reminders";
+
+// Why this import is needed:
+// 1. The google.protobuf.Timestamp message is defined in the
+//    google/protobuf/timestamp.proto file.
+import "google/protobuf/timestamp.proto";
+
+// Why this import is needed:
+// 1. The google.api.http option is defined in the google/api/http.proto
+//    file.
+// 2. The google/api/http.proto file is not imported by default.
+// 3. The google/api/http.proto file is not part of the standard protobuf
+//    distribution.
+// The google.api.http option is used to specify how the gRPC service is
+// mapped to the HTTP REST API. The option is specified in the .proto file
+import "google/api/annotations.proto";
+
+enum ReminderType {
+    NONE = 0;
+    EMAIL = 1;
+    SMS = 2;
+    PUSH = 3;
+}
+
+message Reminder {
+    string what = 1;
+    google.protobuf.Timestamp when = 2;
+    ReminderType type = 3;
+}
+
+message GetRemindersResponse {
+    repeated Reminder reminders = 1;
+}
+
+message GetReminderRequest {
+    int32 id = 1;
+}
+
+message CreateReminderResponse {
+    bool success = 1;
+    int32 id = 2; 
+}
+
+// The Empty message is a special message type that is used to indicate that
+// a message has no content. It is used in the GetReminders method, which
+// returns a list of reminders. The list can be empty, but it can also be
+// null. The Empty message is used to indicate that the list is empty.
+message Empty {}
+
+// TODO
+// I added the option (google.api.http) = { get: "/v1/reminders" }; to the
+// RPCs with the idea of using the grpc-gateway to map the gRPC service to
+// the HTTP REST API. However, I haven't played with the grpc-gateway yet.
+// I need to learn more about it before using the options
+// Per https://grpc-ecosystem.github.io/grpc-gateway/docs/tutorials/adding_annotations/#using-protoc,
+// I updated the structure of the files. Copied the google/api/http.proto
+// and google/api/annotations.proto files to a directory under the examples
+// and then compiled using protoc.
+
+service ReminderService {
+    // GetReminders returns a list of reminders.
+    rpc GetReminders (Empty) returns (GetRemindersResponse) {
+        // How the option works:
+        // 1. The option is a key-value pair, where the key is the name of the
+        //    option and the value is the option's value.
+        // 2. The option's value is a message, which is defined in the
+        //    google.api.http.proto file.
+        // 3. The message has a field for each HTTP method (get, post, etc.).
+        // 4. The field's value is a string that specifies the path.
+        // 5. The path can contain variables, which are specified by the
+        //    colon (:) prefix.
+        // 6. The variables are replaced by the values of the fields in the
+        //    request message.
+        // 7. The fields in the request message are specified by the
+        //    body field.
+        // 8. The body field is a string that specifies the fields in the
+        //    request message.
+        // 9. The fields are specified by their names, separated by commas.
+        // 10. The fields can be nested, by using the dot (.) separator.
+        option (google.api.http) = {
+            get: "/v1/reminders"
+        };
+    }
+
+    // GetReminder returns a specific reminder by ID.
+    rpc GetReminder(GetReminderRequest) returns (Reminder) {
+        option (google.api.http) = {
+            get: "/v1/reminders/{id}"
+        };
+    }
+
+    // CreateReminder creates a new reminder.
+    rpc CreateReminder (Reminder) returns (CreateReminderResponse) {
+        option (google.api.http) = {
+            post: "/v1/reminders"
+            body: "reminder"
+        };
+    }
+}
