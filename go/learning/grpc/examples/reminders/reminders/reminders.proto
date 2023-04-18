@@ -26,6 +26,8 @@ enum ReminderType {
 
 message Reminder {
     string what = 1;
+    // For Go, this translates to timestamppb.Timestamp
+    // https://pkg.go.dev/google.golang.org/protobuf@v1.28.1/types/known/timestamppb#Timestamp
     google.protobuf.Timestamp when = 2;
     ReminderType type = 3;
 }

@@ -84,6 +84,24 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 33 (grpc proto)
+
+- Followed up some more on the Timestamp format. Trying to understand how Timestamp is enforced to follow RFC3339 format
+- `google.protobuf.Timestamp` maps to [timestamppb.Timestamp](https://pkg.go.dev/google.golang.org/protobuf@v1.28.1/types/known/timestamppb#Timestamp)
+- JSON mapping section clearly states that time must be in RFC 3339 format
+
+```markdown
+In JSON format, the Timestamp type is encoded as a string in the [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z" where {year} is always expressed using four digits while {month}, {day}, {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution), are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone is required. A proto3 JSON serializer should always use UTC (as indicated by "Z") when printing the Timestamp type and a proto3 JSON parser should be able to accept both UTC and other timezones (as indicated by an offset).
+
+For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past 01:30 UTC on January 15, 2017.
+
+In JavaScript, one can convert a Date object to this format using the standard [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString) method. In Python, a standard `datetime.datetime` object can be converted to this format using [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use the Joda Time's [`ISODateTimeFormat.dateTime()`]( http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D ) to obtain a formatter capable of generating timestamps in this format.
+```
+
+- grpcurl invokes the method...error comes from [here](https://github.com/fullstorydev/grpcurl/blob/1fda47eb90c6dd8532e33f771fa914f520fe4f05/invoke.go#L158)
+- invoker uses jsonpb.Unmarshal
+- added a client side functions to create and list Reminders
+
 ## Day 32 (grpc proto)
 
 - Added a server side implementation for the reminder service
@@ -170,7 +188,7 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
 - what next?
   - [ ] find some examples of multiplexing in real world scenarios
   - [x] learn reflection, grpcurl
-  - [ ] add another service to the mix
+  - [x] add another service to the mix
 
 ## Day 25 (grpc interceptor)
 
