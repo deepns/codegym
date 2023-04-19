@@ -84,6 +84,15 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 34 (grpc name resolving)
+
+- Reading about name-resolving in [gRPC](https://github.com/grpc/grpc/blob/master/doc/naming.md) and grpc-go
+- wanted to code today, but ran out of time. still learning and understanding how and why resolvers are used
+- what next?
+  - [ ] go through example resolver
+  - [ ] compare with passthrough resolver
+  - [ ] find some applications of resolvers (check load balancing)
+
 ## Day 33 (grpc proto)
 
 - Followed up some more on the Timestamp format. Trying to understand how Timestamp is enforced to follow RFC3339 format
