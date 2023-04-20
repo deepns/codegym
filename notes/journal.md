@@ -84,14 +84,22 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 35 (grpc name-resolver)
+
+- Good workout on the name resolving. found examples in etcd client. understood the resolver part, yet to explore more on the load balancing part
+- Added a client for the name resolving example
+- need to
+  - [ ] update readme with some more notes
+  - [ ] break resolver into separate package and use it in the example
+
 ## Day 34 (grpc name resolving)
 
 - Reading about name-resolving in [gRPC](https://github.com/grpc/grpc/blob/master/doc/naming.md) and grpc-go
 - wanted to code today, but ran out of time. still learning and understanding how and why resolvers are used
 - what next?
-  - [ ] go through example resolver
-  - [ ] compare with passthrough resolver
-  - [ ] find some applications of resolvers (check load balancing)
+  - [x] go through example resolver
+  - [x] compare with passthrough resolver
+  - [x] find some applications of resolvers (check load balancing) - found an example in etcd client
 
 ## Day 33 (grpc proto)
 

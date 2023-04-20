@@ -16,7 +16,30 @@
 
 - Supports **dns, unix and passthrough** resolvers - [doc](https://pkg.go.dev/google.golang.org/grpc/internal/resolver#section-directories)
   - [passthrough](https://github.com/grpc/grpc-go/blob/v1.54.0/internal/resolver/passthrough/passthrough.go) sends the target name without the scheme back to gRPC as resolved address.
-  - where is it used? #TODO
+  - where is it used?
+    - [etcd client](https://github.com/etcd-io/etcd/blob/b27dec8b9487d0d9358ca4dd366563d1aab04a1e/client/v3/naming/resolver/resolver.go) supports grpc resolver for its name resolution.
+    - How it connects using the resolver? **Note**: resolver can be registered with the global register via init() and calling `resolver.Register` or registered for the specific dial using `grpc.WithResolvers`
+
+```go
+// Dial an RPC service using the etcd gRPC resolver and a gRPC Balancer:
+// example:
+func etcdDial(c *clientv3.Client, service string) (*grpc.ClientConn, error) {
+    etcdResolver, err := resolver.NewBuilder(c);
+    if err { return nil, err }
+    return  grpc.Dial("etcd:///" + service, grpc.WithResolvers(etcdResolver))
+}
+```
+
+- `grpc-go` says [grpc.WithResolvers](https://pkg.go.dev/google.golang.org/grpc#WithResolvers) experimental though
+
+```go
+func WithResolvers(rs ...resolver.Builder) DialOption {
+	return newFuncDialOption(func(o *dialOptions) {
+		o.resolvers = append(o.resolvers, rs...)
+	})
+}
+```
+
 - Resolvers are built using [ResolverBuilder](https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Builder). Builder and [Resolver](https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Resolver) are interfaces
 - Need to go through the example resolver and passthrough resolver to learn more how they are built, how and where they are used
   
