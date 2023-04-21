@@ -78,7 +78,7 @@
     - [ ] health
     - [ ] name resolving
     - [ ] load balancing
-    - [ ] grpc-gateway
+    - [x] grpc-gateway
     - [x] grpcurl
 
 ## Daily log - attempt#2

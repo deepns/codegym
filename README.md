@@ -3,9 +3,11 @@
 Welcome to my learning ground. This is my space where I try to learn new things, fail, learn and share.
 
 - [Learning gRPC](go/learning/grpc)
+  - [gRPC Features](go/learning/grpc/features) - contains sample working code for different features of gRPC
+  - [Reminders](go/learning/grpc/examples/reminders) - a simple service to show case serving clients on both grpc server via grpc and grpc-gateway server via http
 - [Refreshing C++](cpp)
 - [Azure Fundamentals](azure/az-900-notes.md)
-- [Learning Golang](go/learning/)
+- [Learning Golang](go/learning/) - code snippets to learn various features of golang
 - [Playing with signal handling](c/signals/)
 - [I/O Multiplexing with epoll](c/epoll/)
 - [I/O Multiplexing with poll](c/poll/)

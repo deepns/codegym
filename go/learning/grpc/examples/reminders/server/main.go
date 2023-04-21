@@ -66,24 +66,24 @@ func startGrpcServer(port int) {
 // startGatewayServer makes a connection to the grpc server
 // and starts the gRPC gateway server
 func startGatewayServer(grpcServerPort, grpcGatewayPort int) {
-	// Create a client connection to the gRPC server.
-	// this connection is used by the grpc-gateway to forward requests to the gRPC server.
-	conn, err := grpc.DialContext(
-		context.Background(),
-		fmt.Sprintf("0.0.0.0:%v", grpcServerPort),
-		grpc.WithBlock(),
-		grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("Failed to dial grpc server: %v", err)
-	}
-	defer conn.Close()
-
+	// create a gRPC server client connection
 	gmux := runtime.NewServeMux()
-	// TODO
-	// Try other ways of register the handlers
-	// 1. pb.RegisterReminderServiceHandlerFromEndpoint(context.Background(), gmux, fmt.Sprintf("localhost:%v", grpcServerPort), []grpc.DialOption{grpc.WithInsecure()})
-	// 2. pb.RegisterReminderServiceHandlerServer(context.Background(), gmux, &reminderServer{})
-	err = pb.RegisterReminderServiceHandler(context.Background(), gmux, conn)
+
+	// A Note on the various RegisterReminderServiceHandler* methods
+	// RegisterReminderServiceHandler is just a convenience wrapper around RegisterReminderServiceHandlerClient
+	// RegisterReminderServiceHandlerFromEndpoint makes this even simpler by taking care of the dialing
+	// and context creation and cancellation.
+	// RegisterReminderServiceHandlerServer registers the http handlers for the given server.
+	// Doc says this registration option will cause many features of gRPC library to stop working,
+	// and recommends using RegisterReminderServiceHandlerFromEndpoint instead.
+
+	// RegisterReminderServiceHandlerFromEndpoint internally creates a connection
+	// and registers the connection to proxy requests to the gRPC server.
+	err := pb.RegisterReminderServiceHandlerFromEndpoint(context.Background(),
+		gmux,
+		fmt.Sprintf("0.0.0.0:%v", grpcServerPort),
+		[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+
 	if err != nil {
 		log.Fatalf("Failed to register gateway: %v", err)
 	}
@@ -102,6 +102,8 @@ func main() {
 	grpcGatewayPort := flag.Int("grpc-gateway-port", 8080, "port to connect to")
 	flag.Parse()
 
+	// grpc server blocks on the Serve() method. So, if we want to start the gateway server
+	// in the same process, we need to start the grpc server in a goroutine.
 	go startGrpcServer(*port)
 	startGatewayServer(*port, *grpcGatewayPort)
 }
