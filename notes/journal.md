@@ -84,13 +84,19 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 36 (grpc name-resolver)
+
+- Moved resolver into own package
+- revisited the Builder and Resolver, and the UpdateState
+- added comments
+
 ## Day 35 (grpc name-resolver)
 
 - Good workout on the name resolving. found examples in etcd client. understood the resolver part, yet to explore more on the load balancing part
 - Added a client for the name resolving example
 - need to
-  - [ ] update readme with some more notes
-  - [ ] break resolver into separate package and use it in the example
+  - [x] update readme with some more notes
+  - [x] break resolver into separate package and use it in the example
 
 ## Day 34 (grpc name resolving)
 

@@ -16,9 +16,9 @@
 
 - Supports **dns, unix and passthrough** resolvers - [doc](https://pkg.go.dev/google.golang.org/grpc/internal/resolver#section-directories)
   - [passthrough](https://github.com/grpc/grpc-go/blob/v1.54.0/internal/resolver/passthrough/passthrough.go) sends the target name without the scheme back to gRPC as resolved address.
-  - where is it used?
-    - [etcd client](https://github.com/etcd-io/etcd/blob/b27dec8b9487d0d9358ca4dd366563d1aab04a1e/client/v3/naming/resolver/resolver.go) supports grpc resolver for its name resolution.
-    - How it connects using the resolver? **Note**: resolver can be registered with the global register via init() and calling `resolver.Register` or registered for the specific dial using `grpc.WithResolvers`
+- Find some places where name resolving is used
+  - [etcd client](https://github.com/etcd-io/etcd/blob/b27dec8b9487d0d9358ca4dd366563d1aab04a1e/client/v3/naming/resolver/resolver.go) supports grpc resolver for its name resolution.
+- How it connects using the resolver? **Note**: resolver can be registered with the global register via init() and calling `resolver.Register` or registered for the specific dial using `grpc.WithResolvers`
 
 ```go
 // Dial an RPC service using the etcd gRPC resolver and a gRPC Balancer:
@@ -41,5 +41,24 @@ func WithResolvers(rs ...resolver.Builder) DialOption {
 ```
 
 - Resolvers are built using [ResolverBuilder](https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Builder). Builder and [Resolver](https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Resolver) are interfaces
-- Need to go through the example resolver and passthrough resolver to learn more how they are built, how and where they are used
-  
+  - The typical workflow is to implement the Builder interface that builds a struct implementing Resolver interface. An example resolver.
+
+    ```go
+    type fooResolver struct {
+        target     resolver.Target
+        cc         resolver.ClientConn
+        addrsStore map[string][]resolver.Address
+    }
+    ```
+
+  - Update the ClientConn with [resolver.State](https://pkg.go.dev/google.golang.org/grpc@v1.52.0/resolver#State) holding the address given by the builder
+
+    ```go
+    func (r *fooResolver) start() {
+        // target.Endpoint is deprecated. Use URL.Path instead.
+        // URL.Path gives the path including the leading slash.
+        // So trim the leading slash to get the address.
+        address := strings.TrimPrefix(r.target.URL.Path, "/")
+        r.cc.UpdateState(resolver.State{Addresses: r.addrsStore[address]})
+    }
+    ```

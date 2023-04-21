@@ -97,7 +97,6 @@ service Greeter {
 
 - Lot more functionalities available in grpcurl.
 
-
 ## Notes
 
 - [reflection protocol](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md)

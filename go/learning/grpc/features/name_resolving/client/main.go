@@ -3,15 +3,13 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
+	myresolver "github.com/deepns/codegym/go/learning/grpc/features/name_resolving/resolver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/resolver"
 )
 
 func UnaryEcho(client pb.EchoServiceClient, message string) {
@@ -32,15 +30,9 @@ func UnaryEcho(client pb.EchoServiceClient, message string) {
 	log.Printf("echo: %v", response.Message)
 }
 
-var (
-	serviceName    = "resolver.foo.bar"
-	serviceBackend = "localhost:50505"
-)
-
 func callRPCs(cc *grpc.ClientConn) {
-	log.Printf("callRPCs: cc.Target()=%v", cc.Target())
 	client := pb.NewEchoServiceClient(cc)
-	UnaryEcho(client, "Call from name_resolving:client")
+	UnaryEcho(client, cc.Target())
 }
 
 // dialWithDNSResolver connects to the server using the DNS resolver.
@@ -70,13 +62,12 @@ func dialWithPassthroughResolver(addr string) {
 
 // dialWithFooResolver connects to the server using the foo resolver.
 func dialWithFooResolver(service string) {
-	fooConn, err := grpc.Dial(
-		fmt.Sprintf("foo:///%s", service),
+	fooConn, err := grpc.Dial(service,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-		// This will register the fooResolverBuilder with the grpc resolver
+		// This will register the FooResolverBuilder with the grpc resolver
 		// only for the foo scheme. Overrides any existing resolver registered
 		// with the global grpc resolver.
-		grpc.WithResolvers(&fooResolverBuilder{}))
+		grpc.WithResolvers(&myresolver.FooResolverBuilder{}))
 	if err != nil {
 		log.Fatalf("Failed to connect to server from foo client. err=%v", err)
 	}
@@ -92,66 +83,16 @@ func main() {
 
 	dialWithPassthroughResolver(*addr)
 
-	dialWithFooResolver("resolver.foo.bar")
+	// Connecting to foo://resolver.foo.bar will fail unless we register
+	// a resolver that resolves foo://resolver.foo.bar to localhost:50505.
+	// Absence of a resolver for the foo scheme will result in a transport error.
+	// Here is a sample error
+	// err=rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp: lookup tcp////resolver.foo.bar: nodename nor servname provided, or not known"
+	dialWithFooResolver("foo:///resolver.foo.bar")
 }
-
-// Connecting to foo://resolver.foo.bar will fail unless we register
-// a resolver that resolves foo://resolver.foo.bar to localhost:50505.
-// Absence of a resolver for the foo scheme will result in a transport error.
-// Here is a sample error
-// err=rpc error: code = Unavailable desc = connection error: desc = "transport: Error while dialing dial tcp: lookup tcp////resolver.foo.bar: nodename nor servname provided, or not known"
-
-type fooResolverBuilder struct{}
-
-// ResolverBuilder implements the resolver.Builder interface.
-// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Builder
-
-func (f *fooResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
-	// Resolver implements the resolver.Resolver interface.
-	// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Resolver
-	r := &fooResolver{
-		target: target,
-		cc:     cc,
-		addrsStore: map[string][]resolver.Address{
-			// resolve the foo service to localhost:50505
-			"resolver.foo.bar": {
-				{Addr: "localhost:50505"},
-			},
-		},
-	}
-	r.start()
-	return r, nil
-}
-
-func (f *fooResolverBuilder) Scheme() string {
-	return "foo"
-}
-
-// fooResolver is a custom resolver for the "foo" scheme.
-// It implements the resolver.Resolver interface.
-// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Resolver
-type fooResolver struct {
-	target     resolver.Target
-	cc         resolver.ClientConn
-	addrsStore map[string][]resolver.Address
-}
-
-func (r *fooResolver) start() {
-	// Sorry Copilot, you gave the deprecated method.
-	// r.cc.NewAddress(r.addrsStore[r.target.Endpoint])
-
-	// target.Endpoint is deprecated.
-	// Even the example code in grpc-go uses target.Endpoint.
-	//
-	// Use URL.Path instead
-	// URL.Path gives the path including the leading slash.
-	endpoint := strings.TrimPrefix(r.target.URL.Path, "/")
-	r.cc.UpdateState(resolver.State{Addresses: r.addrsStore[endpoint]})
-}
-
-func (r *fooResolver) ResolveNow(o resolver.ResolveNowOptions) {}
-func (r *fooResolver) Close()                                  {}
 
 // func init() {
-// 	resolver.Register(&fooResolverBuilder{})
+// 	// This is another way to register the resolver.
+// 	// For connection specific resolvers, use grpc.Dial with grpc.WithResolvers.
+// 	resolver.Register(&myresolver.FooResolverBuilder{})
 // }
