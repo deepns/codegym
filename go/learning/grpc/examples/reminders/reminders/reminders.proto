@@ -97,7 +97,11 @@ service ReminderService {
     rpc CreateReminder (Reminder) returns (CreateReminderResponse) {
         option (google.api.http) = {
             post: "/v1/reminders"
-            body: "reminder"
+            // If the body is not specified, the request message is sent as
+            // a query string.
+            // If the body should contain a specific fied of the request (Reminder 
+            // in this case), field name can then be specified in the body.
+            body: "*"
         };
     }
 }

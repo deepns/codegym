@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/examples/reminders/reminders"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -22,7 +25,7 @@ func (s *reminderServer) CreateReminder(ctx context.Context,
 	req *pb.Reminder) (*pb.CreateReminderResponse, error) {
 	log.Printf("CreateReminder: %v", req)
 	s.reminders = append(s.reminders, &pb.Reminder{What: req.What, When: req.When, Type: req.Type})
-	return &pb.CreateReminderResponse{Id: int32(len(s.reminders))}, nil
+	return &pb.CreateReminderResponse{Id: int32(len(s.reminders)), Success: true}, nil
 }
 
 func (s *reminderServer) GetReminders(ctx context.Context, req *pb.Empty) (*pb.GetRemindersResponse, error) {
@@ -38,10 +41,10 @@ func (s *reminderServer) GetReminder(ctx context.Context, req *pb.GetReminderReq
 	return s.reminders[req.Id-1], nil
 }
 
-func startServer(port int) {
+func startGrpcServer(port int) {
 	// create a listener on TCP port
 	log.Printf("Starting server on port %v", port)
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%v", port))
 	if err != nil {
 		log.Fatalf("Failed to listen on %v. err=%v", port, err)
 	}
@@ -60,9 +63,45 @@ func startServer(port int) {
 	grpcServer.Serve(lis)
 }
 
+// startGatewayServer makes a connection to the grpc server
+// and starts the gRPC gateway server
+func startGatewayServer(grpcServerPort, grpcGatewayPort int) {
+	// Create a client connection to the gRPC server.
+	// this connection is used by the grpc-gateway to forward requests to the gRPC server.
+	conn, err := grpc.DialContext(
+		context.Background(),
+		fmt.Sprintf("0.0.0.0:%v", grpcServerPort),
+		grpc.WithBlock(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Failed to dial grpc server: %v", err)
+	}
+	defer conn.Close()
+
+	gmux := runtime.NewServeMux()
+	// TODO
+	// Try other ways of register the handlers
+	// 1. pb.RegisterReminderServiceHandlerFromEndpoint(context.Background(), gmux, fmt.Sprintf("localhost:%v", grpcServerPort), []grpc.DialOption{grpc.WithInsecure()})
+	// 2. pb.RegisterReminderServiceHandlerServer(context.Background(), gmux, &reminderServer{})
+	err = pb.RegisterReminderServiceHandler(context.Background(), gmux, conn)
+	if err != nil {
+		log.Fatalf("Failed to register gateway: %v", err)
+	}
+
+	gwServer := &http.Server{
+		Addr:    fmt.Sprintf(":%v", grpcGatewayPort),
+		Handler: gmux,
+	}
+
+	log.Printf("Starting gateway server on port %v", grpcGatewayPort)
+	gwServer.ListenAndServe()
+}
+
 func main() {
-	port := flag.Int("port", 50505, "port to connect to")
+	port := flag.Int("grpc-port", 50505, "port to connect to")
+	grpcGatewayPort := flag.Int("grpc-gateway-port", 8080, "port to connect to")
 	flag.Parse()
 
-	startServer(*port)
+	go startGrpcServer(*port)
+	startGatewayServer(*port, *grpcGatewayPort)
 }

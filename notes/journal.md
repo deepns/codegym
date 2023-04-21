@@ -76,6 +76,7 @@
     - [ ] compression
     - [x] reflection
     - [ ] health
+    - [ ] name resolving
     - [ ] load balancing
     - [ ] grpc-gateway
     - [x] grpcurl
@@ -84,11 +85,46 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 37 (grpc-gateway)
+
+- Updated the Reminder service with grpc-gateway, using [these steps](https://github.com/grpc-ecosystem/grpc-gateway) and [tutorial](https://grpc-ecosystem.github.io/grpc-gateway/docs/tutorials/adding_annotations/#using-protoc)
+- updated tools to bring in the dependencies, followed the instructions from [here](https://github.com/go-modules-by-example/index/blob/master/010_tools/README.md)
+- added a Makefile to build proto, server and client
+- Sample invocations
+
+```console
+➜  examples git:(april-2023) ✗ curl --request POST -d '{"what":"Buy something","when":"2022-04-13T15:30:00Z","type":"PUSH"}' http://localhost:8080/v1/reminders
+{"success":true, "id":1}%
+➜  examples git:(april-2023) ✗ curl --request POST -d '{"what":"drop off package","when":"2022-04-13T14:30:00Z","type":"PUSH"}' http://localhost:8080/v1/reminders
+{"success":true, "id":2}%
+➜  examples git:(april-2023) ✗ curl --request GET http://localhost:8080/v1/reminders | jq
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                Dload  Upload   Total   Spent    Left  Speed
+100   161  100   161    0     0  36400      0 --:--:-- --:--:-- --:--:--  157k
+{
+"reminders": [
+    {
+    "what": "Buy something",
+    "when": "2022-04-13T15:30:00Z",
+    "type": "PUSH"
+    },
+    {
+    "what": "drop off package",
+    "when": "2022-04-13T14:30:00Z",
+    "type": "PUSH"
+    }
+]
+}
+```
+
 ## Day 36 (grpc name-resolver)
 
 - Moved resolver into own package
 - revisited the Builder and Resolver, and the UpdateState
 - added comments
+- next
+  - [ ] current example for name resolving makes only one call. why the features in grpc-go makes multiple calls?
+  - [ ] Check the sample invocations in etcd client
 
 ## Day 35 (grpc name-resolver)
 
@@ -143,7 +179,7 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
 - only when I updated the timestamp to [RFC 3339](https://rfc-editor.org/rfc/rfc3339.html) format, it worked
 
 ```console
-✗ grpcurl -plaintext -d '{"what": "Buy coffee", "when": "2022-04-13T13:30:00Z", "type": "SMS"}' localhost:50505 ReminderService/Crlocalhost:50505 ReminderService/CreateReminder
+✗ grpcurl -plaintext -d '{"what": "Buy coffee", "when": "2022-04-13T13:30:00Z", "type": "SMS"}' localhost:50505 ReminderService/CreateReminder
 
 {
   "id": 2
