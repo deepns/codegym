@@ -7,6 +7,7 @@ import (
 	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
+	"github.com/deepns/codegym/go/learning/grpc/features/name_resolving/resolver"
 	myresolver "github.com/deepns/codegym/go/learning/grpc/features/name_resolving/resolver"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -78,6 +79,9 @@ func dialWithFooResolver(service string) {
 func main() {
 	addr := flag.String("addr", "localhost:50505", "address to connect to")
 	flag.Parse()
+
+	// Update the backend server addresses for the resolver to resolve.
+	resolver.ServerAddresses = []string{*addr}
 
 	dialWithDNSResolver(*addr)
 

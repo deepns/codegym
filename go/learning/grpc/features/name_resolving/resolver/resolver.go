@@ -6,31 +6,7 @@ import (
 	"google.golang.org/grpc/resolver"
 )
 
-type FooResolverBuilder struct{}
-
-// ResolverBuilder implements the resolver.Builder interface.
-// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Builder
-
-func (f *FooResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
-	// Resolver implements the resolver.Resolver interface.
-	// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Resolver
-	r := &fooResolver{
-		target: target,
-		cc:     cc,
-		addrsStore: map[string][]resolver.Address{
-			// resolve the foo service to localhost:50505
-			"resolver.foo.bar": {
-				{Addr: "localhost:50505"},
-			},
-		},
-	}
-	r.start()
-	return r, nil
-}
-
-func (f *FooResolverBuilder) Scheme() string {
-	return "foo"
-}
+var ServerAddresses = []string{"localhost:50505"}
 
 // fooResolver is a custom resolver for the "foo" scheme.
 // It implements the resolver.Resolver interface.
@@ -57,3 +33,31 @@ func (r *fooResolver) start() {
 
 func (r *fooResolver) ResolveNow(o resolver.ResolveNowOptions) {}
 func (r *fooResolver) Close()                                  {}
+
+type FooResolverBuilder struct{}
+
+// ResolverBuilder implements the resolver.Builder interface.
+// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Builder
+
+func (f *FooResolverBuilder) Build(target resolver.Target, cc resolver.ClientConn, opts resolver.BuildOptions) (resolver.Resolver, error) {
+	addresses := make([]resolver.Address, len(ServerAddresses))
+	for i, address := range ServerAddresses {
+		addresses[i] = resolver.Address{Addr: address}
+	}
+
+	// Resolver implements the resolver.Resolver interface.
+	// https://pkg.go.dev/google.golang.org/grpc/resolver?utm_source=godoc#Resolver
+	r := &fooResolver{
+		target: target,
+		cc:     cc,
+		addrsStore: map[string][]resolver.Address{
+			"resolver.foo.bar": addresses,
+		},
+	}
+	r.start()
+	return r, nil
+}
+
+func (f *FooResolverBuilder) Scheme() string {
+	return "foo"
+}

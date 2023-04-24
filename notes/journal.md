@@ -85,6 +85,17 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 39 (grpc load balancing)
+
+- reading through load balancing policy
+- added a sample client code. need to follow up with some doubts that I had while working on the code
+  - [ ] Verify that the client is using the round robin load balancing policy.
+  - [ ] Check if we can get the resolved address from the client connection.
+  - [ ] Add notes for the load balancing feature
+  - [ ] Check what other load balancing policies are available.
+
+## Day 38 (break)
+
 ## Day 37 (grpc-gateway)
 
 - Updated the Reminder service with grpc-gateway, using [these steps](https://github.com/grpc-ecosystem/grpc-gateway) and [tutorial](https://grpc-ecosystem.github.io/grpc-gateway/docs/tutorials/adding_annotations/#using-protoc)
