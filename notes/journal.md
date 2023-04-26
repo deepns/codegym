@@ -85,14 +85,20 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+## Day 40 (grpc load balancing)
+
+- updated server with option to run multiple server instances
+- updated client to make multiple Unary RPC calls
+- added notes capturing my understanding
+
 ## Day 39 (grpc load balancing)
 
 - reading through load balancing policy
 - added a sample client code. need to follow up with some doubts that I had while working on the code
-  - [ ] Verify that the client is using the round robin load balancing policy.
-  - [ ] Check if we can get the resolved address from the client connection.
-  - [ ] Add notes for the load balancing feature
-  - [ ] Check what other load balancing policies are available.
+  - [x] Verify that the client is using the round robin load balancing policy. - yes, but sometimes connection state could impact the ordering.
+  - [x] Check if we can get the resolved address from the client connection. - can see from the debug logs
+  - [x] Add notes for the load balancing feature
+  - [x] Check what other load balancing policies are available.
 
 ## Day 38 (break)
 
