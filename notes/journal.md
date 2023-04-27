@@ -69,6 +69,7 @@
     - [x] keepalive
     - [ ] authentication
     - [ ] authorization
+    - [x] debugging
     - [x] metadata
     - [x] interceptor
     - [x] metadata-interceptor
@@ -76,8 +77,8 @@
     - [ ] compression
     - [x] reflection
     - [ ] health
-    - [ ] name resolving
-    - [ ] load balancing
+    - [x] name resolving
+    - [x] load balancing
     - [x] grpc-gateway
     - [x] grpcurl
 
@@ -85,13 +86,20 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
-## Day 40 (grpc load balancing)
+### Day 41 (grpc debugging logs)
+
+- Just playing with debugging, reading [the docs](https://github.com/grpc/grpc-go/blob/master/Documentation/log_levels.md)
+- Enable additonal logging by setting the verbosity and severity levels
+- supported severity are - **Info**, **Warning**, **Error** and **Fatal**
+- supported verbosity levels 0..4 built in.
+
+### Day 40 (grpc load balancing)
 
 - updated server with option to run multiple server instances
 - updated client to make multiple Unary RPC calls
 - added notes capturing my understanding
 
-## Day 39 (grpc load balancing)
+### Day 39 (grpc load balancing)
 
 - reading through load balancing policy
 - added a sample client code. need to follow up with some doubts that I had while working on the code
@@ -100,9 +108,9 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
   - [x] Add notes for the load balancing feature
   - [x] Check what other load balancing policies are available.
 
-## Day 38 (break)
+### Day 38 (break)
 
-## Day 37 (grpc-gateway)
+### Day 37 (grpc-gateway)
 
 - Updated the Reminder service with grpc-gateway, using [these steps](https://github.com/grpc-ecosystem/grpc-gateway) and [tutorial](https://grpc-ecosystem.github.io/grpc-gateway/docs/tutorials/adding_annotations/#using-protoc)
 - updated tools to bring in the dependencies, followed the instructions from [here](https://github.com/go-modules-by-example/index/blob/master/010_tools/README.md)
@@ -134,7 +142,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 }
 ```
 
-## Day 36 (grpc name-resolver)
+### Day 36 (grpc name-resolver)
 
 - Moved resolver into own package
 - revisited the Builder and Resolver, and the UpdateState
@@ -143,7 +151,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
   - [ ] current example for name resolving makes only one call. why the features in grpc-go makes multiple calls?
   - [ ] Check the sample invocations in etcd client
 
-## Day 35 (grpc name-resolver)
+### Day 35 (grpc name-resolver)
 
 - Good workout on the name resolving. found examples in etcd client. understood the resolver part, yet to explore more on the load balancing part
 - Added a client for the name resolving example
@@ -151,7 +159,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
   - [x] update readme with some more notes
   - [x] break resolver into separate package and use it in the example
 
-## Day 34 (grpc name resolving)
+### Day 34 (grpc name resolving)
 
 - Reading about name-resolving in [gRPC](https://github.com/grpc/grpc/blob/master/doc/naming.md) and grpc-go
 - wanted to code today, but ran out of time. still learning and understanding how and why resolvers are used
@@ -160,7 +168,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
   - [x] compare with passthrough resolver
   - [x] find some applications of resolvers (check load balancing) - found an example in etcd client
 
-## Day 33 (grpc proto)
+### Day 33 (grpc proto)
 
 - Followed up some more on the Timestamp format. Trying to understand how Timestamp is enforced to follow RFC3339 format
 - `google.protobuf.Timestamp` maps to [timestamppb.Timestamp](https://pkg.go.dev/google.golang.org/protobuf@v1.28.1/types/known/timestamppb#Timestamp)
@@ -178,7 +186,7 @@ In JavaScript, one can convert a Date object to this format using the standard [
 - invoker uses jsonpb.Unmarshal
 - added a client side functions to create and list Reminders
 
-## Day 32 (grpc proto)
+### Day 32 (grpc proto)
 
 - Added a server side implementation for the reminder service
 - Skipped grpc-gateway functionalities as I haven't read that yet
@@ -221,14 +229,14 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
 - read through the **load balancer** example, which required **name resolver** to be understood first. was able to folow what they were doing, need to spend some more time on the name resolver builder stuff. may be tomorrow
 - too sleepy, done for the day
 
-## Day 31 (grpc proto)
+### Day 31 (grpc proto)
 
 - Tried to add a new service, just for learning aspects.
 - used Timestamp type from `google/protobuf/timestamp.proto`
 - Copilot suggested equivalent REST endpoints, but missed to add the annotations in the right way.
 - ran into few problems, then resolved it with custom header files, based on the instructions from [here](https://grpc-ecosystem.github.io/grpc-gateway/docs/tutorials/adding_annotations/#using-protoc)
 
-## Day 30 (grpc http2 reading)
+### Day 30 (grpc http2 reading)
 
 - another no code day
 - Found some interesting articles to read
@@ -240,23 +248,23 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
   - [golang grpc in Cloud Run](https://github.com/grpc-ecosystem/grpc-cloud-run-example/blob/master/golang/README.md) - example Go application to deploy in Cloud Run
 - also found some interesting uses of gRPC in Istio ([echo server](https://github.com/istio/istio/blob/de9fc7bd3e9cdeda1c30398970fac103ea3cae8c/pkg/test/echo/server/endpoint/grpc.go), [nodeagent sds server](https://github.com/istio/istio/blob/2b39b30c7f69efdf2421482662540455a37584b9/security/pkg/nodeagent/sds/server.go)), [Kubernetes KMS](https://github.com/kubernetes/kms/blob/f5c193c64781ed405774ecfaa5c28375d2cf05a1/pkg/service/grpc_service.go#L66)
 
-## Day 29 (merkletree)
+### Day 29 (merkletree)
 
 - No code day.. just reading about merkle tree and its applications
 
-## Day 28 (grpcurl)
+### Day 28 (grpcurl)
 
 - Explored more about the grpc reflection and grpcurl.
 - read some basics of merkle tree, its usability and applications. Yet to declare my own.
 
-## Day 27 (grpc reflection)
+### Day 27 (grpc reflection)
 
 - Reading about [reflection protocol](https://github.com/grpc/grpc/blob/master/doc/server-reflection.md) and [grpcurl](https://github.com/fullstorydev/grpcurl)
 - added reflection to multiplex server, installed grpcurl, listed the services.
 - will play some more with grpcurl, invoke the service methods tomorrow
 - also address the TODOs from Day 26
 
-## Day 26 (grpc multiplexing)
+### Day 26 (grpc multiplexing)
 
 - updated interceptor to insert new metadata (to show example for metadata-interceptor)
 - read through multiplexing code, added my own client and server for multiplexing
@@ -266,7 +274,7 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
   - [x] learn reflection, grpcurl
   - [x] add another service to the mix
 
-## Day 25 (grpc interceptor)
+### Day 25 (grpc interceptor)
 
 - Added a server side unary interceptor
 - learnt about how `net.Listen` binds
@@ -277,7 +285,7 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
   - [x] [messaging patterns](https://www.redhat.com/architect/architectural-messaging-patterns)
   - [x] [async message patterns](https://blogs.mulesoft.com/api-integration/patterns/asynchronous-messaging-patterns/)
 
-## Day 24 (grpc metadata, interceptor, realworld examples)
+### Day 24 (grpc metadata, interceptor, realworld examples)
 
 - was wondering how the headers and trailers are used. [this cloudfare article](https://blog.cloudflare.com/road-to-grpc/) had some clear explanation related to that. Usage of trailers in http2 is not so common, grpc uses it to **send status** after the body. e.g. in case of streaming rpcs, **send a checksum** of the content at the end for the client to verify. For streaming data, can't send checksum in the headers since we may not know all the data ahead.
 - ![this image](https://blog.cloudflare.com/content/images/2020/10/image3-24.png) neatly summarizes.
@@ -289,19 +297,19 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
   - [x] server side unary interceptor
   - [-] client side streaming interceptor
 
-## Day 23 (grpc metadata)
+### Day 23 (grpc metadata)
 
 - explored more on metadata, where it is used and why
 - see [notes](../go/learning/grpc/features/metadata/readme.md)
 
-## Day 22 (grpc metadata)
+### Day 22 (grpc metadata)
 
 - Learning about metadata handling in grpc
 - added a sample echo client/service..sending and receiving some key/value pairs in header and trailer
 - the header and trailer goes in the respective frames in http/2. how does http/2 frame look like? something to explore next.
 - [x] what are the use cases of custom metadata? - one common use case is authentication
 
-## Day 21 (grpc authentication)
+### Day 21 (grpc authentication)
 
 - looked into adding authentication to grpc calls
 - client and server can be configured to provide authentication using OAuth2.
@@ -312,13 +320,13 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
   - [x] metadata - in progress
   - [ ] interceptor
 
-## Day 20 (skip)
+### Day 20 (skip)
 
-## Day 19 (exercise | sliding window maximum)
+### Day 19 (exercise | sliding window maximum)
 
 - picked up [this problem](https://leetcode.com/problems/sliding-window-maximum/), but didn't finish it
 
-## Day 18 (grpc keepalive continued)
+### Day 18 (grpc keepalive continued)
 
 - quick recap of basic grpc client and server
 - server
@@ -342,27 +350,27 @@ Error invoking method "ReminderService/CreateReminder": error getting request da
   - ok..didn't know that GOAWAY is a frame type in http2..see [rfc](https://www.rfc-editor.org/rfc/rfc7540#page-43)
   - while looking to find more info about GOAWAY, found [this](https://nuvalence.io/insights/lessons-learned-investigating-goaways-in-grpc-apis/) article. will read through it tomorrow
 
-## Day 17 (grpc keepalive features)
+### Day 17 (grpc keepalive features)
 
 - explored the keepalive features on the client and server side of grpc
 - added a client and server application for echo service
 - enabled copilot and used it to code the client/server code for keepalive..using it first time...truly game changing experience.
 
-## Day 16 (protobuf serialization)
+### Day 16 (protobuf serialization)
 
 - added code to serialize protobuf types to pb and json
 - explored [keepalive](https://github.com/grpc/grpc-go/blob/master/Documentation/keepalive.md) feature. will add an example shortly.
 
-## Day 15 (exercise|happy number)
+### Day 15 (exercise|happy number)
 
 - Just picked up [this leetcode problem](https://leetcode.com/problems/happy-number/description/) at random
 - recollected some of my forgetten python knowledge.. `//` operator, generators, unittest
 
-## Day 14 (protobuf serialization)
+### Day 14 (protobuf serialization)
 
 - Explored the possibility of serializing protobuf generated types, in both binary and json format
 
-## Day 13 (grpc)
+### Day 13 (grpc)
 
 - Revisit the examples. Updated the service definitions in echo service
 - what next?
