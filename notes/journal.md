@@ -62,6 +62,7 @@
 - [ ] syslog, journalctl
 - [x] gc pause
 - [ ] json path
+- [ ] ssl cert generator in go
 - [ ] grpc
   - [x] basics
   - [x] protobuf basics
@@ -70,6 +71,7 @@
     - [ ] authentication
     - [ ] authorization
     - [x] debugging
+    - [ ] encryption
     - [x] metadata
     - [x] interceptor
     - [x] metadata-interceptor
@@ -81,10 +83,40 @@
     - [x] load balancing
     - [x] grpc-gateway
     - [x] grpcurl
+    - [ ] openapi
 
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+### Day 42 (grpc authentication)
+
+- Wanted to enable Oauth2 authentication to a client-server example.
+- authentication can be set per connection or per RPCs.
+- required tls in the underlying transport. so tried to set up a tls server to start off with.
+
+```console
+✗ openssl s_client -showcerts -connect localhost:50505
+CONNECTED(00000005)
+depth=0 C = US, ST = DE, O = "Example-server, Inc.", CN = localhost
+verify error:num=20:unable to get local issuer certificate
+verify return:1
+depth=0 C = US, ST = DE, O = "Example-server, Inc.", CN = localhost
+verify error:num=21:unable to verify the first certificate
+verify return:1
+write W BLOCK
+---
+Certificate chain
+ 0 s:/C=US/ST=DE/O=Example-server, Inc./CN=localhost
+   i:/C=US/ST=DE/O=ExampleRootCA, Inc./CN=examplerootca.org
+-----BEGIN CERTIFICATE-----
+```
+
+- many things to follow up
+  - [ ] update ssl-cert-gen to parse arguments via getopt and add an option to take target dir.
+  - [ ] if not the above, update ssl-cert-gen to take target-dir via environment variable to keep this simple. Create another script in go to generate ssl certs
+  - [ ] make sslcerts as a separate module and get the path to certs and keys from there
+  - [ ] add a client that uses tls in the connection to the server
 
 ### Day 41 (grpc debugging logs)
 
