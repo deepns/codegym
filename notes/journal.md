@@ -89,6 +89,40 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 43 (grpc authentication client side tls)
+
+- added authentication of server cert from client side
+- didn't know what COMMON_NAME field is deprecated. Ran into the below error
+
+```console
+err=rpc error: code = Unavailable desc = connection error: desc = "transport: authentication handshake failed: tls: failed to verify certificate: x509: certificate relies on legacy Common Name field, use SANs instead"
+exit status 1
+```
+
+- Then tried to update my own script to add SAN. Realized that I had to specify the SAN in both CSR and certificate create request
+
+```bash
+# To create csr
+openssl req -new -nodes -newkey rsa:2048 \
+    -subj "/C=US/ST=DE/O=Example-server, Inc./CN=localhost" \
+    -addext "subjectAltName = DNS:localhost, IP:127.0.0.1" \
+    -out server.csr -keyout server.key
+
+# To create a req signed by root-ca
+openssl x509 -req -sha256 -days 1000 \
+    -in server.csr -CA ca_cert.crt \
+    -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1") \
+    -CAkey ca_cert.key -CAcreateserial -out server.crt
+```
+
+- That also didn't work as the root-ca wasn't signed properly.
+
+```console
+err=rpc error: code = Unavailable desc = connection error: desc = "transport: authentication handshake failed: tls: failed to verify certificate: x509: certificate signed by unknown authority (possibly because of \"crypto/rsa: verification error\" while trying to verify candidate authority certificate \"examplerootca.org\")" 
+```
+
+- Ended up using the [script](https://github.com/grpc/grpc-go/blob/e853dbf004c343da4b8c6204524765ba6fbeef38/examples/data/x509/create.sh) that came with grpc-go itself
+
 ### Day 42 (grpc authentication)
 
 - Wanted to enable Oauth2 authentication to a client-server example.
@@ -113,10 +147,10 @@ Certificate chain
 ```
 
 - many things to follow up
-  - [ ] update ssl-cert-gen to parse arguments via getopt and add an option to take target dir.
-  - [ ] if not the above, update ssl-cert-gen to take target-dir via environment variable to keep this simple. Create another script in go to generate ssl certs
-  - [ ] make sslcerts as a separate module and get the path to certs and keys from there
-  - [ ] add a client that uses tls in the connection to the server
+  - [-] update ssl-cert-gen to parse arguments via getopt and add an option to take target dir.
+  - [-] if not the above, update ssl-cert-gen to take target-dir via environment variable to keep this simple. Create another script in go to generate ssl certs
+  - [-] make sslcerts as a separate module and get the path to certs and keys from there // dropped this for now
+  - [x] add a client that uses tls in the connection to the server
 
 ### Day 41 (grpc debugging logs)
 
