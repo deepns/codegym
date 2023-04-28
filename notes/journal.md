@@ -89,6 +89,15 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 44 (grpc authentication with oauth2)
+
+- Added an example for Oauth2 authentication
+- Client can choose authenticate per call or per rpc (using `grpc.WithPerRPCCredentials` that takes a token source)
+  - Get the token source via **oauth.TokenSource**, using a `oauth**.TokenSource{TokenSource: oauth2.StaticTokenSource(getToken())}` for this example
+- Auth token is sent in the format of **Bearar <auth-token>** in the metadata
+- For the unary call, server side intercepts it with an UnaryInterceptor, extracts the auth token from the metadata and validates it before invoking the rpc
+- [ ] need to checkout how it is used in a realtime application
+
 ### Day 43 (grpc authentication client side tls)
 
 - added authentication of server cert from client side
