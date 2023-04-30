@@ -89,14 +89,29 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 46 (grpc static authentication)
+
+- adding an example for static authentication with username and password
+- used a unary interceptor on the server side to extract the username and password from metadata
+- username/password based authentication is not a recommended way, but just wanted to test it out
+- running into some error in adding the metadata on the client side. my previous example on the client side interceptor also seem to have a bug. metadata added to grpc.Header through call options is not showing up on the server side
+- [ ] Use [PerRPCCredentials](https://pkg.go.dev/google.golang.org/grpc@v1.54.0/credentials#PerRPCCredentials) to provide the authentication
+- [ ] Fix the errors in authentication_static and client interceptor
+
+### Day 45 (grpc authentication in etcd)
+
+- found examples of the authentication usage in etcd client and server
+- client sends the auth token using PerRPCCredentials, configured using a [token bundle](https://github.com/etcd-io/etcd/blob/7462c61b31ab6df81391cc567ac7162a89ff911f/client/v3/client.go#L296). Token bundle is from [credentials](credentials.Bundle)
+- server side uses a unary interceptor, get the [authorization](https://github.com/etcd-io/etcd/blob/7462c61b31ab6df81391cc567ac7162a89ff911f/api/v3rpc/rpctypes/metadatafields.go#L19) from metadata (extracted [here](https://github.com/etcd-io/etcd/blob/7462c61b31ab6df81391cc567ac7162a89ff911f/server/auth/store.go#L1054)), pass to a [token provider](https://github.com/etcd-io/etcd/blob/7462c61b31ab6df81391cc567ac7162a89ff911f/server/auth/store.go#L1110)
+
 ### Day 44 (grpc authentication with oauth2)
 
 - Added an example for Oauth2 authentication
 - Client can choose authenticate per call or per rpc (using `grpc.WithPerRPCCredentials` that takes a token source)
   - Get the token source via **oauth.TokenSource**, using a `oauth**.TokenSource{TokenSource: oauth2.StaticTokenSource(getToken())}` for this example
-- Auth token is sent in the format of **Bearar <auth-token>** in the metadata
+- Auth token is sent in the format of **Bearer <auth-token>** in the metadata
 - For the unary call, server side intercepts it with an UnaryInterceptor, extracts the auth token from the metadata and validates it before invoking the rpc
-- [ ] need to checkout how it is used in a realtime application
+- [x] need to checkout how it is used in a realtime application
 
 ### Day 43 (grpc authentication client side tls)
 
