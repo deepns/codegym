@@ -89,6 +89,12 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 47 (grpc static authentication)
+
+- Fixed the errors in passing auth info in metadata
+- able to pass username, password in metadata and validate on the server side
+- need to use PerRPCCredentials next
+
 ### Day 46 (grpc static authentication)
 
 - adding an example for static authentication with username and password
@@ -96,7 +102,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - username/password based authentication is not a recommended way, but just wanted to test it out
 - running into some error in adding the metadata on the client side. my previous example on the client side interceptor also seem to have a bug. metadata added to grpc.Header through call options is not showing up on the server side
 - [ ] Use [PerRPCCredentials](https://pkg.go.dev/google.golang.org/grpc@v1.54.0/credentials#PerRPCCredentials) to provide the authentication
-- [ ] Fix the errors in authentication_static and client interceptor
+- [x] Fix the errors in authentication_static and client interceptor
 
 ### Day 45 (grpc authentication in etcd)
 

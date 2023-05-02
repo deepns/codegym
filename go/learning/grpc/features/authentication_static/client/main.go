@@ -5,7 +5,6 @@ import (
 	"flag"
 	"log"
 	"path"
-	"time"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
 	"google.golang.org/grpc"
@@ -13,29 +12,17 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-func unaryClientInterceptor(ctx context.Context, method string, req, reply interface{},
-	cc *grpc.ClientConn, invoker grpc.UnaryInvoker, opts ...grpc.CallOption) error {
-	log.Printf("before call: %s, request: %+v", method, req)
-
-	opts = append(opts, grpc.Header(&metadata.MD{"username": []string{"admin"}, "password": []string{"password"}}))
-
-	err := invoker(ctx, method, req, reply, cc, opts...)
-	log.Printf("after call: %s, response: %+v", method, reply)
-	return err
-}
-
-func callUnaryEcho(client pb.EchoServiceClient, message string) {
-	log.Printf("UnaryEcho: message=%v", message)
+func callUnaryEcho(c pb.EchoServiceClient, message string, username string, password string) {
+	// well, not a good practice to log password. but this is just an example.
+	log.Printf("UnaryEcho: message=%v, username=%v, password=%v", message, username, password)
 	request := pb.EchoRequest{
 		Message: message,
 	}
 
-	// timeout if response is not received within two seconds
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
-	defer cancel()
+	ctx := metadata.NewOutgoingContext(context.Background(),
+		metadata.Pairs("username", username, "password", password))
 
-	// connect to the service
-	response, err := client.UnaryEcho(ctx, &request)
+	response, err := c.UnaryEcho(ctx, &request)
 	if err != nil {
 		log.Fatalf("Failed to run UnaryEcho. err=%v", err)
 	}
@@ -53,16 +40,13 @@ func main() {
 		log.Fatalf("failed to load TLS cert: %v", err)
 	}
 
-	dialOptions := []grpc.DialOption{
-		grpc.WithTransportCredentials(creds),
-		grpc.WithUnaryInterceptor(unaryClientInterceptor)}
-
-	conn, err := grpc.Dial(*addr, dialOptions...)
+	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(creds))
 	if err != nil {
 		log.Fatalf("Failed to connect to server. err=%v", err)
 	}
 	defer conn.Close()
 
 	client := pb.NewEchoServiceClient(conn)
-	callUnaryEcho(client, "hello from static auth client")
+	callUnaryEcho(client, "hello from static auth client", "admin", "secret")
+	callUnaryEcho(client, "hello from static auth client", "admin", "invalid-secret")
 }

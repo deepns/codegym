@@ -10,8 +10,10 @@ import (
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 )
 
 type echoServer struct {
@@ -24,7 +26,7 @@ func (s *echoServer) UnaryEcho(ctx context.Context, req *pb.EchoRequest) (*pb.Ec
 }
 
 func authenticate(username string, password string) bool {
-	if username != "admin" || password != "password" {
+	if username != "admin" || password != "secret" {
 		return false
 	}
 
@@ -41,17 +43,13 @@ func unaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 		log.Printf("metadata: %v=%v", k, v)
 	}
 
-	// What if username is missing?
-	//
-	username := md.Get("username")[0]
-	password := md.Get("password")[0]
-
-	if !authenticate(username, password) {
-		return nil, fmt.Errorf("no auth info")
+	usernames, password := md.Get("username"), md.Get("password")
+	if len(usernames) != 1 || len(password) != 1 {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication info missing")
 	}
 
-	if !authenticate(username, password) {
-		return nil, fmt.Errorf("authentication failed")
+	if !authenticate(usernames[0], password[0]) {
+		return nil, status.Errorf(codes.Unauthenticated, "authentication failed")
 	}
 
 	return handler(ctx, req)
