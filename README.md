@@ -4,6 +4,16 @@ Welcome to my learning ground. This is my space where I try to learn new things,
 
 - [Learning gRPC](go/learning/grpc)
   - [gRPC Features](go/learning/grpc/features) - contains sample working code for different features of gRPC
+    - [Oauth authentication](go/learning/grpc/features/authentication_oauth/)
+    - [Static authentication with username and password](go/learning/grpc/features/authentication_static/)
+    - [Interceptor](go/learning/grpc/features/interceptor/)
+    - [Keepalive](go/learning/grpc/features/keepalive/)
+    - [Load balancing](go/learning/grpc/features/load_balancing/)
+    - [Metadata processing](go/learning/grpc/features/metadata/)
+    - [Multiplexing](go/learning/grpc/features/multiplex/)
+    - [Name resolving](go/learning/grpc/features/name_resolving/)
+    - [Reflection](go/learning/grpc/features/reflection/)
+    - [Configuring TLS](go/learning/grpc/features/tls/)
   - [Reminders](go/learning/grpc/examples/reminders) - a simple service to show case serving clients on both grpc server via grpc and grpc-gateway server via http
 - [Refreshing C++](cpp)
 - [Azure Fundamentals](azure/az-900-notes.md)
