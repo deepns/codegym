@@ -68,7 +68,7 @@
   - [x] protobuf basics
   - [ ] features
     - [x] keepalive
-    - [ ] authentication
+    - [x] authentication
     - [ ] authorization
     - [x] debugging
     - [ ] encryption
@@ -89,6 +89,11 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 48 (grpc static authentication with PerRPCCredentials)
+
+- added an example for static authentication with username and password using metadata and PerRPCCredentials
+- [ ] need to fix the ssl cert path import
+
 ### Day 47 (grpc static authentication)
 
 - Fixed the errors in passing auth info in metadata
@@ -101,7 +106,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - used a unary interceptor on the server side to extract the username and password from metadata
 - username/password based authentication is not a recommended way, but just wanted to test it out
 - running into some error in adding the metadata on the client side. my previous example on the client side interceptor also seem to have a bug. metadata added to grpc.Header through call options is not showing up on the server side
-- [ ] Use [PerRPCCredentials](https://pkg.go.dev/google.golang.org/grpc@v1.54.0/credentials#PerRPCCredentials) to provide the authentication
+- [x] Use [PerRPCCredentials](https://pkg.go.dev/google.golang.org/grpc@v1.54.0/credentials#PerRPCCredentials) to provide the authentication
 - [x] Fix the errors in authentication_static and client interceptor
 
 ### Day 45 (grpc authentication in etcd)

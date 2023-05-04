@@ -55,6 +55,20 @@ func unaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 	return handler(ctx, req)
 }
 
+func getCredentials() credentials.TransportCredentials {
+
+	certPath := path.Join("../", "sslcerts")
+	certFile := path.Join(certPath, "server_cert.pem")
+	keyFile := path.Join(certPath, "server_key.pem")
+
+	creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
+	if err != nil {
+		log.Fatalf("failed to load credentials: %v", err)
+	}
+
+	return creds
+}
+
 func main() {
 	port := flag.Int("port", 50505, "port to listen")
 	flag.Parse()
@@ -64,13 +78,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	certPath := path.Join("..", "sslcerts")
-	cert, err := credentials.NewServerTLSFromFile(
-		path.Join(certPath, "server_cert.pem"),
-		path.Join(certPath, "server_key.pem"))
-	if err != nil {
-		log.Fatalf("failed to load TLS cert: %v", err)
-	}
+	cert := getCredentials()
 
 	s := grpc.NewServer(
 		grpc.Creds(cert),
