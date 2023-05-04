@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"path"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
+	"github.com/deepns/codegym/go/learning/grpc/features/sslcerts"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -57,9 +57,8 @@ func unaryInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServ
 
 func getCredentials() credentials.TransportCredentials {
 
-	certPath := path.Join("../", "sslcerts")
-	certFile := path.Join(certPath, "server_cert.pem")
-	keyFile := path.Join(certPath, "server_key.pem")
+	certFile := sslcerts.Path("server_cert.pem")
+	keyFile := sslcerts.Path("server_key.pem")
 
 	creds, err := credentials.NewServerTLSFromFile(certFile, keyFile)
 	if err != nil {
@@ -78,10 +77,8 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	cert := getCredentials()
-
 	s := grpc.NewServer(
-		grpc.Creds(cert),
+		grpc.Creds(getCredentials()),
 		grpc.UnaryInterceptor(unaryInterceptor))
 	pb.RegisterEchoServiceServer(s, &echoServer{})
 

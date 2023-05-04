@@ -89,10 +89,20 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 49 (go runtime package, filepath)
+
+- fixed the ssl cert path import issue. defined sslcerts as a separate package
+- used `runtime.Caller` to get the path to the file (think it is identical to using `__file__`), which inspects the stack frame return the neccessary info.
+- updated the tls examples to get the path to certs from the `sslcerts.Path`
+
+```go
+pc, currentFilePath, lineno, ok := runtime.Caller(0 /* number of the stack frames to ascend */)
+```
+
 ### Day 48 (grpc static authentication with PerRPCCredentials)
 
 - added an example for static authentication with username and password using metadata and PerRPCCredentials
-- [ ] need to fix the ssl cert path import
+- [x] need to fix the ssl cert path import
 
 ### Day 47 (grpc static authentication)
 

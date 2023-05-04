@@ -4,9 +4,9 @@ import (
 	"context"
 	"flag"
 	"log"
-	"path"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
+	"github.com/deepns/codegym/go/learning/grpc/features/sslcerts"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
@@ -29,8 +29,7 @@ func main() {
 	addr := flag.String("addr", "localhost:50505", "address to connect to")
 	flag.Parse()
 
-	certPath := "../sslcerts"
-	creds, err := credentials.NewClientTLSFromFile(path.Join(certPath, "ca_cert.pem"), "abc.test.example.com")
+	creds, err := credentials.NewClientTLSFromFile(sslcerts.Path("ca_cert.pem"), "abc.test.example.com")
 	if err != nil {
 		log.Fatalf("failed to load TLS cert: %v", err)
 	}

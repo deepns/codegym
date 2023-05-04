@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"path"
 	"strings"
 
 	pb "github.com/deepns/codegym/go/learning/grpc/echo/echo"
+	"github.com/deepns/codegym/go/learning/grpc/features/sslcerts"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials"
@@ -71,10 +71,9 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
-	certPath := path.Join("..", "sslcerts")
 	cert, err := credentials.NewServerTLSFromFile(
-		path.Join(certPath, "server_cert.pem"),
-		path.Join(certPath, "server_key.pem"))
+		sslcerts.Path("server_cert.pem"),
+		sslcerts.Path("server_key.pem"))
 	if err != nil {
 		log.Fatalf("failed to load TLS cert: %v", err)
 	}
