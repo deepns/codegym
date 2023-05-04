@@ -1,6 +1,10 @@
 #! /usr/bin/env bash
 
 # TODO
+# - [ ] take target-directory as input and generate all the files in the target dir
+# - [ ] use getopt for argument processing
+
+DAYS_VALID=${DAYS_VALID:-356}
 
 # Generate the private key and self-signed cert for the root CA
 generate_root_ca()
@@ -19,7 +23,7 @@ generate_root_ca()
     #             - openssl will prompt the user to enter the subject fields. Passing them in -subj makes it convenient to script
     openssl req -x509 -nodes -sha256 -newkey rsa:2048 \
         -subj "/C=US/ST=DE/O=ExampleRootCA, Inc./CN=examplerootca.org" \
-        -days 1024 -out $ROOT_CA.crt -keyout $ROOT_CA.key
+        -days ${DAYS_VALID} -out $ROOT_CA.crt -keyout $ROOT_CA.key
 }
 
 generate_cert_signed_by_root_ca()
@@ -34,6 +38,7 @@ generate_cert_signed_by_root_ca()
     # Set CN=<IP address|hostname> of the server for which the certificate is being generated.
     openssl req -new -nodes -newkey rsa:2048 \
         -subj "/C=US/ST=DE/O=Example-$2, Inc./CN=localhost" \
+        -addext "subjectAltName = DNS:localhost, IP:127.0.0.1" \
         -out $NODE.csr -keyout $NODE.key
 
     # Generate the certificate signed by the root CA
@@ -46,7 +51,10 @@ generate_cert_signed_by_root_ca()
     # -CAcreateserial - create CA serial number file if it doesn't exist already. Don't know where it is used in the certificate
     # -CAserial <file> - use the serial number specified in this file
     # -set_serial <number> - serial number specified in decimal or hexadecimal format. -CAserial and CAcreateserial are ignored when this option is specified
-    openssl x509 -req -sha256 -days 1024 -in $2.csr -CA $ROOT_CA.crt -CAkey $ROOT_CA.key -CAcreateserial -out $NODE.crt
+    openssl x509 -req -sha256 -days ${DAYS_VALID} \
+        -in $2.csr -CA $ROOT_CA.crt \
+        -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1") \
+        -CAkey $ROOT_CA.key -CAcreateserial -out $NODE.crt
 }
 
 # Validate the cert is signed by the given private key

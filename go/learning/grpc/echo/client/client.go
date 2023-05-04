@@ -1,3 +1,5 @@
+// This is a sample client for the echo service.
+// Communicates with the server through different RPC methods.
 package main
 
 import (

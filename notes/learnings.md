@@ -2,6 +2,35 @@
 
 Noting down some learnings along the way
 
+## Merkle trees
+
+### What they are?
+
+- a hash tree structure for efficient and secure verification of large datasets. named after Ralph Merkle
+- how it works?
+  - leaf nodes contain crytographic hashes (such as SHA-256) of data blocks
+  - result leaf hashes are then combined into paris, and each pair is hashed again to form new hash
+  - continue until it is reduced into a single hash, called the root hash.
+- ![a sample tree](https://www.simplilearn.com/ice9/free_resources_article_thumb/Merkle_Tree_In_Blockchain_2.png)
+
+### Applications
+
+- The key benefit of Merkle Trees is their ability to efficiently verify whether a particular piece of data is included in a dataset without having to examine the entire dataset
+- How? - by using the hash values of the data to traverse the tree from the leaf node to the root node. A verifier can compare the hash value of the data they have to the corresponding leaf node in the Merkle Tree and then use the intermediate hashes to confirm that the root hash is correct.
+- application areas - verifying transaction history in block chain, integrity checking in database and filesystems, file integrity checks in git, incremental backups, content addressable storage systems, dropbox file syncing and many more.
+
+### References
+
+Some relevant material to read
+
+- [codementor.io](https://www.codementor.io/blog/merkle-trees-5h9arzd3n8)
+
+>Dynamo uses Merkle trees for anti-entropy as follows: Each node maintains a separate Merkle tree for each key range (the set of keys covered by a virtual node) it hosts. This allows nodes to compare whether the keys within a key range are up-to-date. In this scheme, two nodes exchange the root of the Merkle tree corresponding to the key ranges that they host in common. Subsequently, using the tree traversal scheme described above the nodes determine if they have any differences and perform the appropriate synchronization action.
+
+- Excerpt from [DynamoDB paper](https://www.allthingsdistributed.com/2007/10/amazons_dynamo.html) on usage of merkle trees for replica synchronization
+
+- [Git internal](https://youtu.be/MyvyqdQ3OjI) - talks about git objects (blobs, trees)
+
 ## I/O multiplexing with select and poll
 
 - Both **select()** and **poll()** are system calls to multiplex I/O among multiple file descriptors (which can be files, sockets, pipes, fifo etc.)
@@ -144,7 +173,7 @@ From 1.1 onwards, no explicit initialization is needed. It is taken care by the 
 
 ## SSL_connect behavior difference between TLSv1.2 and TLSv1.3
 
-There is a slight difference in behavior between TLSv1.2 and TLSv1.3 in terms of validating the certificate during handshake.In TLSv1.3, SSL_connect() would succeed even if the server rejects client certificate (for e.g. client's cert expired, or invalid, or didn't present at all/).
+There is a slight difference in behavior between TLSv1.2 and TLSv1.3 in terms of validating the certificate during handshake. In TLSv1.3, SSL_connect() would succeed even if the server rejects client certificate (for e.g. client's cert expired, or invalid, or didn't present at all/).
 
 Subsequently SSL_write() would also succeed even though server had not accepted the connection fully. The buffer will be written to the socket, but server would not read it. However, SSL_read would fail if the server hadn't accepted the connection.
 
