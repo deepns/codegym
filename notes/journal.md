@@ -89,6 +89,13 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 50 (grpc mutual TLS)
+
+- Yay, day 50 successfully. Started with gRPC basics on day 1, ~50 days ago.
+- read about configuring client and server with mutual TLS
+- configured a server with mutual TLS
+- will add a client with mutual TLS tomorrow
+
 ### Day 49 (go runtime package, filepath)
 
 - fixed the ssl cert path import issue. defined sslcerts as a separate package
