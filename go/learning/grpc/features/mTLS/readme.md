@@ -57,3 +57,49 @@ if err != nil {
 The AddCert method is typically used to add a single self-signed certificate to a pool, whereas in the case of mutual TLS, the CA may have issued multiple certificates that are needed to validate the client's certificate.
 
 ## Client side
+
+When I configured TLS on the client side, I used the convenient function `NewClientTLSFromFile` to get the transport credentials.
+
+```go
+	creds, err := credentials.NewClientTLSFromFile(sslcerts.Path("ca_cert.pem"), "abc.test.example.com")
+	if err != nil {
+		log.Fatalf("failed to load TLS cert: %v", err)
+	}
+```
+
+Like the server side, this also creates a new cert pool, include the root CA to validate server certificate and create a TL config with those parameters. If client certificate needs to be included for mutual TLS, I got to use **NewTLS** instead.
+
+```go
+// NewClientTLSFromFile constructs TLS credentials from the provided root
+// certificate authority certificate file(s) to validate server connections. If
+// certificates to establish the identity of the client need to be included in
+// the credentials (eg: for mTLS), use NewTLS instead, where a complete
+// tls.Config can be specified.
+// serverNameOverride is for testing only. If set to a non empty string,
+// it will override the virtual host name of authority (e.g. :authority header
+// field) in requests.
+func NewClientTLSFromFile(certFile, serverNameOverride string) (TransportCredentials, error) {
+	b, err := os.ReadFile(certFile)
+	if err != nil {
+		return nil, err
+	}
+	cp := x509.NewCertPool()
+	if !cp.AppendCertsFromPEM(b) {
+		return nil, fmt.Errorf("credentials: failed to append certificates")
+	}
+	return NewTLS(&tls.Config{ServerName: serverNameOverride, RootCAs: cp}), nil
+```
+
+In addition to the **ServerName** and **RootCAs**, need to provide client certificate in **Certificates**.
+
+```go
+    cert, err := tls.LoadX509KeyPair(
+		sslcerts.Path("client_cert.pem"), sslcerts.Path("client_key.pem"))
+    //...
+    //...
+    return credentials.NewTLS(&tls.Config{
+		Certificates: []tls.Certificate{cert},
+		ServerName:   "abc.test.example.com",
+		RootCAs:      certPool,
+	})
+```

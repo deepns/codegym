@@ -26,12 +26,13 @@ func (s *echoServer) UnaryEcho(_ context.Context, req *pb.EchoRequest) (*pb.Echo
 }
 
 func getTLSConfig() *tls.Config {
-	serverCert, err := tls.LoadX509KeyPair(sslcerts.Path("server_cert.pem"), sslcerts.Path("server_key.pem"))
+	serverCert, err := tls.LoadX509KeyPair(
+		sslcerts.Path("server_cert.pem"), sslcerts.Path("server_key.pem"))
 	if err != nil {
 		log.Fatalf("failed to load server key pair: %v", err)
 	}
 
-	caCert, err := ioutil.ReadFile(sslcerts.Path("ca_cert.pem"))
+	caCert, err := ioutil.ReadFile(sslcerts.Path("client_ca_cert.pem"))
 	if err != nil {
 		log.Fatalf("failed to load CA certificate: %v", err)
 	}

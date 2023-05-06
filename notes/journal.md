@@ -72,6 +72,8 @@
     - [ ] authorization
     - [x] debugging
     - [ ] encryption
+      - [x] tls
+      - [x] mtls
     - [x] metadata
     - [x] interceptor
     - [x] metadata-interceptor
@@ -88,6 +90,11 @@
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+### Day 51 (grpc mutual TLS client)
+
+- added the client side code for mTLS client
+- fixed the certificate issue on the server side. had the wrong CA configured on the server
 
 ### Day 50 (grpc mutual TLS)
 
