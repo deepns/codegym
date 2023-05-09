@@ -69,9 +69,9 @@
   - [ ] features
     - [x] keepalive
     - [x] authentication
-    - [ ] authorization
+    - [x] authorization
     - [x] debugging
-    - [ ] encryption
+    - [x] encryption
       - [x] tls
       - [x] mtls
     - [x] metadata
@@ -90,6 +90,45 @@
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+### Day 54 (reading grpc compression, health check and retry)
+
+- went through grpc compression, retry and health check functionalities
+- both retry and health check uses service config
+- taking on compression first. client and server must register the same compressor
+- client can choose to same compression for all calls or per call using CallOptions
+- Package [gzip](https://github.com/grpc/grpc-go/blob/v1.55.0/encoding/gzip/gzip.go) implements and register a gzip compressor
+- gzip's `init()` registers the compressor using `encoding.RegisterCompressor`, which adds the compressor to `registeredCompressor` map. grpc server and client code gets the registered compressor through `GetCompressor` when invoking the registered RPCs.
+
+```go
+func init() {
+	c := &compressor{}
+	c.poolCompressor.New = func() interface{} {
+		return &writer{Writer: gzip.NewWriter(io.Discard), pool: &c.poolCompressor}
+	}
+	encoding.RegisterCompressor(c)
+}
+```
+
+- On the server side, not much to do except to register the compressor. Importing gzip package takes care of registering the gzip compressor through its init function.
+- On the client side, we can use custom compressor or use gzip
+  - To configure gzip compressor for all calls on the connection, use `grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name))`
+
+    ```go
+    conn, err := grpc.Dial(*addr,
+            grpc.WithTransportCredentials(insecure.NewCredentials()),
+            grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+    ```
+
+  - To configure gzip compressor per call, use `grpc.UseCompressor(gzip.Name)` in the call options
+
+```go
+	resp, err := client.UnaryEcho(ctx, &pb.EchoRequest{Message: msg}, grpc.UseCompressor(gzip.Name))
+```
+
+### Day 53 (nocode)
+
+### Day 52 (nocode)
 
 ### Day 51 (grpc mutual TLS client)
 
