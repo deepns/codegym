@@ -91,6 +91,12 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 58 (learning rust)
+
+- Exploring rust...just for some fun.
+
+### Day 55-57 (no code)
+
 ### Day 54 (reading grpc compression, health check and retry)
 
 - went through grpc compression, retry and health check functionalities
