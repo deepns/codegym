@@ -32,3 +32,12 @@ Added a [hello world program](helloworld/helloworld.rs). Some observations.
 - `println!` is a macro from [std::fmt](https://doc.rust-lang.org/std/fmt/) module
 - supports line comments (`//` ) and block level comments (`/*...*/`)
 - No inclusion of module or header for the hello world program. How macros from std::fmt are imported?
+
+### Primitives
+
+- Integer types, default i32. types can be expressed by default or using suffix
+- interesting to see some rust specific nuances that I haven't seen before in the languages I used
+  - variables are **immutable** by default. To declare a mutable variable, use `mut` keyword
+  - variables can be re-declared in the same scope with same or different type (called **shadowing** in rust context)
+  - numbers can be expressed with `_` for better readability. Compiler ignores `_`.
+- `{:?}` - enables debug formatting of a type

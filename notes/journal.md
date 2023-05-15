@@ -91,7 +91,11 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
-### Day 58 (learning rust)
+### Day 59 (learning rust - primitives)
+
+- Going through [primitives](https://doc.rust-lang.org/stable/rust-by-example/primitives.html)
+
+### Day 58 (learning rust - hello world)
 
 - Exploring rust...just for some fun.
 
