@@ -91,6 +91,40 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 66 (exploring cloud functions and eventarc triggers)
+
+- Wanted to set up a Cloud Function with a trigger that fires the function every x hours or so.
+- there doesn't seem to be a direct way to do that. Explored around Cloud Scheduler, but haven't found a way yet. may be I haven't looked deep enough
+- Set up a Cloud Function with an EventArc Trigger, and connected to Cloud Pub/Sub messagePublished event
+  - As part of that, created a new topic on the Cloud Pub Sub
+  - wanted to see if the function is triggered each time a message is published on the topic
+  - went to the Cloud Pub Sub page, under Messages, manually published a message
+  - then came back to the Cloud Functions page of the function I just created. able to see the logs logged during each invocation
+- If I don't find a way to directly trigger the cloud function from cloud scheduler, then will set up a cloud schduler to publish a message to the pub-sub topic every x hours and have it trigger the cloud function
+
+### Day 65 (creating a twitter bot with v2 API, exploring cloud functions)
+
+- Tried to create a twitter bot using Twitter V2 API and Tweepy
+- Able to send a tweet using v2 API
+- Explored the documentation of Google Cloud Functions. Supports both http and cloud event based invocations
+- Installed functions_framework from pip, and tested the cloud-event based functions locally
+
+### Day 64 (reading about Twitter API v2)
+
+- Trying to setup a twitter bot using v2 API
+- Some resources related to that
+  - [About Oauth 2.0 authorization code](https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code)
+  - [Twitter Tutorial on v2 API](https://developer.twitter.com/en/docs/tutorials/creating-a-twitter-bot-with-python--oauth-2-0--and-v2-of-the-twi)
+  - Set up the credentials and used [Tweepy](https://docs.tweepy.org/en/latest/api.html#tweepy.Client.create_tweet) to send a tweet using v2 API. Hides the complexity of all the auth and token stuff pretty much.
+
+### Day 63 (no code)
+
+### Day 62 (no code)
+
+### Day 61 (no code)
+
+### Day 60 (no code)
+
 ### Day 59 (learning rust - primitives)
 
 - Going through [primitives](https://doc.rust-lang.org/stable/rust-by-example/primitives.html)
