@@ -91,6 +91,52 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 70 (adding a go webapp for my notes)
+
+- Getting started with a simple go webapp for my notes
+- added few endpoints and corresponding handlers
+- need to convert my notes into the new format
+
+### Day 69 (generating openapi spec, go-swagger)
+
+- Exploring swagger and openapi spec for the notes app
+- added a sample spec and generated the server code using go-swagger
+- seems like a overkill for the usecase I am targeting
+
+### Day 68 (google cloud function with cloud pubsub)
+
+- Don't know if the file encoding was messed up during zipping or copying. The null byte error continued to bite me
+- Deploying the function via `gcloud` CLI resolved the problem. and made the process much easier too
+- able to trigger the function via pubsub and have the note tweeted
+- added detailed notes in my other tweetbot repo
+- Used **gcloud functions deploy** command to deploy. Specify the deployment region, runtime (e.g. python39, python311 etc.), and the entrypoint to the function. Optionally specify the trigger as well.
+- Set up the pubsub topic separately, and specified its name in the `--trigger-topic` option
+- Environment variables can be specified separately via `--set-env-vars FOO=bar` option or through yaml file using `--env-vars-file .env.yaml` option.
+- Need to use structured logging to filter the logs by level
+
+### Day 67 (setting my own google cloud function)
+
+Bummer! While all worked good locally, cloud build failed with a weird error in main.py. `Step #1 - "build": Sorry: ValueError: source code string cannot contain null bytes`
+
+used a python code to find null bytes in the source, but it didn't turn up any.
+
+```python
+def find_null_bytes(filename):
+    with open(filename, 'rb') as file:
+        content = file.read()
+        null_positions = [i for i, byte in enumerate(content) if byte == b'\x00']
+        return null_positions
+
+# Usage
+filename = 'main.py'
+null_positions = find_null_bytes(filename)
+print("Null byte positions:", null_positions)
+```
+
+Tried to re-edit the file inline, but that also didn't work. Text encoding is also in utf-8 as well. Stack overflow searches were also not fruitful.
+
+will debug it tomorrow.
+
 ### Day 66 (exploring cloud functions and eventarc triggers)
 
 - Wanted to set up a Cloud Function with a trigger that fires the function every x hours or so.
