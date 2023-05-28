@@ -91,6 +91,18 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 71 (running a go function in google cloud function)
+
+- reading about Google Cloud Functions in Go
+- followed the instructions from [here](https://cloud.google.com/functions/docs/create-deploy-gcloud#functions-deploy-command-go) to deploy a sample function
+- [directory structure](https://cloud.google.com/functions/docs/writing#directory-structure-go) for a go function in google cloud function
+- tested the function locally with [functions-framework](https://github.com/GoogleCloudPlatform/functions-framework-go) and also deployed it in cloud
+
+```console
+✗ curl https://go-http-function-nxxo6p55tq-uc.a.run.app
+Hello World!%
+```
+
 ### Day 70 (adding a go webapp for my notes)
 
 - Getting started with a simple go webapp for my notes
