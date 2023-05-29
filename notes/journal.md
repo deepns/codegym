@@ -91,6 +91,13 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 72 (running a go function in google cloud function)
+
+- Updated the go function to handle multiple entry points
+- Deployed it with Functions Framework and in the cloud
+- Updated the Makefile to handle local and cloud deployment
+- will try out cloud_event trigger tomorrow
+
 ### Day 71 (running a go function in google cloud function)
 
 - reading about Google Cloud Functions in Go
