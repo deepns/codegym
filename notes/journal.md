@@ -91,6 +91,46 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 73 (running gcp cloud event function)
+
+- trying out google cloud event function today
+- source available [here](../go/gcp_cloud_function_cloud_event/)
+- able to test with functions framework and sending pubsub message in a curl request
+
+```console
+ ✗ echo -n "Google" | base64 
+R29vZ2xl
+
+curl localhost:8080 \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -H "ce-id: 123451234512345" \
+    -H "ce-specversion: 1.0" \
+    -H "ce-time: 2020-01-02T12:34:56.789Z" \
+    -H "ce-type: google.cloud.pubsub.topic.v1.messagePublished" \
+    -H "ce-source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC" \
+    -d '{
+        "message": {
+            "data": "R29vZ2xl",
+            "attributes": {
+                "attr1":"attr1-value"
+            }
+        },
+        "subscription": "projects/MY-PROJECT/subscriptions/MY-SUB"
+    }'
+```
+
+- on the server side,
+
+```console
+✗ export FUNCTION_TARGET=helloPubSubHandler
+✗ go run cmd/main.go                       
+2023/05/30 12:26:59 Hello Google!
+2023/05/30 12:27:12 Hello world!
+```
+
+- need to test with a emulator
+
 ### Day 72 (running a go function in google cloud function)
 
 - Updated the go function to handle multiple entry points
