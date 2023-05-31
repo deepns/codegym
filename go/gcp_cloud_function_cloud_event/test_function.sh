@@ -1,0 +1,40 @@
+# Send a test PubSub event to the function for local testing
+PORT=${PORT:-8080}
+
+# Generate a base64 encoded string from the message
+MESSAGE_DATA=$(echo -n "Google" | base64)
+
+# Set the URL and base headers
+URL="http://localhost:${PORT}"
+HEADERS=(
+    "-H 'Content-Type: application/json'"
+    "-H 'ce-id: 123451234512345'"
+    "-H 'ce-specversion: 1.0'"
+    "-H 'ce-time: 2020-01-02T12:34:56.789Z'"
+    "-H 'ce-type: google.cloud.pubsub.topic.v1.messagePublished'"
+    "-H 'ce-source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC'"
+)
+
+# Set the JSON payload
+JSON_DATA=$(cat <<EOF
+{
+    "message": {
+        "data": "${MESSAGE_DATA}",
+        "attributes": {
+            "attr1": "attr1-value"
+        }
+    },
+    "subscription": "projects/MY-PROJECT/subscriptions/MY-SUB"
+}
+EOF
+)
+
+# Build the curl command
+CURL_CMD="curl ${URL}"
+for header in "${HEADERS[@]}"; do
+    CURL_CMD+=" ${header}"
+done
+CURL_CMD+=" -d '${JSON_DATA}'"
+
+# Execute the curl command
+eval "${CURL_CMD}"

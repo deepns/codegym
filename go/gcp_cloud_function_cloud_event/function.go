@@ -39,14 +39,17 @@ type PubSubMessage struct {
 
 func init() {
 	// Register the CloudEvent function with the Functions Framework
+	// needed for local testing of the function
 	functions.CloudEvent("helloPubSubHandler", helloPubSubHandler)
 }
 
+// HelloPubSubHandler is triggered by a CloudEvent of type google.cloud.pubsub.topic.v1.messagePublished
 // Function helloPubSubHandler accepts and handles a CloudEvent object
 // Event data is passed in the form of a CloudEvent object
 // https://cloud.google.com/eventarc/docs/cloudevents
 func helloPubSubHandler(ctx context.Context, e event.Event) error {
-	// My code here
+	log.Printf("helloPubSubHandler: context: %+v, event: %+v\n", ctx, e)
+
 	// Access the CloudEvent data payload via e.Data() or e.DataAs(...)
 	// https://pkg.go.dev/github.com/cloudevents/sdk-go/v2/event#Event
 	var msg MessagePublishedData

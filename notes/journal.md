@@ -91,6 +91,11 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 74 (running gcp cloud event function)
+
+- Cleaned up the code a little
+- added a makefile for local and cloud deploy, and test script for testing
+
 ### Day 73 (running gcp cloud event function)
 
 - trying out google cloud event function today
