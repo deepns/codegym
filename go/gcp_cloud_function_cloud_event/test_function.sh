@@ -1,8 +1,30 @@
+#!/bin/bash
+
+###########################################################
+# Script: test_function.sh
+# Description: Send a test PubSub event to a function for local testing using curl.
+# Version: 1.0
+###########################################################
+
+# Function to generate a random string of alphabets and encode them in base64
+generate_random_string() {
+    local length=$1
+    # Limit the length to a maximum of 32 characters
+    if [[ $length -gt 32 ]]; then
+        length=32
+        echo "Warning: Length exceeds maximum of 32 characters. Truncating to 32 characters."
+    fi
+    local random_string=$(openssl rand -base64 $length | tr -dc 'a-zA-Z' | head -c $length | base64)
+    echo "$random_string"
+}
+
 # Send a test PubSub event to the function for local testing
 PORT=${PORT:-8080}
 
-# Generate a base64 encoded string from the message
-MESSAGE_DATA=$(echo -n "Google" | base64)
+# Generate a random string of alphabets
+LENGTH=${LENGTH:-32}
+MESSAGE_DATA=$(generate_random_string $LENGTH)
+echo "Message data: ${MESSAGE_DATA}"
 
 # Set the URL and base headers
 URL="http://localhost:${PORT}"
