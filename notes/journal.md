@@ -91,6 +91,16 @@
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
 
+### Day 76 (running mynotesapp and tweetbot in gcf)
+
+- Welcome June!
+- Converted mynotesapp into a go function running in gcf
+- Hooked up my tweetbot to pull the notes from mynotesapp
+- Set up Cloud Scheduler to trigger my tweetbot on hourly cadence
+- Things working, but need proper docs, code clean up etc. more on that later.
+
+### Day 75 (no code)
+
 ### Day 74 (running gcp cloud event function)
 
 - Cleaned up the code a little
