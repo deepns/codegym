@@ -14,7 +14,7 @@ generate_random_string() {
         length=32
         echo "Warning: Length exceeds maximum of 32 characters. Truncating to 32 characters."
     fi
-    local random_string=$(openssl rand -base64 $length | tr -dc 'a-zA-Z' | head -c $length | base64)
+    local random_string=$(openssl rand -base64 $length | tr -dc 'a-zA-Z' | head -c $length)
     echo "$random_string"
 }
 
@@ -24,7 +24,9 @@ PORT=${PORT:-8080}
 # Generate a random string of alphabets
 LENGTH=${LENGTH:-32}
 MESSAGE_DATA=$(generate_random_string $LENGTH)
+MESSAGE_DATA_BASE64=$(echo -n ${MESSAGE_DATA} | base64)
 echo "Message data: ${MESSAGE_DATA}"
+echo "Message data in base64: ${MESSAGE_DATA_BASE64}"
 
 # Set the URL and base headers
 URL="http://localhost:${PORT}"
@@ -41,7 +43,7 @@ HEADERS=(
 JSON_DATA=$(cat <<EOF
 {
     "message": {
-        "data": "${MESSAGE_DATA}",
+        "data": "${MESSAGE_DATA_BASE64}",
         "attributes": {
             "attr1": "attr1-value"
         }
