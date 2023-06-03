@@ -69,9 +69,11 @@
   - [ ] features
     - [x] keepalive
     - [x] authentication
-    - [ ] authorization
+    - [x] authorization
     - [x] debugging
-    - [ ] encryption
+    - [x] encryption
+      - [x] tls
+      - [x] mtls
     - [x] metadata
     - [x] interceptor
     - [x] metadata-interceptor
@@ -88,6 +90,211 @@
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.
+
+### Day 74 (running gcp cloud event function)
+
+- Cleaned up the code a little
+- added a makefile for local and cloud deploy, and test script for testing
+
+### Day 73 (running gcp cloud event function)
+
+- trying out google cloud event function today
+- source available [here](../go/gcp_cloud_function_cloud_event/)
+- able to test with functions framework and sending pubsub message in a curl request
+
+```console
+ ✗ echo -n "Google" | base64 
+R29vZ2xl
+
+curl localhost:8080 \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -H "ce-id: 123451234512345" \
+    -H "ce-specversion: 1.0" \
+    -H "ce-time: 2020-01-02T12:34:56.789Z" \
+    -H "ce-type: google.cloud.pubsub.topic.v1.messagePublished" \
+    -H "ce-source: //pubsub.googleapis.com/projects/MY-PROJECT/topics/MY-TOPIC" \
+    -d '{
+        "message": {
+            "data": "R29vZ2xl",
+            "attributes": {
+                "attr1":"attr1-value"
+            }
+        },
+        "subscription": "projects/MY-PROJECT/subscriptions/MY-SUB"
+    }'
+```
+
+- on the server side,
+
+```console
+✗ export FUNCTION_TARGET=helloPubSubHandler
+✗ go run cmd/main.go                       
+2023/05/30 12:26:59 Hello Google!
+2023/05/30 12:27:12 Hello world!
+```
+
+- need to test with a emulator
+
+### Day 72 (running a go function in google cloud function)
+
+- Updated the go function to handle multiple entry points
+- Deployed it with Functions Framework and in the cloud
+- Updated the Makefile to handle local and cloud deployment
+- will try out cloud_event trigger tomorrow
+
+### Day 71 (running a go function in google cloud function)
+
+- reading about Google Cloud Functions in Go
+- followed the instructions from [here](https://cloud.google.com/functions/docs/create-deploy-gcloud#functions-deploy-command-go) to deploy a sample function
+- [directory structure](https://cloud.google.com/functions/docs/writing#directory-structure-go) for a go function in google cloud function
+- tested the function locally with [functions-framework](https://github.com/GoogleCloudPlatform/functions-framework-go) and also deployed it in cloud
+
+```console
+✗ curl https://go-http-function-nxxo6p55tq-uc.a.run.app
+Hello World!%
+```
+
+### Day 70 (adding a go webapp for my notes)
+
+- Getting started with a simple go webapp for my notes
+- added few endpoints and corresponding handlers
+- need to convert my notes into the new format
+
+### Day 69 (generating openapi spec, go-swagger)
+
+- Exploring swagger and openapi spec for the notes app
+- added a sample spec and generated the server code using go-swagger
+- seems like a overkill for the usecase I am targeting
+
+### Day 68 (google cloud function with cloud pubsub)
+
+- Don't know if the file encoding was messed up during zipping or copying. The null byte error continued to bite me
+- Deploying the function via `gcloud` CLI resolved the problem. and made the process much easier too
+- able to trigger the function via pubsub and have the note tweeted
+- added detailed notes in my other tweetbot repo
+- Used **gcloud functions deploy** command to deploy. Specify the deployment region, runtime (e.g. python39, python311 etc.), and the entrypoint to the function. Optionally specify the trigger as well.
+- Set up the pubsub topic separately, and specified its name in the `--trigger-topic` option
+- Environment variables can be specified separately via `--set-env-vars FOO=bar` option or through yaml file using `--env-vars-file .env.yaml` option.
+- Need to use structured logging to filter the logs by level
+
+### Day 67 (setting my own google cloud function)
+
+Bummer! While all worked good locally, cloud build failed with a weird error in main.py. `Step #1 - "build": Sorry: ValueError: source code string cannot contain null bytes`
+
+used a python code to find null bytes in the source, but it didn't turn up any.
+
+```python
+def find_null_bytes(filename):
+    with open(filename, 'rb') as file:
+        content = file.read()
+        null_positions = [i for i, byte in enumerate(content) if byte == b'\x00']
+        return null_positions
+
+# Usage
+filename = 'main.py'
+null_positions = find_null_bytes(filename)
+print("Null byte positions:", null_positions)
+```
+
+Tried to re-edit the file inline, but that also didn't work. Text encoding is also in utf-8 as well. Stack overflow searches were also not fruitful.
+
+will debug it tomorrow.
+
+### Day 66 (exploring cloud functions and eventarc triggers)
+
+- Wanted to set up a Cloud Function with a trigger that fires the function every x hours or so.
+- there doesn't seem to be a direct way to do that. Explored around Cloud Scheduler, but haven't found a way yet. may be I haven't looked deep enough
+- Set up a Cloud Function with an EventArc Trigger, and connected to Cloud Pub/Sub messagePublished event
+  - As part of that, created a new topic on the Cloud Pub Sub
+  - wanted to see if the function is triggered each time a message is published on the topic
+  - went to the Cloud Pub Sub page, under Messages, manually published a message
+  - then came back to the Cloud Functions page of the function I just created. able to see the logs logged during each invocation
+- If I don't find a way to directly trigger the cloud function from cloud scheduler, then will set up a cloud schduler to publish a message to the pub-sub topic every x hours and have it trigger the cloud function
+
+### Day 65 (creating a twitter bot with v2 API, exploring cloud functions)
+
+- Tried to create a twitter bot using Twitter V2 API and Tweepy
+- Able to send a tweet using v2 API
+- Explored the documentation of Google Cloud Functions. Supports both http and cloud event based invocations
+- Installed functions_framework from pip, and tested the cloud-event based functions locally
+
+### Day 64 (reading about Twitter API v2)
+
+- Trying to setup a twitter bot using v2 API
+- Some resources related to that
+  - [About Oauth 2.0 authorization code](https://developer.twitter.com/en/docs/authentication/oauth-2-0/authorization-code)
+  - [Twitter Tutorial on v2 API](https://developer.twitter.com/en/docs/tutorials/creating-a-twitter-bot-with-python--oauth-2-0--and-v2-of-the-twi)
+  - Set up the credentials and used [Tweepy](https://docs.tweepy.org/en/latest/api.html#tweepy.Client.create_tweet) to send a tweet using v2 API. Hides the complexity of all the auth and token stuff pretty much.
+
+### Day 63 (no code)
+
+### Day 62 (no code)
+
+### Day 61 (no code)
+
+### Day 60 (no code)
+
+### Day 59 (learning rust - primitives)
+
+- Going through [primitives](https://doc.rust-lang.org/stable/rust-by-example/primitives.html)
+
+### Day 58 (learning rust - hello world)
+
+- Exploring rust...just for some fun.
+
+### Day 55-57 (no code)
+
+### Day 54 (reading grpc compression, health check and retry)
+
+- went through grpc compression, retry and health check functionalities
+- both retry and health check uses service config
+- taking on compression first. client and server must register the same compressor
+- client can choose to same compression for all calls or per call using CallOptions
+- Package [gzip](https://github.com/grpc/grpc-go/blob/v1.55.0/encoding/gzip/gzip.go) implements and register a gzip compressor
+- gzip's `init()` registers the compressor using `encoding.RegisterCompressor`, which adds the compressor to `registeredCompressor` map. grpc server and client code gets the registered compressor through `GetCompressor` when invoking the registered RPCs.
+
+```go
+func init() {
+	c := &compressor{}
+	c.poolCompressor.New = func() interface{} {
+		return &writer{Writer: gzip.NewWriter(io.Discard), pool: &c.poolCompressor}
+	}
+	encoding.RegisterCompressor(c)
+}
+```
+
+- On the server side, not much to do except to register the compressor. Importing gzip package takes care of registering the gzip compressor through its init function.
+- On the client side, we can use custom compressor or use gzip
+  - To configure gzip compressor for all calls on the connection, use `grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name))`
+
+    ```go
+    conn, err := grpc.Dial(*addr,
+            grpc.WithTransportCredentials(insecure.NewCredentials()),
+            grpc.WithDefaultCallOptions(grpc.UseCompressor(gzip.Name)))
+    ```
+
+  - To configure gzip compressor per call, use `grpc.UseCompressor(gzip.Name)` in the call options
+
+```go
+	resp, err := client.UnaryEcho(ctx, &pb.EchoRequest{Message: msg}, grpc.UseCompressor(gzip.Name))
+```
+
+### Day 53 (nocode)
+
+### Day 52 (nocode)
+
+### Day 51 (grpc mutual TLS client)
+
+- added the client side code for mTLS client
+- fixed the certificate issue on the server side. had the wrong CA configured on the server
+
+### Day 50 (grpc mutual TLS)
+
+- Yay, day 50 successfully. Started with gRPC basics on day 1, ~50 days ago.
+- read about configuring client and server with mutual TLS
+- configured a server with mutual TLS
+- will add a client with mutual TLS tomorrow
 
 ### Day 49 (go runtime package, filepath)
 
