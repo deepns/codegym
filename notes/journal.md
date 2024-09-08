@@ -87,6 +87,85 @@
     - [x] grpcurl
     - [ ] openapi
 
+
+## Daily log - attempt3
+
+### Day 1 - systemctl service
+
+Playing around with turning a python script into a service running under systemctl.
+
+- Created a simple scraper to scrap links in a given set of URLs.
+- Created a new multipass ubuntu instance (been a long time I spun up one locally)
+- Defined the service unit file
+- Added the service file to systemd and reloaded the daemon
+
+```console
+$ cp scraper.service /etc/systemd/system/
+cp: cannot create regular file '/etc/systemd/system/scraper.service': Permission denied
+$ sudo !!
+sudo cp scraper.service /etc/systemd/system/
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable scraper.service
+Created symlink /etc/systemd/system/multi-user.target.wants/scraper.service → /etc/systemd/system/scraper.service.
+$ sudo systemctl status scraper.service
+○ scraper.service - Continuous Scraper Service with Virtual Environment
+     Loaded: loaded (/etc/systemd/system/scraper.service; enabled; preset: enabled)
+     Active: inactive (dead)
+```
+
+Turns out that I attempted to start the service before installing the virtual environment and pip packages on the newly created ubuntu instance.
+
+- Installed virtual environment - `sudo apt install python3.12-venv`
+- Installed pip - `sudo apt install python3-pip`
+- Tested the script first. Printed the links to stdout
+- set the user passwd in the ubuntu instance (systemctl restart command asks for it. hence.)
+
+```console
+$ sudo systemctl status scraper.service
+● scraper.service - Continuous Scraper Service with Virtual Environment
+     Loaded: loaded (/etc/systemd/system/scraper.service; enabled; preset: enabled)
+     Active: active (running) since Sat 2024-09-07 22:53:34 EDT; 10s ago
+   Main PID: 4203 (python)
+      Tasks: 1 (limit: 1060)
+     Memory: 21.4M (peak: 21.8M)
+        CPU: 234ms
+     CGroup: /system.slice/scraper.service
+             └─4203 python /home/ubuntu/Home/workspace/github/codegym/services/scraper/app.py
+
+$ journalctl -u scraper.service
+Sep 07 22:53:34 ubuntu-lts systemd[1]: Started scraper.service - Continuous Scraper Service with Virtual Environment.
+Sep 07 22:54:35 ubuntu-lts bash[4203]: Scraping https://www.google.com
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://www.google.com/imghp?hl=en&tab=wi
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://maps.google.com/maps?hl=en&tab=wl
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://play.google.com/?hl=en&tab=w8
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://www.youtube.com/?tab=w1
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://news.google.com/?tab=wn
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://mail.google.com/mail/?tab=wm
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://drive.google.com/?tab=wo
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://www.google.com/intl/en/about/products?tab=wh
+Sep 07 22:54:35 ubuntu-lts bash[4203]: http://www.google.com/history/optout?hl=en
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /preferences?hl=en
+Sep 07 22:54:35 ubuntu-lts bash[4203]: https://accounts.google.com/ServiceLogin?hl=en&passive=true&continue=https://www.google.com/&ec=GAZAAQ
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /advanced_search?hl=en&authuser=0
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /intl/en/ads/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /services/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /intl/en/about.html
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /intl/en/policies/privacy/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /intl/en/policies/terms/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: Scraping https://www.apple.com
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /us/shop/goto/store
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /mac/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /ipad/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /iphone/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /watch/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /apple-vision-pro/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /airpods/
+Sep 07 22:54:35 ubuntu-lts bash[4203]: /tv-home/
+```
+
+- Tried to reference the app path through environment variable in the service unit file, but that doesn't seem to be possible. We can define the environment variables directly in the unit file or in a separate file (and refer to it with `EnvironmentFile` directive in the service file) for the service to use when it runs. However, the service file as such cannot refer it seems
+
 ## Daily log - attempt#2
 
 Been a while I lost in touch with my daily exercise. Restarting the practice.

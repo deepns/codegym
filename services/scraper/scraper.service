@@ -1,0 +1,15 @@
+[Unit]
+Description=Continuous Scraper Service with Virtual Environment
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c 'source /home/ubuntu/Home/workspace/github/codegym/services/scraper/.venv/bin/activate && exec python /home/ubuntu/Home/workspace/github/codegym/services/scraper/app.py'
+WorkingDirectory=/home/ubuntu/Home/workspace/github/codegym/services/scraper
+StandardOutput=journal
+StandardError=journal
+Restart=always
+KillMode=process
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
