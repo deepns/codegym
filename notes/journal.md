@@ -90,6 +90,188 @@
 
 ## Daily log - attempt3
 
+### Day 3 - Running mongodb with docker locally
+
+Able to run a single node mongodb, single node replica set.
+
+Tried to configure a 3 node replica set, so created a network and then created 3 containers. Followed by that, initialized the replicaset.
+
+```console
+docker network create mongo-cluster
+docker run -d --name mongo1 --net mongo-cluster -p 27017:27017 mongodb/mongodb-community-server --replSet rs0
+docker run -d --name mongo2 --net mongo-cluster -p 27018:27017 mongodb/mongodb-community-server --replSet rs0
+docker run -d --name mongo3 --net mongo-cluster -p 27019:27017 mongodb/mongodb-community-server --replSet rs0
+
+test> rs.initiate({
+...   _id: "rs0",
+...   members: [
+...     { _id: 0, host: "mongo1:27017" },
+...     { _id: 1, host: "mongo2:27017" },
+...     { _id: 2, host: "mongo3:27017" }
+...   ]
+... })
+{ ok: 1 }
+
+rs0 [direct: secondary] test> rs.status()
+{
+  set: 'rs0',
+  date: ISODate('2024-09-10T02:32:42.537Z'),
+  myState: 2,
+  term: Long('0'),
+  syncSourceHost: '',
+  syncSourceId: -1,
+  heartbeatIntervalMillis: Long('2000'),
+  majorityVoteCount: 2,
+  writeMajorityCount: 2,
+  votingMembersCount: 3,
+  writableVotingMembersCount: 3,
+  optimes: {
+    lastCommittedOpTime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+    lastCommittedWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+    readConcernMajorityOpTime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+    appliedOpTime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+    durableOpTime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+    lastAppliedWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+    lastDurableWallTime: ISODate('2024-09-10T02:32:35.041Z')
+  },
+  lastStableRecoveryTimestamp: Timestamp({ t: 1725935555, i: 1 }),
+  members: [
+    {
+      _id: 0,
+      name: 'mongo1:27017',
+      health: 1,
+      state: 2,
+      stateStr: 'SECONDARY',
+      uptime: 96,
+      optime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+      optimeDate: ISODate('2024-09-10T02:32:35.000Z'),
+      lastAppliedWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+      lastDurableWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+      syncSourceHost: '',
+      syncSourceId: -1,
+      infoMessage: '',
+      configVersion: 1,
+      configTerm: 0,
+      self: true,
+      lastHeartbeatMessage: ''
+    },
+    {
+      _id: 1,
+      name: 'mongo2:27017',
+      health: 1,
+      state: 2,
+      stateStr: 'SECONDARY',
+      uptime: 7,
+      optime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+      optimeDurable: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+      optimeDate: ISODate('2024-09-10T02:32:35.000Z'),
+      optimeDurableDate: ISODate('2024-09-10T02:32:35.000Z'),
+      lastAppliedWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+      lastDurableWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+      lastHeartbeat: ISODate('2024-09-10T02:32:42.116Z'),
+      lastHeartbeatRecv: ISODate('2024-09-10T02:32:42.153Z'),
+      pingMs: Long('2'),
+      lastHeartbeatMessage: '',
+      syncSourceHost: '',
+      syncSourceId: -1,
+      infoMessage: '',
+      configVersion: 1,
+      configTerm: 0
+    },
+    {
+      _id: 2,
+      name: 'mongo3:27017',
+      health: 1,
+      state: 2,
+      stateStr: 'SECONDARY',
+      uptime: 7,
+      optime: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+      optimeDurable: { ts: Timestamp({ t: 1725935555, i: 1 }), t: Long('-1') },
+      optimeDate: ISODate('2024-09-10T02:32:35.000Z'),
+      optimeDurableDate: ISODate('2024-09-10T02:32:35.000Z'),
+      lastAppliedWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+      lastDurableWallTime: ISODate('2024-09-10T02:32:35.041Z'),
+      lastHeartbeat: ISODate('2024-09-10T02:32:42.115Z'),
+      lastHeartbeatRecv: ISODate('2024-09-10T02:32:42.172Z'),
+      pingMs: Long('1'),
+      lastHeartbeatMessage: '',
+      syncSourceHost: ''
+      syncSourceId: -1,
+      infoMessage: '',
+      configVersion: 1,
+      configTerm: 0
+    }
+  ],
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1725935555, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1725935555, i: 1 })
+}
+```
+
+Connecting to the mongodb instance using direct connection works `"mongodb://localhost:27017?directConnection=true"` but replica set didn't work.
+
+Connecting to the replicaset from within the container works
+
+```console
+mongodb@06ccc5d7442d:/$ mongosh "mongodb://mongo1:27017,mongo2:27018,mongo3:27019/?replicaSet=rs0"
+Current Mongosh Log ID: 66dfb670eceec36b27c76a8a
+Connecting to:          mongodb://mongo1:27017,mongo2:27018,mongo3:27019/?replicaSet=rs0&appName=mongosh+2.3.0
+Using MongoDB:          7.0.12
+Using Mongosh:          2.3.0
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-09-10T02:42:05.464+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2024-09-10T02:42:06.398+00:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2024-09-10T02:42:06.399+00:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never' in this binary version
+   2024-09-10T02:42:06.399+00:00: vm.max_map_count is too low
+------
+
+rs0 [primary] test> 
+```
+
+looks like I will need to use docker-compose and specify the below parameter.
+
+```yaml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+```
+
+Found many references using this parameter
+
+- https://anthonysimmon.com/the-only-local-mongodb-replica-set-with-docker-compose-guide-youll-ever-need/
+- https://dev.to/abdelfattahradwan/quick-and-easy-mongodb-replica-set-deployment-with-docker-compose-1kij
+- https://dev.to/arthurgermano/tutorial-configuring-a-local-mongodb-docker-replicaset-with-3nodes-and-tls-4492
+
+will try with docker compose and corrected network configuration tomorrow.
+
+### Day 2 - Diagrams as Code with Mermaid
+
+Playing with [mermaid flowcharts](https://mermaid.js.org/syntax/flowchart.html)
+
+Installed the extension for VS Code to render mermaid in preview
+
+```mermaid
+flowchart TD;
+    A[Diagrams as code] --> B[Mermaid] & C[Diagrams];
+    B --> D(Markdown based)
+    C --> E(Python based)
+
+```
+
+Tomorrow:
+
+- [ ] Little more on systemctl and its alternatives
+- [ ] Find resources to learn prompt engineering
+
 ### Day 1 - systemctl service
 
 Playing around with turning a python script into a service running under systemctl.
@@ -192,7 +374,7 @@ Been a while I lost in touch with my daily exercise. Restarting the practice.
 - able to test with functions framework and sending pubsub message in a curl request
 
 ```console
- ✗ echo -n "Google" | base64 
+ ✗ echo -n "Google" | base64
 R29vZ2xl
 
 curl localhost:8080 \
@@ -218,7 +400,7 @@ curl localhost:8080 \
 
 ```console
 ✗ export FUNCTION_TARGET=helloPubSubHandler
-✗ go run cmd/main.go                       
+✗ go run cmd/main.go
 2023/05/30 12:26:59 Hello Google!
 2023/05/30 12:27:12 Hello world!
 ```
@@ -459,7 +641,7 @@ openssl x509 -req -sha256 -days 1000 \
 - That also didn't work as the root-ca wasn't signed properly.
 
 ```console
-err=rpc error: code = Unavailable desc = connection error: desc = "transport: authentication handshake failed: tls: failed to verify certificate: x509: certificate signed by unknown authority (possibly because of \"crypto/rsa: verification error\" while trying to verify candidate authority certificate \"examplerootca.org\")" 
+err=rpc error: code = Unavailable desc = connection error: desc = "transport: authentication handshake failed: tls: failed to verify certificate: x509: certificate signed by unknown authority (possibly because of \"crypto/rsa: verification error\" while trying to verify candidate authority certificate \"examplerootca.org\")"
 ```
 
 - Ended up using the [script](https://github.com/grpc/grpc-go/blob/e853dbf004c343da4b8c6204524765ba6fbeef38/examples/data/x509/create.sh) that came with grpc-go itself
