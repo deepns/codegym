@@ -87,8 +87,55 @@
     - [x] grpcurl
     - [ ] openapi
 
-
 ## Daily log - attempt3
+
+### Day 4 - MongoDB replicaset
+
+Played around with mongodb replica set single node and multi node setup using docker.
+
+for the multi node setup, used a docker compose to spin up three mongo containers, connected by a bridge network with the following replica set config.
+
+```javascript
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "mongo1:27017" },
+    { _id: 1, host: "mongo2:27018" },
+    { _id: 2, host: "mongo3:27019" }
+  ]
+});
+```
+
+Initialized the replicaset followed by composing the containers, used the command `docker compose -f mongodb-replicaset.yml up -d && sleep 5 && mongosh "mongodb:
+//localhost:27017" < init-rs.js` with the replica set initiate command specified in init-rs.js
+
+```console
+ ✗ docker compose -f mongodb-replicaset.yml up -d && sleep 5 && mongosh "mongodb:
+//localhost:27017" < init-rs.js
+[+] Running 4/4
+ ✔ Network mongo-cluster  Created                                                                   0.0s
+ ✔ Container mongo1       Started                                                                   0.2s
+ ✔ Container mongo2       Started                                                                   0.2s
+ ✔ Container mongo3       Started                                                                   0.2s
+Current Mongosh Log ID: 66e785fd6e4fbb68522a524b
+Connecting to:          mongodb://localhost:27017/?directConnection=true&serverSelectionTimeoutMS=2000&ap
+pName=mongosh+2.3.1
+Using MongoDB:          7.0.14
+Using Mongosh:          2.3.1
+```
+
+after editing the `/etc/hosts` file to account for mongo1, mongo2 and mongo3, able to reach the replicaset from the host using mongosh with the connection string `"mongodb://localhost:27017,localhost:27018,localhost:27019/?replicaSet=rs0"`
+
+cleaned up the containers with `docker compose down`
+
+```console
+✗ docker compose -f mongodb-replicaset.yml down -v
+[+] Running 4/4
+ ✔ Container mongo1       Removed                                                                  10.3s 
+ ✔ Container mongo3       Removed                                                                  10.2s 
+ ✔ Container mongo2       Removed                                                                  10.2s 
+ ✔ Network mongo-cluster  Removed                                                                   0.1s
+```
 
 ### Day 3 - Running mongodb with docker locally
 
@@ -244,6 +291,25 @@ looks like I will need to use docker-compose and specify the below parameter.
     extra_hosts:
       - "host.docker.internal:host-gateway"
 ```
+
+The `extra_hosts` attribute in a Docker Compose file allows you to add additional hostnames to the container's `/etc/hosts` file.
+
+The syntax for `extra_hosts` is as follows:
+
+```yaml
+extra_hosts:
+    - hostname:IP
+```
+
+The `host.docker.internal:host-gateway` entry is a special value that allows the container to access the host machine's network stack. It resolves to the IP address of the Docker host from within a container.
+
+Use cases for `extra_hosts` include:
+
+1. Accessing services running on the host machine from within a container.
+2. Connecting to databases or other services running on the host machine.
+3. Testing and development scenarios where you need to simulate a network environment.
+
+By adding `host.docker.internal:host-gateway` to `extra_hosts`, you can easily access services running on the host machine without having to hardcode IP addresses or modify the container's network configuration.
 
 Found many references using this parameter
 
