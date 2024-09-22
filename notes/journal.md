@@ -89,6 +89,10 @@
 
 ## Daily log - attempt3
 
+### Day 5 - tqdm module in python
+
+Played around with tqdm in python. super quick way to show progress bar for an iterable processing.
+
 ### Day 4 - MongoDB replicaset
 
 Played around with mongodb replica set single node and multi node setup using docker.
