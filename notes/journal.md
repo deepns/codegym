@@ -89,6 +89,225 @@
 
 ## Daily log - attempt3
 
+## Day 6 - mongodb in kubernetes using minikube
+
+- Created a single node mongodb, with statically provisioned PV
+
+```console
+✗ kubectl apply -f mongo-single-node.yaml
+persistentvolume/mongodb-pv created
+persistentvolumeclaim/mongodb-pvc created
+statefulset.apps/mongodb created
+service/mongodb created
+
+✗ kubectl get all,pv,pvc -n mongodb-test
+NAME            READY   STATUS    RESTARTS   AGE
+pod/mongodb-0   1/1     Running   0          29s
+
+NAME              TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)     AGE
+service/mongodb   ClusterIP   None         <none>        27017/TCP   29s
+
+NAME                       READY   AGE
+statefulset.apps/mongodb   1/1     29s
+
+NAME                          CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                      STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+persistentvolume/mongodb-pv   1Gi        RWO            Delete           Bound    mongodb-test/mongodb-pvc   standard       <unset>                          29s
+
+NAME                                STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/mongodb-pvc   Bound    mongodb-pv   1Gi        RWO            standard       <unset>                 29s
+
+✗ kubectl exec -it mongodb-0 -n mongodb-test -- mongosh --eval "db.hello()"
+{
+  isWritablePrimary: true,
+  topologyVersion: {
+    processId: ObjectId('66f0154e4e630ac135628d18'),
+    counter: Long('0')
+  },
+  maxBsonObjectSize: 16777216,
+  maxMessageSizeBytes: 48000000,
+  maxWriteBatchSize: 100000,
+  localTime: ISODate('2024-09-22T13:04:22.028Z'),
+  logicalSessionTimeoutMinutes: 30,
+  connectionId: 10,
+  minWireVersion: 0,
+  maxWireVersion: 25,
+  readOnly: false,
+  ok: 1
+}
+
+✗ kubectl exec -it mongodb-0 -n mongodb-test -- mongosh                       
+Current Mongosh Log ID: 66f0169d711c26d7cb1681ec
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1
+Using MongoDB:          8.0.0
+Using Mongosh:          2.3.1
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+test> show dbs
+admin   40.00 KiB
+config  60.00 KiB
+local   40.00 KiB
+test>
+```
+
+Deleted the resources
+
+```console
+✗ kubectl delete -f mongo-single-node.yaml             
+persistentvolume "mongodb-pv" deleted
+persistentvolumeclaim "mongodb-pvc" deleted
+statefulset.apps "mongodb" deleted
+service "mongodb" deleted
+✗ kubectl get all,pv,pvc -n mongodb-test  
+No resources found
+```
+
+- Created a single node replicaset, with dynamically provisioned PVCs.
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: mongodb-test
+spec:
+  serviceName: mongodb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo
+          ports:
+            - containerPort: 27017
+          command: ["mongod", "--replSet", "rs0", "--port", "27017", "--bind_ip_all"]
+          volumeMounts:
+            - name: mongodb-data
+              mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongodb-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+        storageClassName: standard
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: mongodb-test
+spec:
+  clusterIP: None
+  selector:
+    app: mongodb
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+```
+
+Created the resources.
+
+```console
+✗ kubectl apply -f mongo-single-node-replset.yaml
+statefulset.apps/mongodb created
+service/mongodb created
+
+✗ kubectl get all,pv,pvc -n mongodb-test         
+NAME            READY   STATUS    RESTARTS   AGE
+pod/mongodb-0   1/1     Running   0          4s
+
+NAME              TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)     AGE
+service/mongodb   ClusterIP   None         <none>        27017/TCP   4s
+
+NAME                       READY   AGE
+statefulset.apps/mongodb   1/1     4s
+
+NAME                                                        CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                                 STORAGECLASS   VOLUMEATTRIBUTESCLASS   REASON   AGE
+persistentvolume/pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90   1Gi        RWO            Delete           Bound    mongodb-test/mongodb-data-mongodb-0   standard       <unset>                          4s
+
+NAME                                           STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+persistentvolumeclaim/mongodb-data-mongodb-0   Bound    pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90   1Gi        RWO            standard       <unset>                 4s
+```
+
+PV and PVCs are dynamically provisioned with type `HostPath` by minikube
+
+```console
+ ✗ kubectl describe persistentvolume/pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90 -n mongodb-test           
+Name:            pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90
+Labels:          <none>
+Annotations:     hostPathProvisionerIdentity: 151ae896-829e-49bf-b1df-dd36d11ac073
+                 pv.kubernetes.io/provisioned-by: k8s.io/minikube-hostpath
+Finalizers:      [kubernetes.io/pv-protection]
+StorageClass:    standard
+Status:          Bound
+Claim:           mongodb-test/mongodb-data-mongodb-0
+Reclaim Policy:  Delete
+Access Modes:    RWO
+VolumeMode:      Filesystem
+Capacity:        1Gi
+Node Affinity:   <none>
+Message:         
+Source:
+    Type:          HostPath (bare host directory volume)
+    Path:          /tmp/hostpath-provisioner/mongodb-test/mongodb-data-mongodb-0
+    HostPathType:  
+Events:            <none>
+```
+
+Enabled port forward to reach the pod fro the local host
+
+```console
+ ✗ kubectl port-forward -n mongodb-test pod/mongodb-0 27017:27017                            
+Forwarding from 127.0.0.1:27017 -> 27017
+Forwarding from [::1]:27017 -> 27017
+
+~ mongosh "mongodb://localhost:27017/?replicaSet=rs0" --eval "rs.conf()"  
+{
+  _id: 'rs0',
+  version: 1,
+  term: 2,
+  members: [
+    {
+      _id: 0,
+      host: 'localhost:27017',
+      arbiterOnly: false,
+      buildIndexes: true,
+      hidden: false,
+      priority: 1,
+      tags: {},
+      secondaryDelaySecs: Long('0'),
+      votes: 1
+    }
+  ],
+  protocolVersion: Long('1'),
+  writeConcernMajorityJournalDefault: true,
+  settings: {
+    chainingAllowed: true,
+    heartbeatIntervalMillis: 2000,
+    heartbeatTimeoutSecs: 10,
+    electionTimeoutMillis: 10000,
+    catchUpTimeoutMillis: -1,
+    catchUpTakeoverDelayMillis: 30000,
+    getLastErrorModes: {},
+    getLastErrorDefaults: { w: 1, wtimeout: 0 },
+    replicaSetId: ObjectId('66f014234d59d84420312be1')
+  }
+}
+```
+
 ### Day 5 - tqdm module in python
 
 Played around with tqdm in python. super quick way to show progress bar for an iterable processing.
@@ -135,9 +354,9 @@ cleaned up the containers with `docker compose down`
 ```console
 ✗ docker compose -f mongodb-replicaset.yml down -v
 [+] Running 4/4
- ✔ Container mongo1       Removed                                                                  10.3s 
- ✔ Container mongo3       Removed                                                                  10.2s 
- ✔ Container mongo2       Removed                                                                  10.2s 
+ ✔ Container mongo1       Removed                                                                  10.3s
+ ✔ Container mongo3       Removed                                                                  10.2s
+ ✔ Container mongo2       Removed                                                                  10.2s
  ✔ Network mongo-cluster  Removed                                                                   0.1s
 ```
 
@@ -286,7 +505,7 @@ For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
    2024-09-10T02:42:06.399+00:00: vm.max_map_count is too low
 ------
 
-rs0 [primary] test> 
+rs0 [primary] test>
 ```
 
 looks like I will need to use docker-compose and specify the below parameter.
