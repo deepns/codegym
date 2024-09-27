@@ -89,6 +89,200 @@
 
 ## Daily log - attempt3
 
+## Day 9 - creating a 3 node mongodb replicaset, with 2 data and an arbiter (PSA architecture)
+
+Created a 3 node replica set using this [spec file](../mongodb/k8s/mongo-multinode-replset.yaml)
+
+Started the stateful set with three pods.
+
+```console
+✗ kubectl get pods -n mongodb-test-multinode
+NAME        READY   STATUS    RESTARTS   AGE
+mongodb-0   1/1     Running   0          13s
+mongodb-1   1/1     Running   0          9s
+mongodb-2   1/1     Running   0          6s
+```
+
+Created a replica set with 2 nodes.
+
+```console
+✗ kubectl exec -it mongodb-0 -n mongodb-test-multinode -- mongosh --eval 'rs.initiate({
+_id: "rs0",
+members: [
+  {_id:0, host: "mongodb-0.mongodb:27017"},
+  {_id:1, host: "mongodb-1.mongodb:27017"}
+]
+})'
+
+rs0 [direct: secondary] test> const status = rs.status();
+
+rs0 [direct: secondary] test> status.members.forEach(member => {
+...   print(`Name: ${member.name}, State: ${member.stateStr}`);
+... });
+Name: mongodb-0.mongodb:27017, State: SECONDARY
+Name: mongodb-1.mongodb:27017, State: PRIMARY
+```
+
+Adding the arbiter
+
+```console
+rs0 [direct: primary] test> db.adminCommand({
+...   setDefaultRWConcern: 1,
+...   defaultWriteConcern: { w: "majority", wtimeout: 0 }
+... })
+{
+  defaultReadConcern: { level: 'local' },
+  defaultWriteConcern: { w: 'majority', wtimeout: 0 },
+  updateOpTime: Timestamp({ t: 1727458419, i: 1 }),
+  updateWallClockTime: ISODate('2024-09-27T17:33:46.471Z'),
+  defaultWriteConcernSource: 'global',
+  defaultReadConcernSource: 'implicit',
+  localUpdateWallClockTime: ISODate('2024-09-27T17:33:46.481Z'),
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1727458426, i: 2 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1727458426, i: 2 })
+}
+rs0 [direct: primary] test> rs.addArb('mongodb-2.mongodb:27017')
+{
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1727458432, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1727458432, i: 1 })
+}
+
+rs0 [direct: primary] test> const status = rs.status();
+
+rs0 [direct: primary] test> status.members.forEach(member => {
+...   print(`Name: ${member.name}, State: ${member.stateStr}`);
+... });
+Name: mongodb-0.mongodb:27017, State: SECONDARY
+Name: mongodb-1.mongodb:27017, State: PRIMARY
+Name: mongodb-2.mongodb:27017, State: ARBITER
+
+```
+
+While this worked good, having the writeConcern as `majority` can cause performance issues when the secondary node goes down. See [this page](https://www.mongodb.com/docs/v5.1/tutorial/mitigate-psa-performance-issues/#std-label-performance-issues-psa) and [this page](https://www.mongodb.com/docs/v5.1/tutorial/add-replica-set-arbiter/). So setting the default writeConcern to 1.
+
+```console
+rs0 [direct: primary] test> db.adminCommand({
+... setDefaultRWConcern:1,
+... defaultWriteConcern: { w: 1}
+... })
+{
+  defaultReadConcern: { level: 'local' },
+  defaultWriteConcern: { w: 1, wtimeout: 0 },
+  updateOpTime: Timestamp({ t: 1727471057, i: 1 }),
+  updateWallClockTime: ISODate('2024-09-27T21:04:26.965Z'),
+  defaultWriteConcernSource: 'global',
+  defaultReadConcernSource: 'implicit',
+  localUpdateWallClockTime: ISODate('2024-09-27T21:04:26.967Z'),
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1727471066, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1727471066, i: 1 })
+}
+rs0 [direct: primary] test> 
+
+rs0 [direct: primary] test> rs.status().members.forEach(member => {
+...   print(`Name: ${member.name}, State: ${member.stateStr}`);
+... });
+Name: mongodb-0.mongodb:27017, State: SECONDARY
+Name: mongodb-1.mongodb:27017, State: PRIMARY
+Name: mongodb-2.mongodb:27017, State: ARBITER
+
+```
+
+ 'rs.initiate({
+_id: "rs0",
+members: [
+  {_id:0, host: "mongodb-replicaset-0.mongodb-svc:27017"},
+  {_id:1, host: "mongodb-replicaset-1.mongodb-svc:27017"}
+]
+})'
+
+## Day 8 - creating a 3 node mongodb replicaset
+
+Created a 3 pod replicaset using this [spec file](../mongodb/k8s/mongo-multinode-replset.yaml)
+
+Initialized the replica set as below.
+
+```console
+✗ kubectl exec -it mongodb-0 -n mongodb-test-multinode -- mongosh --eval 'rs.initiate({
+_id: "rs0",
+members: [
+  {_id:0, host: "mongodb-0.mongodb:27017"},
+  {_id:1, host: "mongodb-1.mongodb:27017"},
+  {_id:2, host: "mongodb-2.mongodb:27017"}
+]
+})'
+{
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1727457187, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1727457187, i: 1 })
+}
+
+rs0 [direct: primary] test> const status = rs.status();
+
+rs0 [direct: primary] test> status.members.forEach(member => {
+...   print(`Name: ${member.name}, State: ${member.stateStr}`);
+... });
+Name: mongodb-0.mongodb:27017, State: PRIMARY
+Name: mongodb-1.mongodb:27017, State: SECONDARY
+Name: mongodb-2.mongodb:27017, State: SECONDARY
+
+rs0 [direct: primary] test> db.adminCommand({getDefaultRWConcern: 1})
+{
+  defaultReadConcern: { level: 'local' },
+  defaultWriteConcern: { w: 'majority', wtimeout: 0 },
+  defaultWriteConcernSource: 'implicit',
+  defaultReadConcernSource: 'implicit',
+  localUpdateWallClockTime: ISODate('2024-09-27T17:19:24.382Z'),
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1727457558, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1727457558, i: 1 })
+}
+```
+
+1. defaultReadConcern: { level: 'local' }
+
+Read Concern: Determines the level of isolation for read operations. It specifies the consistency and isolation properties of the data being read.
+level: 'local': This setting means that the query returns the instance’s most recent data. It does not guarantee that the data has been written to a majority of the replica set members (i.e., it could be rolled back). This is the default read concern level and is suitable for scenarios where eventual consistency is acceptable.
+
+2. defaultWriteConcern: { w: 'majority', wtimeout: 0 }
+
+Write Concern: Specifies the level of acknowledgment requested from MongoDB for write operations to return a success status.
+w: 'majority': This ensures that write operations return successfully only after the data has been written to the majority of the nodes in the replica set, including the primary node. It provides a stronger consistency guarantee by ensuring that written data can be read by subsequent read operations (assuming the same or stronger read concern level). This setting helps prevent data loss by ensuring that more than one node has the data before considering the operation successful.
+wtimeout: 0: Specifies the time limit, in milliseconds, for the write concern to be satisfied. A value of 0 means there is no time limit, so the write operation will wait indefinitely until the write concern is satisfied. This can be useful to ensure data durability but may lead to operations hanging if the requested write concern cannot be satisfied due to, for example, a network partition or downed nodes.
+
+
 ## Day 7 - using service, connecting to mongo from another pod
 
 Created a job to spin a new client
@@ -196,7 +390,7 @@ persistentvolumeclaim/mongodb-pvc   Bound    mongodb-pv   1Gi        RWO        
   ok: 1
 }
 
-✗ kubectl exec -it mongodb-0 -n mongodb-test -- mongosh                       
+✗ kubectl exec -it mongodb-0 -n mongodb-test -- mongosh
 Current Mongosh Log ID: 66f0169d711c26d7cb1681ec
 Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.1
 Using MongoDB:          8.0.0
@@ -214,12 +408,12 @@ test>
 Deleted the resources
 
 ```console
-✗ kubectl delete -f mongo-single-node.yaml             
+✗ kubectl delete -f mongo-single-node.yaml
 persistentvolume "mongodb-pv" deleted
 persistentvolumeclaim "mongodb-pvc" deleted
 statefulset.apps "mongodb" deleted
 service "mongodb" deleted
-✗ kubectl get all,pv,pvc -n mongodb-test  
+✗ kubectl get all,pv,pvc -n mongodb-test
 No resources found
 ```
 
@@ -286,7 +480,7 @@ Created the resources.
 statefulset.apps/mongodb created
 service/mongodb created
 
-✗ kubectl get all,pv,pvc -n mongodb-test         
+✗ kubectl get all,pv,pvc -n mongodb-test
 NAME            READY   STATUS    RESTARTS   AGE
 pod/mongodb-0   1/1     Running   0          4s
 
@@ -306,7 +500,7 @@ persistentvolumeclaim/mongodb-data-mongodb-0   Bound    pvc-e8e0579f-ca8c-46f3-9
 PV and PVCs are dynamically provisioned with type `HostPath` by minikube
 
 ```console
- ✗ kubectl describe persistentvolume/pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90 -n mongodb-test           
+ ✗ kubectl describe persistentvolume/pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90 -n mongodb-test
 Name:            pvc-e8e0579f-ca8c-46f3-9c3d-097fffd7dd90
 Labels:          <none>
 Annotations:     hostPathProvisionerIdentity: 151ae896-829e-49bf-b1df-dd36d11ac073
@@ -320,22 +514,22 @@ Access Modes:    RWO
 VolumeMode:      Filesystem
 Capacity:        1Gi
 Node Affinity:   <none>
-Message:         
+Message:
 Source:
     Type:          HostPath (bare host directory volume)
     Path:          /tmp/hostpath-provisioner/mongodb-test/mongodb-data-mongodb-0
-    HostPathType:  
+    HostPathType:
 Events:            <none>
 ```
 
 Enabled port forward to reach the pod fro the local host
 
 ```console
- ✗ kubectl port-forward -n mongodb-test pod/mongodb-0 27017:27017                            
+ ✗ kubectl port-forward -n mongodb-test pod/mongodb-0 27017:27017
 Forwarding from 127.0.0.1:27017 -> 27017
 Forwarding from [::1]:27017 -> 27017
 
-~ mongosh "mongodb://localhost:27017/?replicaSet=rs0" --eval "rs.conf()"  
+~ mongosh "mongodb://localhost:27017/?replicaSet=rs0" --eval "rs.conf()"
 {
   _id: 'rs0',
   version: 1,
