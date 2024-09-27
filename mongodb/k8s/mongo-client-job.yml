@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-list-databases
+  namespace: mongodb-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: mongodb-client
+        image: mongo
+        command: ["mongosh", "mongodb://mongodb.mongodb-test.svc.cluster.local:27017", "--eval", "db.adminCommand('listDatabases')"]
+      restartPolicy: Never
+  backoffLimit: 4

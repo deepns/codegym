@@ -89,6 +89,67 @@
 
 ## Daily log - attempt3
 
+## Day 7 - using service, connecting to mongo from another pod
+
+Created a job to spin a new client
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-list-databases
+  namespace: mongodb-test
+spec:
+  template:
+    spec:
+      containers:
+      - name: mongodb-client
+        image: mongo
+        command: ["mongosh", "mongodb://mongodb.mongodb-test.svc.cluster.local:27017", "--eval", "db.adminCommand('listDatabases')"]
+      restartPolicy: Never
+  backoffLimit: 4
+```
+
+- Applied the spec
+
+```console
+✗ kubectl apply -f mongo-client-job.yml
+job.batch/mongodb-list-databases created
+✗ kubectl get pods -n mongodb-test
+NAME                           READY   STATUS    RESTARTS   AGE
+mongodb-0                      1/1     Running   0          19m
+mongodb-list-databases-rz9qt   1/1     Running   0          2s
+✗ kubectl get pods -n mongodb-test
+NAME                           READY   STATUS      RESTARTS   AGE
+mongodb-0                      1/1     Running     0          19m
+mongodb-list-databases-rz9qt   0/1     Completed   0          3s
+
+```
+
+Got the logs from the pod
+
+```console
+✗ kubectl logs mongodb-list-databases-rz9qt -n mongodb-test
+{
+  databases: [
+    { name: 'admin', sizeOnDisk: Long('81920'), empty: false },
+    { name: 'config', sizeOnDisk: Long('180224'), empty: false },
+    { name: 'local', sizeOnDisk: Long('450560'), empty: false }
+  ],
+  totalSize: Long('712704'),
+  totalSizeMb: Long('0'),
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1727011778, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1727011778, i: 1 })
+}
+```
+
 ## Day 6 - mongodb in kubernetes using minikube
 
 - Created a single node mongodb, with statically provisioned PV
