@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowflake-service
+spec:
+  replicas: 2  # Simulate 10 pods
+  selector:
+    matchLabels:
+      app: snowflake-service
+  template:
+    metadata:
+      labels:
+        app: snowflake-service
+    spec:
+      containers:
+      - name: snowflake-service
+        image: snowflakeidgen:latest
+        imagePullPolicy: IfNotPresent # Important!
+        env:
+        - name: MACHINE_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name  # Assign unique IDs using pod names
+        - name: MONGO_URI
+          value: "mongodb-0.mongodb-test:27017"
+        - name: BATCH_SIZE
+          value: "10000"
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        ports:
+        - containerPort: 8080
