@@ -87,8 +87,38 @@
     - [x] grpcurl
     - [ ] openapi
 
-## Daily log - attempt3
+## 2025
 
+### Jan
+
+- Created a snowflakeid app. tried to run it in my docker
+
+spin up mongo
+
+```bash
+docker run -p 27017:27017 -d --name mongo --hostname mongo mongo:latest --replSet rs0
+```
+
+intialize replicaset
+
+```javascript
+rs.initiate({ _id: "rs0", members: [ { _id: 0, host: "mongo:27017" } ] })
+```
+
+run snowflakeid app
+
+```console
+✗ docker run --link mongo --name snowflakeidgen --rm snowflakeidgen
+Generated and inserted 10000 IDs.
+```
+
+learnt that we can use `--link` option to link two containers, without having to create a new custom network between them.
+
+next:
+
+- set up a docker compose to spin up multiple apps
+
+## Daily log - attempt3
 
 ## Day 10 - Deploying a kafka cluster locally on minikube
 
