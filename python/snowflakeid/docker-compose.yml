@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  app1:
+    image: snowflakeidgen
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - MACHINE_ID=1
+    depends_on:
+      - mongo
+
+  app2:
+    image: snowflakeidgen
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - MACHINE_ID=2
+    depends_on:
+      - mongo
+
+  app3:
+    image: snowflakeidgen
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/
+      - MACHINE_ID=3
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_data:

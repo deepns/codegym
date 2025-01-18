@@ -118,6 +118,8 @@ next:
 
 - set up a docker compose to spin up multiple apps
 
+added docker compose file to spin up mongo and apps.
+
 ## Daily log - attempt3
 
 ## Day 10 - Deploying a kafka cluster locally on minikube
