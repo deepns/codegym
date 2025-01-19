@@ -1,8 +1,7 @@
 import os
 import time
 from pymongo import MongoClient
-
-
+from pymongo.errors import DuplicateKeyError
 
 class SnowflakeIDGenerator:
     """
@@ -63,6 +62,9 @@ for i in range(batch_size):
         "pod": os.getenv("HOSTNAME", "unknown"),
         "timestamp": time.time()
     }
-    collection.insert_one(document)
+    try:
+        collection.insert_one(document)
+    except DuplicateKeyError:
+        print(f"Document with _id {document['_id']} already exists.")
 
 print(f"Generated and inserted {batch_size} IDs.")
