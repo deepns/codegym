@@ -91,6 +91,90 @@
 
 ### Jan
 
+#### 01/26/25 21:13
+
+- Learning about Helm chart. Tried create a helloword chart using `helm create helloworld`. It created the deployment and a service for nginx, default files shown below.
+
+```console
+.
+├── Chart.yaml
+├── charts
+├── templates
+│   ├── NOTES.txt
+│   ├── _helpers.tpl
+│   ├── deployment.yaml
+│   ├── hpa.yaml
+│   ├── ingress.yaml
+│   ├── service.yaml
+│   ├── serviceaccount.yaml
+│   └── tests
+│       └── test-connection.yaml
+└── values.yaml
+
+4 directories, 10 files
+```
+
+- charts/: Directory for any dependent charts.
+- templates/: Directory containing Kubernetes manifest templates.
+- deployment.yaml: Template for a Kubernetes Deployment.
+- service.yaml: Template for a Kubernetes Service.
+- _helpers.tpl: Template helpers file.
+- NOTES.txt: Instructions displayed after installing the chart.
+- Chart.yaml: Metadata about the chart (name, version, description).
+- values.yaml: Default configuration values for the chart.
+- README.md: Basic information about the chart.
+- .helmignore: Specifies files to be ignored when packaging the chart.
+
+- Updated service type of NodePort in [values.yaml](../helm/helloworld/values.yaml)
+- Installed the release
+
+```console
+(.venv) ➜  helm git:(code2025q1) ✗ helm install my-helloworld helloworld
+NAME: my-helloworld
+LAST DEPLOYED: Sun Jan 26 21:38:48 2025
+NAMESPACE: default
+STATUS: deployed
+REVISION: 1
+NOTES:
+1. Get the application URL by running these commands:
+  export NODE_PORT=$(kubectl get --namespace default -o jsonpath="{.spec.ports[0].nodePort}" services my-helloworld-deepn-helloworld)
+  export NODE_IP=$(kubectl get nodes --namespace default -o jsonpath="{.items[0].status.addresses[0].address}")
+  echo http://$NODE_IP:$NODE_PORT
+(.venv) ➜  helm git:(code2025q1) ✗ k get pods
+NAME                                              READY   STATUS    RESTARTS   AGE
+my-helloworld-deepn-helloworld-85d69c697f-7rvc5   1/1     Running   0          23s
+(.venv) ➜  helm git:(code2025q1) ✗ helm list
+NAME            NAMESPACE       REVISION        UPDATED                                 STATUS          CHART                   APP VERSION
+my-helloworld   default         1               2025-01-26 21:38:48.652979 -0500 EST    deployed        deepn-helloworld-0.1.0  1.16.0
+```
+
+- had some trouble accessing the nodeport service running in minikube. turns out that i had to expose the service specifically via `minikube service` or via nodeport since minikube itself is a container running in docker.
+- excerpt from [SO thread](https://stackoverflow.com/questions/76298298/kubernetes-nodeport-on-minikube-not-accessible-from-outside)
+
+>Services of type NodePort can be exposed via the minikube service --url command. It must be run in a separate terminal window to keep the tunnel open. Ctrl-C in the terminal can be used to terminate the process at which time the network routes will be cleaned up.
+
+```console
+➜  codegym git:(code2025q1) ✗ minikube service my-helloworld-deepn-helloworld --url
+http://127.0.0.1:64000
+❗  Because you are using a Docker driver on darwin, the terminal needs to be open to run it.
+^C%
+➜  codegym git:(code2025q1) ✗ k port-forward svc/my-helloworld-deepn-helloworld :80
+Forwarding from 127.0.0.1:64016 -> 80
+Forwarding from [::1]:64016 -> 80
+Handling connection for 64016
+^C%
+```
+
+- wanted to restart minikube in vm mode, so tried installing hyperkit as per instructions from [this page](https://minikube.sigs.k8s.io/docs/drivers/). Turned out that HyperKit is not supported on apple silicon. can try with qemu.
+- tried with qemu. even that requires port forwarding. The IP allocated is within the local network, and there are some networking restrictions as well (no tunnel or service support)
+
+- what next?
+  - create a sample python application - some parameters configured through environment variables
+  - install via helm
+  - have dev, prod and test version of the release
+
+#### 01/18/25 11:13
+
 - Created a snowflakeid app. tried to run it in my docker
 
 spin up mongo
@@ -127,24 +211,24 @@ added docker compose file to spin up mongo and apps.
 Following the instructions from [this page](https://www.strangeleaflet.com/blog/running-kafka-locally-in-kubernetes-using-minikube), installed helm and installed a kafka cluster. kafka service and pods were up. But the client had some trouble connecting to the service due to authentication issues.
 
 ```console
-➜  ~ helm install my-kafka bitnami/kafka 
+➜  ~ helm install my-kafka bitnami/kafka
 NAME: my-kafka
-LAST DEPLOYED: Sun Oct 13 14:58:04 2024 
-NAMESPACE: default                                                             
-STATUS: deployed                                                                                                                                               REVISION: 1                                                                                                                                                    
-TEST SUITE: None        
+LAST DEPLOYED: Sun Oct 13 14:58:04 2024
+NAMESPACE: default
+STATUS: deployed                                                                                                                                               REVISION: 1
+TEST SUITE: None
 NOTES:
 CHART NAME: kafka
-CHART VERSION: 30.1.5              
-APP VERSION: 3.8.0                                                             
-                                                                               
+CHART VERSION: 30.1.5
+APP VERSION: 3.8.0
+
 ** Please be patient while the chart is being deployed **
-                                       
+
 Kafka can be accessed by consumers via port 9092 on the following DNS name from within your cluster:
-                                                                                                                                                                   my-kafka.default.svc.cluster.local                                         
-                                       
+                                                                                                                                                                   my-kafka.default.svc.cluster.local
+
 Each Kafka broker can be accessed by producers via port 9092 on the following DNS name(s) from within your cluster:
-                                       
+
     my-kafka-controller-0.my-kafka-controller-headless.default.svc.cluster.local:9092
     my-kafka-controller-1.my-kafka-controller-headless.default.svc.cluster.local:9092
     my-kafka-controller-2.my-kafka-controller-headless.default.svc.cluster.local:9092
@@ -183,7 +267,7 @@ default.svc.cluster.local:9092,my-kafka-controller-2.my-kafka-controller-headles
 WARNING: There are "resources" sections in the chart not set. Using "resourcesPreset" is not recommended for production. For production installations, please s
 et the following values according to your workload needs:
   - controller.resources
-+info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/    
++info https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
 ```
 
 authentication failures from the client.
@@ -304,7 +388,7 @@ rs0 [direct: primary] test> db.adminCommand({
   },
   operationTime: Timestamp({ t: 1727471066, i: 1 })
 }
-rs0 [direct: primary] test> 
+rs0 [direct: primary] test>
 
 rs0 [direct: primary] test> rs.status().members.forEach(member => {
 ...   print(`Name: ${member.name}, State: ${member.stateStr}`);
