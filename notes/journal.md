@@ -91,6 +91,10 @@
 
 ### Jan
 
+#### 01/27/25 22:39
+
+- Tried creating a simple todo application from scratch. Added the source, basic templates and helm chart. Haven't tested any of them, feeling so sleep. will try the deployment tomorrow.
+
 #### 01/26/25 21:13
 
 - Learning about Helm chart. Tried create a helloword chart using `helm create helloworld`. It created the deployment and a service for nginx, default files shown below.
