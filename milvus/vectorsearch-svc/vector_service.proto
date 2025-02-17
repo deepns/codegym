@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package vector_service;
+option go_package = "github.com/deepns/codegym/milvus/vectorsearch-svc/proto";
+
+service VectorService {
+  rpc InsertVector (InsertVectorRequest) returns (InsertVectorResponse);
+  rpc SearchVector (SearchVectorRequest) returns (SearchVectorResponse);
+}
+
+message InsertVectorRequest {
+  int64 id = 1;
+  repeated float embedding = 2;
+}
+
+message InsertVectorResponse {
+  bool success = 1;
+}
+
+message SearchVectorRequest {
+  repeated float embedding = 1;
+  int32 top_k = 2;
+}
+
+message SearchVectorResponse {
+  repeated SearchResult results = 1;
+}
+
+message SearchResult {
+  int64 id = 1;
+  float distance = 2;
+}
