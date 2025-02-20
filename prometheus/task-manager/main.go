@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"sync"
 	"time"
@@ -114,5 +115,6 @@ func main() {
 	http.HandleFunc("/tasks/delete", deleteTaskHandler)
 
 	// Start server
+	log.Println("Server started at :8080")
 	http.ListenAndServe(":8080", nil)
 }
