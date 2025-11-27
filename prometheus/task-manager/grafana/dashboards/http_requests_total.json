@@ -1,0 +1,55 @@
+{
+  "id": null,
+  "uid": "http-requests-total",
+  "title": "HTTP Requests",
+  "tags": ["metrics"],
+  "timezone": "",
+  "schemaVersion": 30,
+  "version": 1,
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "http_requests_total (rate)",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (endpoint) (rate(http_requests_total[1m]))",
+          "legendFormat": "{{endpoint}}",
+          "refId": "A"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 8 },
+      "id": 1
+    },
+    {
+      "type": "stat",
+      "title": "Requests (increase, 5m) by endpoint",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (endpoint) (increase(http_requests_total[5m]))",
+          "legendFormat": "{{endpoint}}",
+          "refId": "B"
+        }
+      ],
+      "gridPos": { "x": 0, "y": 8, "w": 8, "h": 5 },
+      "id": 2
+    },
+    {
+      "type": "timeseries",
+      "title": "Total requests (counter) by endpoint",
+      "datasource": "Prometheus",
+      "targets": [
+        {
+          "expr": "sum by (endpoint) (http_requests_total)",
+          "legendFormat": "{{endpoint}}",
+          "refId": "C"
+        }
+      ],
+      "gridPos": { "x": 8, "y": 8, "w": 16, "h": 5 },
+      "id": 3
+    }
+  ],
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" }
+}

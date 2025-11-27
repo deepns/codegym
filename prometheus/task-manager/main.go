@@ -139,8 +139,8 @@ func main() {
 	// Define routes
 	http.Handle("/metrics", promhttp.Handler())
 	http.Handle("/tasks", metricsMiddleware("/tasks", http.HandlerFunc(listTasksHandler)))
-	http.Handle("/tasks/create", metricsMiddleware("/tasks", http.HandlerFunc(createTaskHandler)))
-	http.Handle("/tasks/delete", metricsMiddleware("/tasks", http.HandlerFunc(deleteTaskHandler)))
+	http.Handle("/tasks/create", metricsMiddleware("/tasks/create", http.HandlerFunc(createTaskHandler)))
+	http.Handle("/tasks/delete", metricsMiddleware("/tasks/delete", http.HandlerFunc(deleteTaskHandler)))
 
 	// Start server
 	log.Println("Server started at :8080")
