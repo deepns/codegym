@@ -12,6 +12,17 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+// statusRecorder wraps http.ResponseWriter to capture response status code
+type statusRecorder struct {
+	http.ResponseWriter
+	status int
+}
+
+func (r *statusRecorder) WriteHeader(code int) {
+	r.status = code
+	r.ResponseWriter.WriteHeader(code)
+}
+
 type Task struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
@@ -46,12 +57,18 @@ var (
 			Help: "Current number of active tasks",
 		},
 	)
+
+	// Error counter by HTTP status code
+	httpErrors = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "http_errors_total",
+			Help: "Total number of HTTP errors by status code",
+		},
+		[]string{"method", "endpoint", "status"},
+	)
 )
 
 func createTaskHandler(w http.ResponseWriter, r *http.Request) {
-	start := time.Now()
-	httpRequests.WithLabelValues("POST", "/tasks").Inc()
-
 	taskMutex.Lock()
 	defer taskMutex.Unlock()
 
@@ -62,27 +79,17 @@ func createTaskHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(task)
-
-	requestDuration.WithLabelValues("POST", "/tasks").Observe(time.Since(start).Seconds())
 }
 
 func listTasksHandler(w http.ResponseWriter, r *http.Request) {
-	start := time.Now()
-	httpRequests.WithLabelValues("GET", "/tasks").Inc()
-
 	taskMutex.Lock()
 	defer taskMutex.Unlock()
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(tasks)
-
-	requestDuration.WithLabelValues("GET", "/tasks").Observe(time.Since(start).Seconds())
 }
 
 func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
-	start := time.Now()
-	httpRequests.WithLabelValues("DELETE", "/tasks").Inc()
-
 	taskMutex.Lock()
 	defer taskMutex.Unlock()
 
@@ -98,8 +105,6 @@ func deleteTaskHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("No tasks found"))
 	}
-
-	requestDuration.WithLabelValues("DELETE", "/tasks").Observe(time.Since(start).Seconds())
 }
 
 func main() {
@@ -107,12 +112,35 @@ func main() {
 	prometheus.MustRegister(httpRequests)
 	prometheus.MustRegister(requestDuration)
 	prometheus.MustRegister(activeTasks)
+	prometheus.MustRegister(httpErrors)
+
+	// Define metrics middleware
+	metricsMiddleware := func(endpoint string, next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			start := time.Now()
+
+			// default status 200 in case handler doesn't call WriteHeader explicitly
+			rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
+
+			next.ServeHTTP(rec, r)
+
+			method := r.Method
+			// record request count and duration
+			httpRequests.WithLabelValues(method, endpoint).Inc()
+			requestDuration.WithLabelValues(method, endpoint).Observe(time.Since(start).Seconds())
+
+			// record errors (status >= 400)
+			if rec.status >= 400 {
+				httpErrors.WithLabelValues(method, endpoint, fmt.Sprint(rec.status)).Inc()
+			}
+		})
+	}
 
 	// Define routes
 	http.Handle("/metrics", promhttp.Handler())
-	http.HandleFunc("/tasks", listTasksHandler)
-	http.HandleFunc("/tasks/create", createTaskHandler)
-	http.HandleFunc("/tasks/delete", deleteTaskHandler)
+	http.Handle("/tasks", metricsMiddleware("/tasks", http.HandlerFunc(listTasksHandler)))
+	http.Handle("/tasks/create", metricsMiddleware("/tasks", http.HandlerFunc(createTaskHandler)))
+	http.Handle("/tasks/delete", metricsMiddleware("/tasks", http.HandlerFunc(deleteTaskHandler)))
 
 	// Start server
 	log.Println("Server started at :8080")
