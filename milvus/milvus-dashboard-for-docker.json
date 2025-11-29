@@ -1,0 +1,242 @@
+{
+    "uid": "milvus-docker",
+    "title": "Milvus Docker Metrics",
+    "tags": [
+        "milvus",
+        "docker"
+    ],
+    "timezone": "browser",
+    "schemaVersion": 38,
+    "version": 1,
+    "refresh": "10s",
+    "panels": [
+        {
+            "type": "stat",
+            "title": "Total Search Vectors (by Collection)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum by (collection_name) (milvus_proxy_search_vectors_count)",
+                    "legendFormat": "{{collection_name}}",
+                    "refId": "A"
+                }
+            ],
+            "id": 1,
+            "gridPos": {
+                "x": 0,
+                "y": 0,
+                "w": 8,
+                "h": 4
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Search Vectors Rate (by Collection)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum by (collection_name) (rate(milvus_proxy_search_vectors_count[1m]))",
+                    "legendFormat": "{{collection_name}}",
+                    "refId": "B"
+                }
+            ],
+            "id": 2,
+            "gridPos": {
+                "x": 8,
+                "y": 0,
+                "w": 16,
+                "h": 8
+            }
+        },
+        {
+            "type": "stat",
+            "title": "Total Insert Vectors (by Collection)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum by (collection_name) (milvus_proxy_insert_vectors_count)",
+                    "legendFormat": "{{collection_name}}",
+                    "refId": "C"
+                }
+            ],
+            "id": 3,
+            "gridPos": {
+                "x": 0,
+                "y": 4,
+                "w": 8,
+                "h": 4
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Insert Vectors Rate (by Collection)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum by (collection_name) (rate(milvus_proxy_insert_vectors_count[1m]))",
+                    "legendFormat": "{{collection_name}}",
+                    "refId": "D"
+                }
+            ],
+            "id": 4,
+            "gridPos": {
+                "x": 8,
+                "y": 8,
+                "w": 16,
+                "h": 8
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Slow Query Count (1m)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "increase(milvus_proxy_slow_query_count[1m])",
+                    "legendFormat": "{{node_id}}",
+                    "refId": "A"
+                }
+            ],
+            "id": 5,
+            "gridPos": {
+                "x": 0,
+                "y": 12,
+                "w": 8,
+                "h": 5
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Successful Requests (1m)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum(increase(milvus_proxy_req_count{status=\"success\"}[1m])) by(function_name)",
+                    "legendFormat": "{{function_name}}",
+                    "refId": "A"
+                }
+            ],
+            "id": 6,
+            "gridPos": {
+                "x": 8,
+                "y": 12,
+                "w": 8,
+                "h": 5
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Failed Requests (1m)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum(increase(milvus_proxy_req_count{status!~\"success|total\"}[1m])) by(function_name)",
+                    "legendFormat": "{{function_name}}",
+                    "refId": "A"
+                }
+            ],
+            "id": 7,
+            "gridPos": {
+                "x": 16,
+                "y": 12,
+                "w": 8,
+                "h": 5
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Mutation Latency (p99, avg)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.99, sum by (le, msg_type, node_id) (rate(milvus_proxy_mutation_latency_bucket[2m])))",
+                    "legendFormat": "p99-{{node_id}}-{{msg_type}}",
+                    "refId": "A"
+                },
+                {
+                    "expr": "sum(increase(milvus_proxy_mutation_latency_sum[2m])) by (node_id, msg_type) / sum(increase(milvus_proxy_mutation_latency_count[2m])) by (node_id, msg_type)",
+                    "legendFormat": "avg-{{node_id}}-{{msg_type}}",
+                    "refId": "B"
+                }
+            ],
+            "id": 8,
+            "gridPos": {
+                "x": 0,
+                "y": 17,
+                "w": 12,
+                "h": 6
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Search Latency (p99, avg)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.99, sum by (le, node_id) (rate(milvus_proxy_sq_latency_bucket{query_type=\"search\"}[2m])))",
+                    "legendFormat": "p99-{{node_id}}",
+                    "refId": "A"
+                },
+                {
+                    "expr": "sum(increase(milvus_proxy_sq_latency_sum{query_type=\"search\"}[2m])) by (node_id) / sum(increase(milvus_proxy_sq_latency_count{query_type=\"search\"}[2m])) by (node_id)",
+                    "legendFormat": "avg-{{node_id}}",
+                    "refId": "B"
+                }
+            ],
+            "id": 9,
+            "gridPos": {
+                "x": 12,
+                "y": 17,
+                "w": 12,
+                "h": 6
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "Query Latency (p99, avg)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "histogram_quantile(0.99, sum by (le, node_id) (rate(milvus_proxy_sq_latency_bucket{query_type=\"query\"}[2m])))",
+                    "legendFormat": "p99-{{node_id}}",
+                    "refId": "A"
+                },
+                {
+                    "expr": "sum(increase(milvus_proxy_sq_latency_sum{query_type=\"query\"}[2m])) by (node_id) / sum(increase(milvus_proxy_sq_latency_count{query_type=\"query\"}[2m])) by (node_id)",
+                    "legendFormat": "avg-{{node_id}}",
+                    "refId": "B"
+                }
+            ],
+            "id": 10,
+            "gridPos": {
+                "x": 0,
+                "y": 23,
+                "w": 12,
+                "h": 6
+            }
+        },
+        {
+            "type": "timeseries",
+            "title": "RateLimit Requests (fail, by msg_type)",
+            "datasource": "Prometheus",
+            "targets": [
+                {
+                    "expr": "sum(rate(milvus_proxy_rate_limit_req_count{status=\"fail\"}[1m])) by (msg_type)",
+                    "legendFormat": "{{msg_type}}",
+                    "refId": "A"
+                }
+            ],
+            "id": 11,
+            "gridPos": {
+                "x": 12,
+                "y": 23,
+                "w": 12,
+                "h": 6
+            }
+        }
+    ],
+    "time": {
+        "from": "now-1h",
+        "to": "now"
+    }
+}

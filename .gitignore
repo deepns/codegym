@@ -4,3 +4,6 @@
 
 # Ignore virtual environments
 *.venv
+
+# milvus volumes
+milvus/volumes/*
